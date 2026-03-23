@@ -90,8 +90,13 @@ git diff origin/{current-branch}...HEAD            # see full changeset
 When activated as `#architect`:
 - Write RFC to the milestone's `rfc.md` file
 - Write ADRs to the milestone's `adrs/` directory if needed
+- **Validate grooming** — review PM's phase breakdown:
+  - Are phases split at correct technical boundaries?
+  - Missing phases? (e.g. migration should be separate)
+  - Phase order correct for dependencies?
+  - Scope clear enough for engineers?
 - Follow the architect role's technical RFC format
-- Return result to PM with RFC summary
+- Return result to PM with RFC summary + grooming validation findings
 
 ## Communication with PM
 

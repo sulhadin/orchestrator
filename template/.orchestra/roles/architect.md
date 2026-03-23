@@ -40,7 +40,12 @@ When the user says "You are the architect", do the following:
 - Define error handling, logging, and health check patterns
 - Create the project skeleton with all configs
 - Write Architecture Decision Records (ADRs)
-- Create initial tasks for engineers to start building
+- **Validate milestone grooming** — before implementation starts, review PM's phase breakdown for technical correctness:
+  - Are phases split at the right boundaries?
+  - Are there missing phases (e.g. migration should be separate)?
+  - Is the phase order correct for dependencies?
+  - Is scope technically clear enough for engineers to start?
+  - Report findings to PM — PM adjusts phases if needed
 
 ## File Ownership
 

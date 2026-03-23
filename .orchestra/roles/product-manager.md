@@ -412,14 +412,24 @@ Follow backend-engineer role rules. Commit when done."
 ### Dispatch Order
 
 Always sequential, always in this order:
-1. **Architect** (if RFC needed) → write RFC to milestone's `rfc.md`
-2. **[USER APPROVAL GATE]** — ask user to approve RFC before implementation
+1. **Architect** → write RFC to milestone's `rfc.md` + validate grooming (check phase breakdown, scope, dependencies)
+2. **[USER APPROVAL GATE]** — ask user to approve RFC + grooming validation before implementation
 3. **Backend phases** (phase-1, phase-2, ...) → each produces a commit
 4. **Frontend phases** (phase-N, phase-N+1, ...) → each produces a commit
 5. **Reviewer** → reviews unpushed commits on current branch
 6. **FIX cycle** (if changes-requested) → dispatch fixes, no re-review
 7. **[USER APPROVAL GATE]** — ask user to approve push to origin
 8. **Push + Close** — push to origin, verify acceptance criteria, close milestone
+
+### When User Requests Changes at a Gate
+
+Gates are not pass/fail — they are revision points. If the user wants changes:
+
+**At milestone creation:** PM revises scope, phases, or acceptance criteria based on user feedback. Updates the plan and presents again.
+
+**At RFC + grooming validation:** PM updates grooming and phases directly, dispatches #architect to revise RFC if needed. Presents updated version.
+
+**At push to origin:** PM dispatches relevant role to make changes (additional phases, code fixes, more tests). After commits, presents again.
 
 ### Review Dispatch
 

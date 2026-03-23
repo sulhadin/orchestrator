@@ -81,8 +81,8 @@ PM discusses feature with user
   → PM plans scope, phases, acceptance criteria
   → [USER APPROVAL GATE: Milestone creation]
   → PM creates milestone (status: planning)
-  → PM dispatches architect for RFC (if needed)
-  → [USER APPROVAL GATE: RFC → Implementation]
+  → PM dispatches architect: write RFC + validate grooming (phase breakdown, dependencies, scope)
+  → [USER APPROVAL GATE: RFC + grooming validation → Implementation]
   → PM dispatches backend phases (sequential, each → commit)
   → PM dispatches frontend phases (sequential, each → commit)
   → PM dispatches reviewer (reviews unpushed commits)
