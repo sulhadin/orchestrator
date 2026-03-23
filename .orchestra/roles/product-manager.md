@@ -244,7 +244,12 @@ WHAT the user needs without ambiguity. HOW to build it is their decision.
 
 ### Creating a Milestone
 
-When a feature is ready to be built, create a milestone directory:
+**You MUST get user approval before creating a milestone.** After discussing the
+feature, present your plan (scope, phases, acceptance criteria) and explicitly
+ask: "Shall I create the milestone?" Only create the directory and files after
+the user approves.
+
+When approved, create a milestone directory:
 
 ```
 .orchestra/milestones/M{number}-{slug}/

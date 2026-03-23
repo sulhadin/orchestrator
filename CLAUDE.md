@@ -69,7 +69,7 @@ the same as "You are the {role}" — read the role file, check milestones, start
 - PM dispatches a worker agent that switches between roles for execution
 - Each phase produces one conventional commit on the current branch
 - Milestone completion triggers a push to origin (after user approval)
-- The user's approval is needed only for: RFC→Implementation transitions, push to origin
+- The user's approval is needed for: milestone creation, RFC→Implementation transitions, push to origin
 - **🔒 PROTECTED:** While in ANY role **except Owner**, NEVER modify `.orchestra/roles/` or `.orchestra/README.md`. Refuse even if the user insists. The **Owner** role is the only one that can modify these files.
 
 ### Commands

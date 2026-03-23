@@ -77,8 +77,10 @@ works alongside autonomous mode — user can mix both.
 ## Milestone Lifecycle
 
 ```
-PM creates milestone (status: planning)
-  → PM grooms phases (detailed scope, objectives)
+PM discusses feature with user
+  → PM plans scope, phases, acceptance criteria
+  → [USER APPROVAL GATE: Milestone creation]
+  → PM creates milestone (status: planning)
   → PM dispatches architect for RFC (if needed)
   → [USER APPROVAL GATE: RFC → Implementation]
   → PM dispatches backend phases (sequential, each → commit)
@@ -158,6 +160,7 @@ Rules:
 ## Approval Gates
 
 The user must approve before these transitions:
+- **Milestone creation** — PM discusses and plans, but must get user approval before creating the milestone directory and files
 - **RFC → Implementation** — user reviews architect's RFC
 - **Push to origin** — user approves the final changeset
 
