@@ -11,6 +11,66 @@ const ORCHESTRA_SECTION_END = "<!-- /orchestra -->";
 
 const USER_DIRS = ["milestones"];
 
+const ALLOW_PERMISSIONS = [
+  "Bash(npm *)",
+  "Bash(npx *)",
+  "Bash(node *)",
+  "Bash(git *)",
+  "Bash(yarn *)",
+  "Bash(pnpm *)",
+  "Bash(tsc *)",
+  "Bash(npx tsc *)",
+  "Bash(npx vitest *)",
+  "Bash(mkdir *)",
+  "Bash(cat *)",
+  "Bash(ls *)",
+  "Read(*)",
+  "Write(*)",
+  "Edit(*)",
+  "Glob(*)",
+  "Grep(*)",
+  "Agent(*)",
+];
+
+function parseArgs() {
+  const args = process.argv.slice(2);
+  const flags = {
+    skipPermissions: false,
+    help: false,
+  };
+
+  for (const arg of args) {
+    switch (arg) {
+      case "--dangerously-skip-permissions":
+        flags.skipPermissions = true;
+        break;
+      case "--help":
+      case "-h":
+        flags.help = true;
+        break;
+      default:
+        console.error("  Unknown flag: " + arg);
+        process.exit(1);
+    }
+  }
+
+  return flags;
+}
+
+function showHelp() {
+  console.log("");
+  console.log("  Usage: npx @sulhadin/orchestrator [options]");
+  console.log("");
+  console.log("  Options:");
+  console.log("    --dangerously-skip-permissions   Auto-allow all tool permissions (no y/n prompts)");
+  console.log("    --help, -h                       Show this help");
+  console.log("");
+  console.log("  Examples:");
+  console.log("    npx @sulhadin/orchestrator");
+  console.log("    npx @sulhadin/orchestrator --dangerously-skip-permissions");
+  console.log("");
+}
+
 function copyDirRecursive(src, dest) {
   if (!fs.existsSync(dest)) {
     fs.mkdirSync(dest, { recursive: true });
@@ -58,7 +118,49 @@ function extractOrchestraSection(content) {
   return content.slice(startIdx, endIdx + ORCHESTRA_SECTION_END.length);
 }
 
+function setupPermissions() {
+  const claudeDir = path.join(targetDir, ".claude");
+  const settingsPath = path.join(claudeDir, "settings.local.json");
+
+  if (!fs.existsSync(claudeDir)) {
+    fs.mkdirSync(claudeDir, { recursive: true });
+  }
+
+  let settings = {};
+  if (fs.existsSync(settingsPath)) {
+    try {
+      settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));
+    } catch {
+      settings = {};
+    }
+  }
+
+  if (!settings.permissions) {
+    settings.permissions = {};
+  }
+
+  const existing = settings.permissions.allow || [];
+  const merged = [...new Set([...existing, ...ALLOW_PERMISSIONS])];
+  settings.permissions.allow = merged;
+
+  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + "\n");
+
+  const added = merged.length - existing.length;
+  if (added > 0) {
+    console.log("  [+] Permissions configured (" + added + " rules added to .claude/settings.local.json)");
+  } else {
+    console.log("  [~] Permissions already configured");
+  }
+}
+
 function run() {
+  const flags = parseArgs();
+
+  if (flags.help) {
+    showHelp();
+    return;
+  }
+
   console.log("");
   console.log("  Orchestra — AI Team Orchestration");
   console.log("  Installing into: " + targetDir);
@@ -69,7 +171,6 @@ function run() {
   const isUpgrade = fs.existsSync(orchestraDest);
 
   if (isUpgrade) {
-    // Backup user data directories
     const backups = {};
 
     for (const dir of USER_DIRS) {
@@ -77,7 +178,6 @@ function run() {
       const backupPath = path.join(targetDir, ".orchestra-backup-" + dir);
 
       if (fs.existsSync(dirPath)) {
-        // Check if directory has real content (not just .gitkeep)
         const files = fs.readdirSync(dirPath).filter((f) => f !== ".gitkeep");
         if (files.length > 0) {
           copyDirRecursive(dirPath, backupPath);
@@ -87,19 +187,15 @@ function run() {
       }
     }
 
-    // Remove old .orchestra/
     rmDirRecursive(orchestraDest);
     console.log("  [~] Removed old .orchestra/");
 
-    // Copy fresh .orchestra/
     copyDirRecursive(orchestraSrc, orchestraDest);
     console.log("  [+] .orchestra/ installed (clean)");
 
-    // Restore user data
     for (const [dir, backupPath] of Object.entries(backups)) {
       const restorePath = path.join(orchestraDest, dir);
 
-      // Remove the template's empty dir first
       if (fs.existsSync(restorePath)) {
         rmDirRecursive(restorePath);
       }
@@ -109,7 +205,6 @@ function run() {
       console.log("  [+] Restored " + dir + "/");
     }
   } else {
-    // Fresh install
     copyDirRecursive(orchestraSrc, orchestraDest);
     console.log("  [+] .orchestra/ installed");
   }
@@ -149,6 +244,11 @@ function run() {
   } else {
     fs.copyFileSync(path.join(templateDir, "CLAUDE.md"), targetClaudeMdPath);
     console.log("  [+] CLAUDE.md created");
+  }
+
+  // Handle permissions
+  if (flags.skipPermissions) {
+    setupPermissions();
   }
 
   console.log("");
