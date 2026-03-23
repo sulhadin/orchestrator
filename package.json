@@ -1,0 +1,23 @@
+{
+  "name": "@sulhadin/orchestrator",
+  "version": "1.0.0",
+  "description": "AI Team Orchestration System — multi-role coordination for Claude Code",
+  "bin": {
+    "orchestrator": "bin/index.js"
+  },
+  "files": [
+    "bin/",
+    "template/"
+  ],
+  "keywords": [
+    "claude",
+    "orchestrator",
+    "ai",
+    "agent",
+    "multi-agent",
+    "claude-code"
+  ],
+  "author": "Sulhadin Öney",
+  "license": "MIT",
+  "packageManager": "yarn@4.13.0"
+}
