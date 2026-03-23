@@ -386,24 +386,87 @@ use `SendMessage` to the same session — zero warmup, full context preserved.
 
 ### Dispatching a Phase
 
-Send a message to the worker agent specifying the role and phase:
+**CRITICAL:** Every dispatch MUST start with the role prefix (`#backend:`, `#frontend:`, `#architect:`, `#reviewer:`). The worker agent uses this prefix to activate the correct role and its ownership scope. Without it, the worker doesn't know which role to follow.
+
+**Dispatch format — use this exact structure:**
 
 ```
 SendMessage to worker:
-"#backend: Implement phase-1 of M1-user-auth.
-Read the phase file: .orchestra/milestones/M1-user-auth/phases/phase-1.md
-Follow backend-engineer role rules. Commit when done."
+"#backend: You are now the backend-engineer for this task.
+
+Phase: phase-1 of M1-user-auth
+Phase file: .orchestra/milestones/M1-user-auth/phases/phase-1.md
+
+Read the phase file, implement according to its objective and scope.
+Follow backend-engineer role rules and ownership scope.
+Write tests. Commit with conventional commit format when done.
+Update the phase file's Result section."
+```
+
+**Always include:**
+1. Role prefix (`#backend:`, `#frontend:`, etc.)
+2. Explicit role activation ("You are now the backend-engineer")
+3. Phase reference (milestone name + phase file path)
+4. Instruction to read phase file, implement, test, commit, update result
+
+### Progress Reporting — MANDATORY
+
+**Before every dispatch**, print a visible status line so the user knows what's happening:
+
+```
+🏗️ #architect ▶ RFC + grooming validation...
+```
+
+**After every dispatch**, print the result:
+
+```
+⚙️ #backend ✅ phase-1 done (feat(db): add auth tables)
+```
+
+This is critical because `Agent` and `SendMessage` calls collapse in the UI.
+Without these status lines, the user has no visibility into which role is working.
+
+**Role icons:**
+
+| Role | Icon |
+|------|------|
+| #architect | 🏗️ |
+| #backend | ⚙️ |
+| #frontend | 🎨 |
+| #reviewer | 🔍 |
+| PM (you) | 🎯 |
+
+**Full progress format for a milestone:**
+
+```
+🏗️ #architect ▶ RFC + grooming validation...
+🏗️ #architect ✅ RFC ready
+
+🚦 Approve RFC to start implementation?
+
+⚙️ #backend ▶ phase-1: DB schema + migrations...
+⚙️ #backend ✅ phase-1 done (feat(db): add auth tables)
+
+⚙️ #backend ▶ phase-2: API endpoints + tests...
+⚙️ #backend ✅ phase-2 done (feat(auth): add login endpoint)
+
+🎨 #frontend ▶ phase-3: Login UI...
+🎨 #frontend ✅ phase-3 done (feat(auth): add login page)
+
+🔍 #reviewer ▶ reviewing unpushed commits...
+🔍 #reviewer ✅ approved
+
+🚦 Push to origin?
 ```
 
 ### Await and Next Step
 
 `SendMessage` **blocks** until the worker agent returns a result. When it does:
 
-1. **Read the result** — what was done, what was committed
+1. **Print completion status** — `{icon} #role ✅ phase-N done (commit message)`
 2. **Update the phase file** status if the worker didn't
-3. **Report progress to user** — brief summary of what was completed
-4. **Decide next action:**
-   - More phases remaining → dispatch next phase
+3. **Decide next action:**
+   - More phases remaining → print next status line, dispatch next phase
    - All phases done → dispatch reviewer
    - Worker returned a QUESTION → ask user, re-dispatch with answer
    - Worker returned a CONCERN → evaluate and decide
@@ -437,9 +500,14 @@ Reviewer reviews all unpushed commits on the current branch:
 
 ```
 SendMessage to worker:
-"#reviewer: Review milestone M1-user-auth.
-Check unpushed commits: git log origin/{branch}..HEAD
-Apply the full review checklist. Return verdict: approved or changes-requested."
+"#reviewer: You are now the code-reviewer for this task.
+
+Milestone: M1-user-auth
+Review unpushed commits: git log origin/{branch}..HEAD
+Full changeset: git diff origin/{branch}...HEAD
+
+Apply the full review checklist (detect backend or frontend mode from the files changed).
+Return verdict: approved or changes-requested with specific issues per file."
 ```
 
 - If **approved** → proceed to push gate
