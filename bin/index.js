@@ -30,6 +30,8 @@ const ALLOW_PERMISSIONS = [
   "Glob(*)",
   "Grep(*)",
   "Agent(*)",
+  "WebFetch(*)",
+  "WebSearch(*)",
 ];
 
 function parseArgs() {
