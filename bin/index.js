@@ -12,22 +12,7 @@ const ORCHESTRA_SECTION_END = "<!-- /orchestra -->";
 const USER_DIRS = ["milestones"];
 
 const ALLOW_PERMISSIONS = [
-  "Bash(npm *)",
-  "Bash(npx *)",
-  "Bash(node *)",
-  "Bash(git *)",
-  "Bash(yarn *)",
-  "Bash(pnpm *)",
-  "Bash(tsc *)",
-  "Bash(npx tsc *)",
-  "Bash(npx vitest *)",
-  "Bash(mkdir *)",
-  "Bash(rm *)",
-  "Bash(cp *)",
-  "Bash(mv *)",
-  "Bash(cat *)",
-  "Bash(ls *)",
-  "Bash(chmod *)",
+  "Bash(*)",
   "Read(*)",
   "Write(*)",
   "Edit(*)",
