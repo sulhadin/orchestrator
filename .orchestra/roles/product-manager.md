@@ -385,7 +385,7 @@ Send a message to the worker agent specifying the role and phase:
 
 ```
 SendMessage to worker:
-"@backend: Implement phase-1 of M1-user-auth.
+"#backend: Implement phase-1 of M1-user-auth.
 Read the phase file: .orchestra/milestones/M1-user-auth/phases/phase-1.md
 Follow backend-engineer role rules. Commit when done."
 ```
@@ -422,7 +422,7 @@ Reviewer reviews all unpushed commits on the current branch:
 
 ```
 SendMessage to worker:
-"@reviewer: Review milestone M1-user-auth.
+"#reviewer: Review milestone M1-user-auth.
 Check unpushed commits: git log origin/{branch}..HEAD
 Apply the full review checklist. Return verdict: approved or changes-requested."
 ```

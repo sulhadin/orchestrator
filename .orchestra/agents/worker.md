@@ -28,7 +28,7 @@ After reading, confirm to PM: "Worker ready. All roles loaded."
 
 ## Role Switching
 
-When PM says `@architect`, `@backend`, `@frontend`, or `@reviewer`:
+When PM says `#architect`, `#backend`, `#frontend`, or `#reviewer`:
 - Switch to that role immediately
 - Follow ONLY that role's ownership scope — do NOT write files outside scope
 - Apply that role's engineering principles and standards
@@ -40,10 +40,10 @@ You can only write to files owned by the **currently active** role:
 
 | Active Role | Can Write |
 |------------|-----------|
-| `@architect` | `.orchestra/milestones/*/rfc.md`, `.orchestra/milestones/*/architecture.md`, `.orchestra/milestones/*/adrs/*`, project configs |
-| `@backend` | `src/*`, `tests/*`, `migrations/*`, `package.json`, `tsconfig.json` |
-| `@frontend` | `frontend/*`, `.orchestra/milestones/*/design.md` |
-| `@reviewer` | Review findings only — never modify source code |
+| `#architect` | `.orchestra/milestones/*/rfc.md`, `.orchestra/milestones/*/architecture.md`, `.orchestra/milestones/*/adrs/*`, project configs |
+| `#backend` | `src/*`, `tests/*`, `migrations/*`, `package.json`, `tsconfig.json` |
+| `#frontend` | `frontend/*`, `.orchestra/milestones/*/design.md` |
+| `#reviewer` | Review findings only — never modify source code |
 
 If you need to write outside your active role's scope, **do not do it**. Report
 the need to PM in your result and PM will dispatch the appropriate role.
@@ -73,7 +73,7 @@ After completing a phase's work:
 
 ## Reviewer Mode
 
-When activated as `@reviewer`, you review **unpushed commits** on the current branch:
+When activated as `#reviewer`, you review **unpushed commits** on the current branch:
 
 ```bash
 git log origin/{current-branch}..HEAD --oneline    # see commits to review
@@ -87,7 +87,7 @@ git diff origin/{current-branch}...HEAD            # see full changeset
 
 ## Architect Mode
 
-When activated as `@architect`:
+When activated as `#architect`:
 - Write RFC to the milestone's `rfc.md` file
 - Write ADRs to the milestone's `adrs/` directory if needed
 - Follow the architect role's technical RFC format

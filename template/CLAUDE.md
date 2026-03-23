@@ -52,14 +52,14 @@ before asking this question. The role selection question IS your greeting.
 
 | Selection | Role ID (for file paths) | Short alias |
 |-----------|--------------------------|-------------|
-| Owner | owner | `@owner` |
-| Product Manager | product-manager | `@pm` |
-| Architect | architect | `@architect` |
-| Backend Engineer | backend-engineer | `@backend` |
-| Code Reviewer | code-reviewer | `@reviewer` |
-| Frontend Engineer | frontend-engineer | `@frontend` |
+| Owner | owner | `#owner` |
+| Product Manager | product-manager | `#pm` |
+| Architect | architect | `#architect` |
+| Backend Engineer | backend-engineer | `#backend` |
+| Code Reviewer | code-reviewer | `#reviewer` |
+| Frontend Engineer | frontend-engineer | `#frontend` |
 
-When the user types `@{alias}` (e.g. `@backend`, `@reviewer`), treat it exactly
+When the user types `#{alias}` (e.g. `#backend`, `#reviewer`), treat it exactly
 the same as "You are the {role}" — read the role file, check milestones, start working.
 
 ### Rules
@@ -81,7 +81,7 @@ These commands work in ANY role, in any terminal:
 | `status` / `orchestrate` / `what's next` | **PM only.** Full pipeline status report. Other roles: "Open a PM terminal." |
 | `check` / `check your queue` | Check milestones for pending work and start. Works in any role. |
 | `orc help` / `orchestra help` | Show all available commands and how the orchestra system works. |
-| `You are the {role}` / `@{role}` | Switch to a different role in the current session. Aliases: `@owner`, `@pm`, `@architect`, `@backend`, `@reviewer`, `@frontend` |
+| `You are the {role}` / `#{role}` | Switch to a different role in the current session. Aliases: `#owner`, `#pm`, `#architect`, `#backend`, `#reviewer`, `#frontend` |
 | `commit` / `commit your changes` | Commit your work using conventional commits (only files in your ownership scope). |
 | `bootstrap` / `new project` | **Architect only.** Start the discovery phase for a new project. Other roles: "Open an architect terminal." |
 
@@ -97,15 +97,15 @@ COMMANDS:
   bootstrap / new project    Start new project discovery (Architect role only)
   orc help                   Show this help
   You are the {role}         Switch role in current session
-  @{alias}                   Short switch: @owner @pm @architect @backend @reviewer @frontend
+  #{alias}                   Short switch: #owner #pm #architect #backend #reviewer #frontend
 
 ROLES:
-  owner          (@owner)     Maintain and evolve Orchestra system (roles, rules, structure)
-  product-manager (@pm)       Write RFCs, define features, orchestrate pipeline
-  architect      (@architect) Design architecture, choose tech, set up project skeleton
-  backend-engineer (@backend) Implement features, write code + tests
-  code-reviewer  (@reviewer)  Review implementations, write findings
-  frontend-engineer (@frontend) Design + build UI, write frontend tests
+  owner          (#owner)     Maintain and evolve Orchestra system (roles, rules, structure)
+  product-manager (#pm)       Write RFCs, define features, orchestrate pipeline
+  architect      (#architect) Design architecture, choose tech, set up project skeleton
+  backend-engineer (#backend) Implement features, write code + tests
+  code-reviewer  (#reviewer)  Review implementations, write findings
+  frontend-engineer (#frontend) Design + build UI, write frontend tests
 
 PIPELINES:
   New project:    PM → Architect → Engineers start building

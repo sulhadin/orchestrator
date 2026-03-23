@@ -156,7 +156,7 @@ function run() {
   console.log("");
   console.log("  Next steps:");
   console.log("    1. Open Claude Code in your project");
-  console.log('    2. Say "@pm" to start orchestrating');
+  console.log('    2. Say "#pm" to start orchestrating');
   console.log("");
 }
 

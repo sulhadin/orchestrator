@@ -8,11 +8,11 @@ Building a feature with Claude Code typically looks like this:
 
 ```
 You: "Build user authentication"
-You: *opens terminal* "@architect — design the system"
+You: *opens terminal* "#architect — design the system"
 You: *reads RFC, approves*
-You: *opens terminal* "@backend — implement the API"
-You: *opens terminal* "@reviewer — review the code"
-You: *opens terminal* "@pm — close the feature"
+You: *opens terminal* "#backend — implement the API"
+You: *opens terminal* "#reviewer — review the code"
+You: *opens terminal* "#pm — close the feature"
 ```
 
 You become the orchestrator. You carry context between sessions, sequence work in the right order, and manage the pipeline manually. This is tedious and error-prone.
@@ -22,13 +22,13 @@ You become the orchestrator. You carry context between sessions, sequence work i
 Orchestra turns Claude Code's PM role into an autonomous orchestrator. You describe what you want, PM handles the rest:
 
 ```
-You: "@pm"
+You: "#pm"
 You: "I want user authentication with JWT"
 PM:  creates milestone, grooms phases, dispatches worker agent
-     @architect writes RFC → you approve
-     @backend implements phase by phase → each phase = one commit
-     @frontend builds the UI → each phase = one commit
-     @reviewer reviews unpushed commits
+     #architect writes RFC → you approve
+     #backend implements phase by phase → each phase = one commit
+     #frontend builds the UI → each phase = one commit
+     #reviewer reviews unpushed commits
      you approve → PM pushes to origin
      milestone closed.
 ```
@@ -43,11 +43,11 @@ You ←→ PM (always-on orchestrator)
         ├── Creates milestone with groomed phases
         ├── Spawns one worker agent (all roles loaded)
         │
-        ├── SendMessage("@architect: write RFC") → awaits
-        ├── SendMessage("@backend: phase-1")     → awaits → commit
-        ├── SendMessage("@backend: phase-2")     → awaits → commit
-        ├── SendMessage("@frontend: phase-3")    → awaits → commit
-        ├── SendMessage("@reviewer: review")     → awaits
+        ├── SendMessage("#architect: write RFC") → awaits
+        ├── SendMessage("#backend: phase-1")     → awaits → commit
+        ├── SendMessage("#backend: phase-2")     → awaits → commit
+        ├── SendMessage("#frontend: phase-3")    → awaits → commit
+        ├── SendMessage("#reviewer: review")     → awaits
         │
         ├── You approve → PM pushes to origin
         └── Milestone closed
@@ -138,10 +138,10 @@ your-project/
 
 ## Usage
 
-Open Claude Code in your project and say `@pm`:
+Open Claude Code in your project and say `#pm`:
 
 ```
-You: @pm
+You: #pm
 PM:  "No active milestones. Ready for instructions."
 
 You: "I want to add a health check endpoint"
@@ -158,12 +158,12 @@ PM:  *creates milestone, grooms phases, dispatches worker*
 
 | Command | Description |
 |---------|------------|
-| `@pm` | Activate Product Manager |
-| `@backend` | Activate Backend Engineer (manual mode) |
-| `@frontend` | Activate Frontend Engineer (manual mode) |
-| `@reviewer` | Activate Code Reviewer (manual mode) |
-| `@architect` | Activate Architect (manual mode) |
-| `@owner` | Activate Owner (system maintenance) |
+| `#pm` | Activate Product Manager |
+| `#backend` | Activate Backend Engineer (manual mode) |
+| `#frontend` | Activate Frontend Engineer (manual mode) |
+| `#reviewer` | Activate Code Reviewer (manual mode) |
+| `#architect` | Activate Architect (manual mode) |
+| `#owner` | Activate Owner (system maintenance) |
 | `status` | Pipeline status report (PM only) |
 | `orc help` | Show all commands |
 
@@ -172,7 +172,7 @@ PM:  *creates milestone, grooms phases, dispatches worker*
 You can still use roles directly without PM orchestration:
 
 ```
-You: @backend
+You: #backend
 BE:  *checks milestones for pending backend phases*
      *starts working*
 ```

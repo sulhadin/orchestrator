@@ -15,10 +15,10 @@ You (User)
       → PM discusses features with you, creates milestones
       → PM creates a worker agent session (all roles loaded)
       → PM dispatches phases sequentially:
-          @architect → writes RFC
-          @backend   → implements backend phases (each → commit)
-          @frontend  → implements frontend phases (each → commit)
-          @reviewer  → reviews unpushed commits
+          #architect → writes RFC
+          #backend   → implements backend phases (each → commit)
+          #frontend  → implements frontend phases (each → commit)
+          #reviewer  → reviews unpushed commits
       → PM pushes to origin after approval
       → PM closes milestone
 ```
@@ -57,7 +57,7 @@ User talks only to PM. PM dispatches a worker agent to execute all roles:
 1. PM creates milestone with groomed phases
 2. PM creates worker agent session (via `Agent` tool — all roles loaded once)
 3. PM dispatches phases via `SendMessage` → awaits result → dispatches next
-4. Worker switches roles as PM instructs (`@architect`, `@backend`, `@frontend`, `@reviewer`)
+4. Worker switches roles as PM instructs (`#architect`, `#backend`, `#frontend`, `#reviewer`)
 5. Each phase → one commit. Milestone done → push to origin.
 
 ### Manual Mode
@@ -65,8 +65,8 @@ User talks only to PM. PM dispatches a worker agent to execute all roles:
 User switches roles directly — same as before:
 
 ```
-User → @backend (implement)
-User → @reviewer (review)
+User → #backend (implement)
+User → #reviewer (review)
 ```
 
 Roles check `.orchestra/milestones/` for phases assigned to them. Manual mode
@@ -170,7 +170,7 @@ All other transitions are automatic.
 Reviewer no longer needs task files. Review is based on **unpushed commits**.
 
 ```
-PM dispatches @reviewer via worker agent
+PM dispatches #reviewer via worker agent
   → Reviewer runs: git log origin/{branch}..HEAD
   → Reviewer runs: git diff origin/{branch}...HEAD
   → Reviewer applies full checklist (backend or frontend mode)
@@ -252,7 +252,7 @@ Each role has exclusive write access to specific directories:
 PM dispatches tasks by specifying the role and the work:
 
 ```
-"@backend: Implement phase-1 of M1-user-auth.
+"#backend: Implement phase-1 of M1-user-auth.
 Read: .orchestra/milestones/M1-user-auth/phases/phase-1.md"
 ```
 
@@ -289,28 +289,28 @@ sequenceDiagram
     PM->>PM: Create milestone + groom phases
     PM->>W: Agent(worker.md) — create session
 
-    PM->>W: SendMessage(@architect: write RFC)
+    PM->>W: SendMessage(#architect: write RFC)
     W-->>PM: RFC result
     PM->>U: RFC ready — approve?
     U->>PM: Approved
 
     loop Each backend phase
-        PM->>W: SendMessage(@backend: phase-N)
+        PM->>W: SendMessage(#backend: phase-N)
         W-->>PM: Phase result + commit
         PM->>U: Progress: phase-N done
     end
 
     loop Each frontend phase
-        PM->>W: SendMessage(@frontend: phase-N)
+        PM->>W: SendMessage(#frontend: phase-N)
         W-->>PM: Phase result + commit
         PM->>U: Progress: phase-N done
     end
 
-    PM->>W: SendMessage(@reviewer: review)
+    PM->>W: SendMessage(#reviewer: review)
     W-->>PM: Review verdict
 
     alt Changes requested
-        PM->>W: SendMessage(@backend/@frontend: fix)
+        PM->>W: SendMessage(#backend/#frontend: fix)
         W-->>PM: Fix result + commit
     end
 
@@ -326,15 +326,15 @@ sequenceDiagram
     participant PM as Product Manager
     participant W as Worker Agent
 
-    PM->>W: "@backend: implement phase-1"
+    PM->>W: "#backend: implement phase-1"
     Note over W: Read phase file<br/>Activate backend role<br/>Implement + test<br/>Commit
     W-->>PM: Result: done, committed abc123
 
-    PM->>W: "@backend: implement phase-2"
+    PM->>W: "#backend: implement phase-2"
     Note over W: Same session<br/>Full context preserved<br/>Implement + test<br/>Commit
     W-->>PM: Result: done, committed def456
 
-    PM->>W: "@frontend: implement phase-3"
+    PM->>W: "#frontend: implement phase-3"
     Note over W: Role switch<br/>Architect + backend context available<br/>Implement + test<br/>Commit
     W-->>PM: Result: done, committed ghi789
 ```
@@ -347,7 +347,7 @@ sequenceDiagram
     participant W as Worker Agent
     actor U as User
 
-    PM->>W: "@reviewer: review M1-user-auth"
+    PM->>W: "#reviewer: review M1-user-auth"
     Note over W: git log origin/branch..HEAD<br/>git diff origin/branch...HEAD<br/>Apply review checklist
 
     alt Approved
@@ -357,7 +357,7 @@ sequenceDiagram
         PM->>PM: git push + close milestone
     else Changes Requested
         W-->>PM: verdict: changes-requested + issues
-        PM->>W: "@backend: fix issues in phase-2"
+        PM->>W: "#backend: fix issues in phase-2"
         W-->>PM: Fixed + committed
         PM->>U: Fixes applied. Push?
         U->>PM: Yes
