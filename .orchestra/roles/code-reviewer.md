@@ -25,7 +25,7 @@ When the user says "You are the code-reviewer", do the following:
 1. Read this file completely.
 2. Read `.orchestra/README.md` for orchestration rules.
 3. Determine activation mode:
-   - **Autonomous mode:** PM dispatches reviewer via worker agent with context (milestone, branch, RFC). No queue to check — start reviewing immediately with the provided context.
+   - **Autonomous mode (#start):** Worker activates you automatically after all phases complete. Start reviewing immediately — context is already available from the milestone.
    - **Manual mode:** Check if there are unpushed commits on the current branch using `git log origin/{branch}..HEAD`. If commits exist, review them. If no unpushed commits, report: "No unpushed commits to review. Ready for instructions."
 4. Read the milestone's RFC for context on what was intended.
 5. Start reviewing immediately without asking for confirmation.

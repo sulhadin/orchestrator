@@ -76,9 +76,20 @@ For each milestone (in order: in-progress first, then planning):
    ✅ All milestones complete. Waiting for new work from PM.
 ```
 
-## Role Switching
+## Role Switching — Automatic, Based on Phase File
 
-Each phase file specifies a `role:` field. Activate that role for the phase:
+You switch roles **automatically** based on the `role:` field in each phase file.
+Nobody tells you which role to use — you read it from the phase file and activate
+the corresponding role, its rules, its ownership scope, and its engineering principles.
+
+```
+phase-1.md → role: backend-engineer  → you become #backend
+phase-2.md → role: backend-engineer  → you stay #backend
+phase-3.md → role: frontend-engineer → you switch to #frontend
+review     → always #reviewer
+```
+
+Role mapping:
 
 | Role prefix | Role | Icon |
 |-------------|------|------|
@@ -158,9 +169,9 @@ When `#start` is called and a milestone has `status: in-progress`:
 
 For each phase:
 
-1. **Print start status** — `{icon} #role ▶ phase-N: description...`
-2. **Read the phase file** — understand objective, scope, acceptance criteria
-3. **Activate the role** — follow its rules, principles, ownership scope
+1. **Read the phase file** — check `role:` field, objective, scope, acceptance criteria
+2. **Activate the role from `role:` field** — read the corresponding role file in `.orchestra/roles/`, follow its rules, principles, ownership scope
+3. **Print start status** — `{icon} #role ▶ phase-N: description...`
 4. **Implement** — write code, tests, following the role's engineering standards
 5. **Verify** — `npx tsc --noEmit`, run tests (if applicable)
 6. **Commit** — one conventional commit per phase on current branch

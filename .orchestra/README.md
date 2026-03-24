@@ -85,11 +85,11 @@ PM discusses feature with user
   → PM plans scope, phases, acceptance criteria
   → [USER APPROVAL GATE: Milestone creation]
   → PM creates milestone (status: planning)
-  → PM dispatches architect: write RFC + validate grooming (phase breakdown, dependencies, scope)
+  → Worker activates #architect: writes RFC + validates grooming
   → [USER APPROVAL GATE: RFC + grooming validation → Implementation]
-  → PM dispatches backend phases (sequential, each → commit)
-  → PM dispatches frontend phases (sequential, each → commit)
-  → PM dispatches reviewer (reviews unpushed commits)
+  → Worker executes backend phases (sequential, each → commit)
+  → Worker executes frontend phases (sequential, each → commit)
+  → Worker activates #reviewer (reviews unpushed commits)
   → FIX cycle if changes-requested (one round, no re-review)
   → [USER APPROVAL GATE: Push to origin]
   → PM pushes, verifies acceptance criteria, closes milestone
@@ -177,7 +177,7 @@ All other transitions are automatic.
 Reviewer no longer needs task files. Review is based on **unpushed commits**.
 
 ```
-PM dispatches #reviewer via worker agent
+Worker activates #reviewer
   → Reviewer runs: git log origin/{branch}..HEAD
   → Reviewer runs: git diff origin/{branch}...HEAD
   → Reviewer applies full checklist (backend or frontend mode)
@@ -186,7 +186,7 @@ PM dispatches #reviewer via worker agent
 
 **If approved** → PM proceeds to push gate.
 
-**If changes-requested** → PM dispatches FIX to relevant role. Worker fixes
+**If changes-requested** → Worker switches to the relevant role, fixes
 and commits. Pipeline proceeds — **no re-review** (single review round).
 
 ---

@@ -117,7 +117,7 @@ Fix:      Reviewer → changes-requested → Engineer fixes → proceed (no re-r
 - Current library versions only
 - No workarounds, no unused code, no `any` types
 - SOLID, KISS, YAGNI, DRY — enforced by reviewer
-- PM dispatches a single worker agent (all roles loaded, await-based)
+- Worker (#start) reads milestones, switches roles automatically per phase
 - Each phase → one commit, milestone done → push to origin
 
 ### Commands
