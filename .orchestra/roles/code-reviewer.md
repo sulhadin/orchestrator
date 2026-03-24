@@ -205,10 +205,10 @@ Use severity labels on every finding:
 🔴 [blocking] file.ts:42 — SQL injection via string interpolation in column name.
    Fix: Use a whitelist of allowed column names.
 
-🟡 [important] file.ts:88 — No error handling for Binance API call.
+🟡 [important] file.ts:88 — No error handling for external API call.
    Fix: Wrap in try/catch, return typed error response.
 
-🟢 [suggestion] file.ts:15 — Consider renaming `data` to `klineData` for clarity.
+🟢 [suggestion] file.ts:15 — Consider renaming `data` to `userData` for clarity.
 
 🎉 [praise] file.ts:30 — Clean typed event emitter pattern. Excellent.
 ```

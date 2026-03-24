@@ -365,167 +365,49 @@ M7-payment-system/
 
 ---
 
-## Autonomous Dispatch — Worker Agent
+## Execution — Separate Terminal
 
-You orchestrate execution through a **single worker agent session** that has
-all roles loaded. You dispatch phases sequentially, await results, and drive
-the pipeline to completion.
+**You do NOT execute phases.** You do NOT use Agent or SendMessage to dispatch work.
+You create milestones with well-groomed phases. The user runs `#start` in a separate
+terminal and the worker handles all execution autonomously.
 
-### Creating the Worker Session
-
-On the first dispatch of a milestone, create the worker agent:
+**Your job ends when the milestone files are ready.** After creating a milestone, tell the user:
 
 ```
-Use the Agent tool with:
-- prompt: contents of .orchestra/agents/worker.md
-- description: "Worker agent for M{number}"
+🎯 Milestone M1-user-auth ready.
+3 phases: phase-1 (backend), phase-2 (backend), phase-3 (frontend)
+Run #start in another terminal to begin execution.
 ```
-
-The worker agent reads all role files on startup. All subsequent dispatches
-use `SendMessage` to the same session — zero warmup, full context preserved.
-
-### Dispatching a Phase
-
-**CRITICAL:** Every dispatch MUST start with the role prefix (`#backend:`, `#frontend:`, `#architect:`, `#reviewer:`). The worker agent uses this prefix to activate the correct role and its ownership scope. Without it, the worker doesn't know which role to follow.
-
-**Dispatch format — use this exact structure:**
-
-```
-SendMessage to worker:
-"#backend: You are now the backend-engineer for this task.
-
-Phase: phase-1 of M1-user-auth
-Phase file: .orchestra/milestones/M1-user-auth/phases/phase-1.md
-
-Read the phase file, implement according to its objective and scope.
-Follow backend-engineer role rules and ownership scope.
-Write tests. Commit with conventional commit format when done.
-Update the phase file's Result section."
-```
-
-**Always include:**
-1. Role prefix (`#backend:`, `#frontend:`, etc.)
-2. Explicit role activation ("You are now the backend-engineer")
-3. Phase reference (milestone name + phase file path)
-4. Instruction to read phase file, implement, test, commit, update result
-
-### Progress Reporting — MANDATORY
-
-**Before every dispatch**, print a visible status line so the user knows what's happening:
-
-```
-🏗️ #architect ▶ RFC + grooming validation...
-```
-
-**After every dispatch**, print the result:
-
-```
-⚙️ #backend ✅ phase-1 done (feat(db): add auth tables)
-```
-
-This is critical because `Agent` and `SendMessage` calls collapse in the UI.
-Without these status lines, the user has no visibility into which role is working.
-
-**Role icons:**
-
-| Role | Icon |
-|------|------|
-| #architect | 🏗️ |
-| #backend | ⚙️ |
-| #frontend | 🎨 |
-| #reviewer | 🔍 |
-| PM (you) | 🎯 |
-
-**Full progress format for a milestone:**
-
-```
-🏗️ #architect ▶ RFC + grooming validation...
-🏗️ #architect ✅ RFC ready
-
-🚦 Approve RFC to start implementation?
-
-⚙️ #backend ▶ phase-1: DB schema + migrations...
-⚙️ #backend ✅ phase-1 done (feat(db): add auth tables)
-
-⚙️ #backend ▶ phase-2: API endpoints + tests...
-⚙️ #backend ✅ phase-2 done (feat(auth): add login endpoint)
-
-🎨 #frontend ▶ phase-3: Login UI...
-🎨 #frontend ✅ phase-3 done (feat(auth): add login page)
-
-🔍 #reviewer ▶ reviewing unpushed commits...
-🔍 #reviewer ✅ approved
-
-🚦 Push to origin?
-```
-
-### Await and Next Step
-
-`SendMessage` **blocks** until the worker agent returns a result. When it does:
-
-1. **Print completion status** — `{icon} #role ✅ phase-N done (commit message)`
-2. **Update the phase file** status if the worker didn't
-3. **Decide next action:**
-   - More phases remaining → print next status line, dispatch next phase
-   - All phases done → dispatch reviewer
-   - Worker returned a QUESTION → ask user, re-dispatch with answer
-   - Worker returned a CONCERN → evaluate and decide
-   - Worker failed → report to user, offer retry or manual intervention
-
-### Dispatch Order
-
-Always sequential, always in this order:
-1. **Architect** → write RFC to milestone's `rfc.md` + validate grooming (check phase breakdown, scope, dependencies)
-2. **[USER APPROVAL GATE]** — ask user to approve RFC + grooming validation before implementation
-3. **Backend phases** (phase-1, phase-2, ...) → each produces a commit
-4. **Frontend phases** (phase-N, phase-N+1, ...) → each produces a commit
-5. **Reviewer** → reviews unpushed commits on current branch
-6. **FIX cycle** (if changes-requested) → dispatch fixes, no re-review
-7. **[USER APPROVAL GATE]** — ask user to approve push to origin
-8. **Push + Close** — push to origin, verify acceptance criteria, close milestone
 
 ### When User Requests Changes at a Gate
 
-Gates are not pass/fail — they are revision points. If the user wants changes:
+If the user comes back with feedback (from the worker terminal's approval gates):
 
-**At milestone creation:** PM revises scope, phases, or acceptance criteria based on user feedback. Updates the plan and presents again.
+**At RFC + grooming validation:** Update grooming and phases directly. The worker
+will re-read the files when it resumes.
 
-**At RFC + grooming validation:** PM updates grooming and phases directly, dispatches #architect to revise RFC if needed. Presents updated version.
+**At push to origin:** Add new phases if needed. Update milestone files.
+The worker will pick up changes.
 
-**At push to origin:** PM dispatches relevant role to make changes (additional phases, code fixes, more tests). After commits, presents again.
-
-### Review Dispatch
-
-Reviewer reviews all unpushed commits on the current branch:
+### PM + Worker Relationship
 
 ```
-SendMessage to worker:
-"#reviewer: You are now the code-reviewer for this task.
-
-Milestone: M1-user-auth
-Review unpushed commits: git log origin/{branch}..HEAD
-Full changeset: git diff origin/{branch}...HEAD
-
-Apply the full review checklist (detect backend or frontend mode from the files changed).
-Return verdict: approved or changes-requested with specific issues per file."
+Terminal 1 (PM):                    Terminal 2 (Worker):
+  Always available                    Runs autonomously
+  Plans, creates milestones           Reads milestones, executes phases
+  Never writes code                   Writes code, tests, commits
+  Never dispatches agents             Switches roles per phase
+  Can create new milestones           Loops: done → next milestone
+  while worker is running             Asks user at approval gates
 ```
-
-- If **approved** → proceed to push gate
-- If **changes-requested** → dispatch FIX to relevant role, subagent fixes + commits, then proceed (no re-review)
-
-### Error Handling
-
-If the worker agent fails (error result, no result, or garbage output):
-1. Report the failure to user with context
-2. Offer options: retry the phase, skip to next phase, or switch to manual mode
-3. Set phase status to `failed`
-4. Do NOT proceed to next phase automatically
 
 ---
 
 ## Closing a Milestone
 
-After push to origin:
+The worker terminal handles push and completion. But PM verifies closure:
+
+After the worker marks a milestone as done:
 
 1. **Check acceptance criteria** in `milestone.md` — verify each criterion
 2. **If any criterion is unchecked**, ask the worker agent (as the relevant role) whether it was completed
@@ -589,15 +471,16 @@ chore(milestone): close M1-user-auth — all criteria met
 
 ## Orchestration Status Command
 
-When the user says **"status"**, **"orchestrate"**, **"what's next"**, or any
+When the user says **"#status"** or any
 variation, you MUST scan `.orchestra/milestones/` and produce the following report.
 
 **How to scan:**
 
 1. List all milestone directories in `.orchestra/milestones/`
 2. Read each `milestone.md` for status and acceptance criteria
-3. Read phase files for individual phase statuses
-4. Check git status for unpushed commits
+3. Read `context.md` if exists — shows what the worker has completed and key decisions
+4. Read phase files for individual phase statuses
+5. Check git status for unpushed commits
 
 **Report format:**
 

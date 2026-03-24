@@ -1,26 +1,23 @@
 # Orchestra — AI Team Orchestration
 
 A milestone-based orchestration system for coordinating AI agent sessions
-working on the same codebase. The Product Manager acts as the orchestrator,
-dispatching work to a single worker agent that switches between roles.
+working on the same codebase. Two terminals: PM plans, worker executes.
 
 ## How It Works
 
 ```
-You (User)
-  │
-  └─ Open Terminal → "You are the product-manager"
-      → PM reads role file + orchestration rules
-      → PM checks .orchestra/milestones/ for active work
-      → PM discusses features with you, creates milestones
-      → PM creates a worker agent session (all roles loaded)
-      → PM dispatches phases sequentially:
-          #architect → writes RFC
-          #backend   → implements backend phases (each → commit)
-          #frontend  → implements frontend phases (each → commit)
-          #reviewer  → reviews unpushed commits
-      → PM pushes to origin after approval
-      → PM closes milestone
+Terminal 1 (PM):                    Terminal 2 (Worker):
+  #pm                                #start
+  │                                  │
+  ├─ Discuss features with user      ├─ Scan milestones
+  ├─ Create milestones               ├─ 🏗️ #architect → RFC
+  ├─ Groom phases                    ├─ 🚦 User approves RFC
+  ├─ Always available                ├─ ⚙️ #backend → phase by phase
+  │                                  ├─ 🎨 #frontend → phase by phase
+  │  (can plan M2 while M1 runs)     ├─ 🔍 #reviewer → review commits
+  │                                  ├─ 🚦 User approves push
+  │                                  ├─ git push → milestone done
+  │                                  └─ Loop → next milestone
 ```
 
 ## Directory Structure
@@ -42,35 +39,42 @@ You (User)
 │       ├── milestone.md   # Summary, acceptance criteria, status
 │       ├── grooming.md    # Discussion, scope, decisions
 │       ├── rfc.md         # Technical design (architect fills)
+│       ├── architecture.md # System design (architect fills, if needed)
+│       ├── design.md      # UI/UX design (frontend fills, if needed)
+│       ├── context.md     # Running log (worker maintains for resume)
+│       ├── adrs/          # Architecture Decision Records (if needed)
 │       └── phases/        # Sequential units of work
 │           ├── phase-1.md # role + objective + scope + result
 │           ├── phase-2.md
 │           └── ...
 ```
 
-## Two Modes of Operation
+## Two Terminals
 
-### Autonomous Mode (recommended)
+### Terminal 1: `#pm` (Planning)
 
-User talks only to PM. PM dispatches a worker agent to execute all roles:
+PM is always available for discussion. Creates milestones, never writes code.
+You can plan new milestones while the worker is executing another one.
 
-1. PM creates milestone with groomed phases
-2. PM creates worker agent session (via `Agent` tool — all roles loaded once)
-3. PM dispatches phases via `SendMessage` → awaits result → dispatches next
-4. Worker switches roles as PM instructs (`#architect`, `#backend`, `#frontend`, `#reviewer`)
-5. Each phase → one commit. Milestone done → push to origin.
+### Terminal 2: `#start` (Execution)
+
+Worker reads milestones, executes phases autonomously. Switches roles per phase.
+Loops to the next milestone when done. Maintains `context.md` for resume capability.
+
+```
+#start
+  → finds M1-user-auth (status: in-progress) → resumes
+  → finds M2-dashboard (status: planning) → starts after M1
+  → no more milestones → "All done. Waiting for new work."
+```
 
 ### Manual Mode
 
-User switches roles directly — same as before:
-
+You can still use roles directly in any terminal:
 ```
-User → #backend (implement)
-User → #reviewer (review)
+#backend  → checks milestones for pending backend phases
+#reviewer → checks for unpushed commits to review
 ```
-
-Roles check `.orchestra/milestones/` for phases assigned to them. Manual mode
-works alongside autonomous mode — user can mix both.
 
 ---
 
@@ -243,38 +247,31 @@ Each role has exclusive write access to specific directories:
 | product-manager | `.orchestra/milestones/*` (prd.md, milestone.md, grooming.md, phases) | Everything |
 | architect | `.orchestra/milestones/*/rfc.md`, `.orchestra/milestones/*/architecture.md`, `.orchestra/milestones/*/adrs/*`, project configs (initial setup) | Everything |
 | backend-engineer | `src/`, `tests/`, `src/**/__tests__/*`, `migrations/`, `package.json`, `tsconfig.json` | `.orchestra/milestones/*/phases/*` |
-| code-reviewer | Review findings only (returned to PM via await) | `src/`, `tests/`, `frontend/` |
+| code-reviewer | Review findings only — never modifies source code | `src/`, `tests/`, `frontend/` |
 | frontend-engineer | `frontend/`, `frontend/**/__tests__/*`, `frontend/**/e2e/*`, `.orchestra/milestones/*/design.md` | `.orchestra/milestones/*/phases/*` |
 
 ---
 
-## Worker Agent Communication
+## PM ↔ Worker Communication
 
-### PM → Worker (via SendMessage)
+PM and worker run in **separate terminals**. They communicate through milestone files:
 
-PM dispatches tasks by specifying the role and the work:
+- **PM writes:** prd.md, grooming.md, milestone.md, phase files
+- **Worker reads:** milestone files → executes phases → updates results + context.md
+- **No direct messaging** between PM and worker — file system is the interface
 
-```
-"#backend: Implement phase-1 of M1-user-auth.
-Read: .orchestra/milestones/M1-user-auth/phases/phase-1.md"
-```
+### Context Persistence
 
-### Worker → PM (via await return)
+Worker maintains `context.md` in each milestone directory. This allows:
+- Resume after terminal close/reopen
+- Track decisions made during implementation
+- Record what was committed in each phase
 
-Worker returns results directly. PM reads the return value — no polling needed.
+### Approval Gates (Worker Terminal)
 
-Possible return types:
-- **Done** — work completed, committed, phase result updated
-- **QUESTION** — worker needs clarification, PM asks user and re-dispatches
-- **CONCERN** — worker spotted an issue, PM evaluates
-- **NEEDS** — worker needs work outside current role's scope, PM dispatches appropriate role
-- **Error** — worker failed, PM reports to user
-
-### No Polling, No Signals
-
-`SendMessage` blocks until the worker returns. PM gets results directly.
-Signal files and queues are **not used**. Milestone/phase files provide
-persistence if PM session dies.
+Worker asks the user directly (not PM) at these points:
+1. **RFC ready** — "🚦 Approve RFC to start implementation?"
+2. **Push to origin** — "🚦 All done. Push to origin?"
 
 ---
 
@@ -285,85 +282,63 @@ persistence if PM session dies.
 ```mermaid
 sequenceDiagram
     actor U as User
-    participant PM as Product Manager
-    participant W as Worker Agent
+    participant PM as Terminal 1: PM
+    participant W as Terminal 2: Worker
 
-    U->>PM: Describe feature
-    PM->>PM: Create milestone + groom phases
-    PM->>W: Agent(worker.md) — create session
+    U->>PM: "I want user auth"
+    PM->>PM: Discuss, plan, create milestone
 
-    PM->>W: SendMessage(#architect: write RFC)
-    W-->>PM: RFC result
-    PM->>U: RFC ready — approve?
-    U->>PM: Approved
+    U->>W: #start
+    W->>W: Read milestone files
+
+    W->>W: 🏗️ #architect → write RFC
+    W->>U: 🚦 Approve RFC?
+    U->>W: Yes
 
     loop Each backend phase
-        PM->>W: SendMessage(#backend: phase-N)
-        W-->>PM: Phase result + commit
-        PM->>U: Progress: phase-N done
+        W->>W: ⚙️ #backend → phase-N → commit
     end
 
     loop Each frontend phase
-        PM->>W: SendMessage(#frontend: phase-N)
-        W-->>PM: Phase result + commit
-        PM->>U: Progress: phase-N done
+        W->>W: 🎨 #frontend → phase-N → commit
     end
 
-    PM->>W: SendMessage(#reviewer: review)
-    W-->>PM: Review verdict
+    W->>W: 🔍 #reviewer → review commits
 
     alt Changes requested
-        PM->>W: SendMessage(#backend/#frontend: fix)
-        W-->>PM: Fix result + commit
+        W->>W: Fix → commit
     end
 
-    PM->>U: Review done — push to origin?
-    U->>PM: Approved
-    PM->>PM: Push + close milestone
+    W->>U: 🚦 Push to origin?
+    U->>W: Yes
+    W->>W: git push → milestone done
+
+    W->>W: Next milestone? → loop or done
+
+    Note over PM: PM is free the entire time<br/>Can plan M2 while M1 executes
 ```
 
-### 2. Phase Execution
+### 2. Worker Execution Loop
 
 ```mermaid
 sequenceDiagram
-    participant PM as Product Manager
-    participant W as Worker Agent
+    participant W as Worker
 
-    PM->>W: "#backend: implement phase-1"
-    Note over W: Read phase file<br/>Activate backend role<br/>Implement + test<br/>Commit
-    W-->>PM: Result: done, committed abc123
+    W->>W: Scan milestones/
+    Note over W: M1: in-progress<br/>M2: planning<br/>M3: done
 
-    PM->>W: "#backend: implement phase-2"
-    Note over W: Same session<br/>Full context preserved<br/>Implement + test<br/>Commit
-    W-->>PM: Result: done, committed def456
+    W->>W: Resume M1 (read context.md)
+    W->>W: ⚙️ phase-2 (resuming)
+    W->>W: ⚙️ phase-3
+    W->>W: 🔍 review → approved
+    W->>W: Push → M1 done
 
-    PM->>W: "#frontend: implement phase-3"
-    Note over W: Role switch<br/>Architect + backend context available<br/>Implement + test<br/>Commit
-    W-->>PM: Result: done, committed ghi789
-```
+    W->>W: Start M2
+    W->>W: 🏗️ architect → RFC
+    W->>W: ⚙️ phase-1
+    W->>W: 🔍 review → approved
+    W->>W: Push → M2 done
 
-### 3. Review Flow
-
-```mermaid
-sequenceDiagram
-    participant PM as Product Manager
-    participant W as Worker Agent
-    actor U as User
-
-    PM->>W: "#reviewer: review M1-user-auth"
-    Note over W: git log origin/branch..HEAD<br/>git diff origin/branch...HEAD<br/>Apply review checklist
-
-    alt Approved
-        W-->>PM: verdict: approved
-        PM->>U: Review passed. Push?
-        U->>PM: Yes
-        PM->>PM: git push + close milestone
-    else Changes Requested
-        W-->>PM: verdict: changes-requested + issues
-        PM->>W: "#backend: fix issues in phase-2"
-        W-->>PM: Fixed + committed
-        PM->>U: Fixes applied. Push?
-        U->>PM: Yes
-        PM->>PM: git push + close milestone
-    end
+    W->>W: No more milestones
+    Note over W: "All done. Waiting for new work."
 ```

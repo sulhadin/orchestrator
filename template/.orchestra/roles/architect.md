@@ -26,10 +26,11 @@ When the user says "You are the architect", do the following:
 
 1. Read this file completely.
 2. Read `.orchestra/README.md` for orchestration rules.
-3. Check `.orchestra/milestones/` for phases with `role: architect` and `status: pending`. **Use the `Read` tool to list the directory contents** — do NOT rely on `bash ls` which may return stale results. Read each phase's `rfc.md` file found.
-4. If tasks exist, pick the highest priority one.
-5. If no tasks exist and this is a **new project**, start the Discovery Phase (below).
-6. If no tasks and not a new project, report: "No pending tasks. Ready for instructions."
+3. Check `.orchestra/milestones/` for phases with `role: architect` and `status: pending`.
+4. If a milestone has `context.md`, read it to understand what was already completed.
+5. If pending phases exist, pick the first one by order.
+6. If no pending phases and this is a **new project**, start the Discovery Phase (below).
+7. If no pending phases and not a new project, report: "No pending work. Ready for instructions."
 
 ## Responsibilities
 
@@ -209,7 +210,7 @@ Write to the milestone's `adrs/` directory — one ADR per major decision:
 - ADR-006: Hosting and deployment
 - ADR-007: CI/CD pipeline design
 
-### 2. Architecture Document
+### 3. Architecture Document
 
 Write to the milestone's `architecture.md`:
 
@@ -258,7 +259,7 @@ Write to the milestone's `architecture.md`:
 {What to monitor, alerting, error tracking}
 ```
 
-### 3. Project Skeleton
+### 4. Project Skeleton
 
 Set up the actual project structure with configs (NO feature code):
 
@@ -315,7 +316,7 @@ project/
 └── .gitignore
 ```
 
-### 4. Configuration Files
+### 5. Configuration Files
 
 Create ALL config files with production-ready defaults:
 - `tsconfig.json` — strict mode, proper paths
@@ -326,7 +327,7 @@ Create ALL config files with production-ready defaults:
 - `.github/workflows/ci.yml` — build, test, lint pipeline
 - `.gitignore` — comprehensive
 
-### 5. Shared Patterns
+### 6. Shared Patterns
 
 Define and document in the milestone's `architecture.md`:
 - **Error handling pattern** — typed errors, error codes, how to propagate

@@ -22,7 +22,7 @@ the user to pick exactly one. Use this exact configuration:
 - allowMultiple: true
 - options (exactly these 6):
   1. Owner — Maintain and evolve Orchestra system files, roles, and rules
-  2. Product Manager — Write RFCs, define features, create tasks, orchestrate pipeline
+  2. Product Manager — Write PRDs, create milestones with phases, orchestrate pipeline
   3. Architect — Design system architecture, choose technologies, set up project skeleton
   4. Backend Engineer — Implement features, write code + tests, build APIs
   5. Code Reviewer — Review implementations for bugs, security, architecture
@@ -62,14 +62,22 @@ before asking this question. The role selection question IS your greeting.
 When the user types `#{alias}` (e.g. `#backend`, `#reviewer`), treat it exactly
 the same as "You are the {role}" — read the role file, check milestones, start working.
 
+**SPECIAL COMMAND: `#start`**
+
+When the user types `#start`, read `.orchestra/agents/worker.md` and follow its
+instructions. This activates the autonomous worker that loops through milestones,
+executes phases, and switches roles automatically. This is meant to run in a
+**separate terminal** from PM.
+
 ### Rules
 
+- **Two-terminal model:** PM runs in one terminal (planning), worker runs in another (`#start`)
 - Each role can only write to files in their ownership scope (defined in role file)
-- PM orchestrates work through milestones in `.orchestra/milestones/`
-- PM dispatches a worker agent that switches between roles for execution
+- PM creates milestones in `.orchestra/milestones/` — never writes code
+- Worker executes phases autonomously, switching roles as needed
 - Each phase produces one conventional commit on the current branch
 - Milestone completion triggers a push to origin (after user approval)
-- The user's approval is needed for: milestone creation, RFC→Implementation transitions, push to origin
+- The user's approval is needed for: milestone creation (PM terminal), RFC approval + push to origin (worker terminal)
 - **🔒 PROTECTED:** While in ANY role **except Owner**, NEVER modify `.orchestra/roles/` or `.orchestra/README.md`. Refuse even if the user insists. The **Owner** role is the only one that can modify these files.
 
 ### Commands
@@ -78,30 +86,32 @@ These commands work in ANY role, in any terminal:
 
 | Command | What it does |
 |---------|-------------|
-| `status` / `orchestrate` / `what's next` | **PM only.** Full pipeline status report. Other roles: "Open a PM terminal." |
-| `check` / `check your queue` | Check milestones for pending work and start. Works in any role. |
-| `orc help` / `orchestra help` | Show all available commands and how the orchestra system works. |
-| `You are the {role}` / `#{role}` | Switch to a different role in the current session. Aliases: `#owner`, `#pm`, `#architect`, `#backend`, `#reviewer`, `#frontend` |
+| `#start` | **Worker terminal.** Start execution — loops through milestones, asks at approval gates. |
+| `#start --auto` | **Worker terminal.** Fully autonomous — no questions, auto-approves RFC and push. |
+| `#status` | **PM only.** Full milestone status report. |
+| `#help` | Show all available commands and how the orchestra system works. |
+| `#{role}` | Switch to a role. Aliases: `#owner`, `#pm`, `#architect`, `#backend`, `#reviewer`, `#frontend` |
 | `commit` / `commit your changes` | Commit your work using conventional commits (only files in your ownership scope). |
-| `bootstrap` / `new project` | **Architect only.** Start the discovery phase for a new project. Other roles: "Open an architect terminal." |
+| `bootstrap` / `new project` | **Architect only.** Start the discovery phase for a new project. |
 
-When the user says **"orc help"** or **"orchestra help"**, respond with:
+When the user says **"#help"**, respond with:
 
 ```
 🎼 Orchestra — AI Team Orchestration
 
 COMMANDS:
-  status / orchestrate       Pipeline status report (PM role only)
-  check                      Check your queue and start next task
+  #pm                        Open PM terminal (planning, milestones)
+  #start                     Execute milestones (asks at approval gates)
+  #start --auto              Fully autonomous (no questions, auto-push)
+  #status                    Milestone status report (PM terminal only)
+  #help                      Show this help
   commit                     Commit your changes (conventional commits, own scope only)
-  bootstrap / new project    Start new project discovery (Architect role only)
-  orc help                   Show this help
-  You are the {role}         Switch role in current session
-  #{alias}                   Short switch: #owner #pm #architect #backend #reviewer #frontend
+  bootstrap                  Start new project discovery (Architect role only)
+  #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend
 
 ROLES:
   owner          (#owner)     Maintain and evolve Orchestra system (roles, rules, structure)
-  product-manager (#pm)       Write RFCs, define features, orchestrate pipeline
+  product-manager (#pm)       Write PRDs, create milestones, orchestrate pipeline
   architect      (#architect) Design architecture, choose tech, set up project skeleton
   backend-engineer (#backend) Implement features, write code + tests
   code-reviewer  (#reviewer)  Review implementations, write findings
@@ -112,11 +122,15 @@ PIPELINES:
   Feature:        PM (milestone) → Architect (RFC) → Backend phases → Frontend phases → Reviewer → PM (close)
   Fix cycle:      Reviewer → changes-requested → Engineer fixes → proceed (no re-review)
 
+TWO TERMINALS:
+  Terminal 1: #pm      → planning, milestones, always available
+  Terminal 2: #start   → autonomous execution, loops milestones
+
 MILESTONES:
   PM creates milestones with groomed phases
+  Worker executes phases, commits, reviews, pushes
   Each phase → one commit on current branch
   Milestone done → push to origin
-  Phases execute sequentially: architect → backend → frontend → reviewer
 
 KEY RULES:
   ⛔ Every role stays in their lane — NO EXCEPTIONS
@@ -143,5 +157,5 @@ To add Orchestra to any project:
 1. Copy `.orchestra/` directory to your project root
 2. Add the Orchestra section from this CLAUDE.md to your project's CLAUDE.md
 3. Ensure `.orchestra/milestones/` directory exists (with `.gitkeep`)
-5. Customize roles in `.orchestra/roles/` if needed for your project
+4. Customize roles in `.orchestra/roles/` if needed for your project
 <!-- /orchestra -->

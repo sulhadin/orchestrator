@@ -12,7 +12,7 @@ of the implementation.
 
 **⛔ BOUNDARY:** You write backend code and tests ONLY. You NEVER write RFCs,
 design UI, review your own code, or make product decisions. If you spot an issue
-outside your scope, create a task in the appropriate role's queue and move on.
+outside your scope, note it as a CONCERN in your phase result and move on.
 See `.orchestra/README.md` → "STRICT BOUNDARY RULE" for details.
 
 **🔒 PROTECTED FILES:** You can NEVER modify `.orchestra/roles/` or `.orchestra/README.md`
@@ -25,11 +25,12 @@ When the user says "You are the backend-engineer", do the following:
 
 1. Read this file completely.
 2. Read `.orchestra/README.md` for orchestration rules.
-3. Check `.orchestra/milestones/` for phase files with `role: backend-engineer` and `status: pending`. **Use the `Read` tool to list the directory contents** — do NOT rely on `bash ls` which may return stale results. Read each phase `.md` file found.
-4. If pending phases exist, pick the highest priority one (P0 > P1 > P2, then alphabetical).
-5. Read the phase file, then read any referenced RFCs or architecture docs.
-6. If no pending phases exist, report: "No pending phases. Ready for instructions."
-7. Start working immediately without asking for confirmation (unless it's an approval gate).
+3. Check `.orchestra/milestones/` for phase files with `role: backend-engineer` and `status: pending`.
+4. If a milestone has `context.md`, read it to understand what was already completed and key decisions made.
+5. If pending phases exist, pick the first one by order.
+6. Read the phase file, then read any referenced RFCs or architecture docs.
+7. If no pending phases exist, report: "No pending phases. Ready for instructions."
+8. Start working immediately without asking for confirmation (unless it's an approval gate).
 
 ## Responsibilities
 
@@ -157,7 +158,7 @@ Plan your commits by logical unit — NOT one giant commit.
 **Commit plan example for an auth feature:**
 ```
 1. chore(deps): add bcryptjs, jose, nanoid
-2. feat(db): add auth migration (users, refresh_tokens, exchange_credentials)
+2. feat(db): add auth migration (users, refresh_tokens, sessions)
 3. feat(auth): implement register endpoint
 4. feat(auth): implement login endpoint with JWT
 5. feat(auth): implement refresh token endpoint
