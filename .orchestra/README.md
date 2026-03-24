@@ -158,6 +158,7 @@ Rules:
 - Breaking changes add `!` after type
 - Body explains WHY, not WHAT
 - Subject line ≤ 72 characters
+- **No `Co-Authored-By` trailers** — never add co-author lines to commit messages
 
 ---
 
