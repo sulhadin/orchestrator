@@ -103,8 +103,20 @@ as a CONCERN in context.md and continue.
 
 ## Context Persistence — `context.md`
 
-**After every phase completion**, update `context.md` in the milestone directory.
-This file allows you to resume if the terminal is closed and reopened.
+Update `context.md` in the milestone directory at these moments:
+
+| When | What to write |
+|------|---------------|
+| **Phase starts** | Current phase name, objective, plan |
+| **Key decision made** | What was decided and why (e.g. "chose argon2 over bcrypt") |
+| **Files created/modified** | Which files were touched and why |
+| **Phase completes** | Commit message, result summary |
+| **Error occurs** | What failed, why, current state |
+| **User gives instruction** | What the user asked to change mid-phase |
+
+This ensures that if the terminal closes at ANY point — even mid-phase — the
+next `#start` can resume with full context. Don't wait until phase completion
+to update; write incrementally as you work.
 
 ### context.md Format
 
