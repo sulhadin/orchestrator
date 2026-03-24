@@ -1,6 +1,6 @@
 {
   "name": "@sulhadin/orchestrator",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "AI Team Orchestration System — multi-role coordination for Claude Code",
   "bin": {
     "orchestrator": "bin/index.js"
