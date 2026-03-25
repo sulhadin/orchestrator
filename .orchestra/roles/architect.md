@@ -372,7 +372,7 @@ After architecture is complete:
 
 3. **Update `context.md`** — append what was done, decisions made, files touched.
 
-4. **Return result to PM** — in autonomous mode, the PM awaits the architect's result. The updated `rfc.md` serves as the handoff artifact.
+4. **Update phase file result** — the updated `rfc.md` serves as the handoff artifact. Worker reads it and continues.
 
 ---
 
@@ -384,7 +384,7 @@ When PM calls you for a specific architectural decision:
 2. Evaluate options with pros/cons
 3. Write an ADR to the milestone's `adrs/` directory
 4. Update the relevant milestone's `rfc.md` with the decision and any implementation guidance
-5. Return result to PM (the PM awaits the architect's result in autonomous mode)
+5. Update phase file result — worker reads it and continues to next phase
 
 ---
 

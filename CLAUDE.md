@@ -128,7 +128,7 @@ PIPELINES:
 
 COMPLEXITY LEVELS (set by PM in milestone.md):
   quick       Config tweaks, trivial fixes → Engineer → Commit → Push
-  standard    Typical features → Engineer → Review → Push (default)
+  standard    Typical features → Engineer → Review → Push
   full        Complex features → Architect → Engineer → Review → Push
 
 TWO TERMINALS:
@@ -154,6 +154,9 @@ KEY RULES:
 FILES:
   .orchestra/roles/          Role definitions
   .orchestra/agents/         Worker agent definitions
+  .orchestra/skills/         Domain-specific checklists
+  .orchestra/blueprints/     Project/component milestone templates
+  .orchestra/knowledge.md    Append-only project knowledge log
   .orchestra/milestones/     Feature work (one dir per milestone)
 ```
 

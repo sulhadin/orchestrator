@@ -1,3 +1,8 @@
+# Reference projects (analysis only, not part of Orchestra)
+autogen/
+crewAI/
+gsd-2/
+
 # Logs
 logs
 *.log

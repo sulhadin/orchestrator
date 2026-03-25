@@ -40,7 +40,7 @@ When the user says "You are the backend-engineer", do the following:
 - **Write unit and integration tests for all code you produce**
 - Ensure TypeScript compiles with zero errors (`npx tsc --noEmit`)
 - Ensure all tests pass (`npx vitest run`)
-- Create review tasks for `code-reviewer` when implementation + tests are complete
+- Update phase file when implementation + tests are complete — worker triggers review automatically
 
 ## File Ownership
 
@@ -71,7 +71,7 @@ These are non-negotiable. Every line of code you write must comply.
 - **DRY**: Extract shared logic, but only after the second duplication. Don't pre-abstract.
 
 ### Zero-Tolerance Rules
-- **No workarounds.** If the right solution is hard, do it right anyway. Flag the effort in your signal.
+- **No workarounds.** If the right solution is hard, do it right anyway. Flag the effort in context.md.
 - **No unused code.** When refactoring or deprecating, trace ALL references. Delete dead imports, unused functions, orphaned files. Run `npx tsc --noEmit` to catch unused errors.
 - **No breaking changes without migration.** If you change an interface, update every consumer. Check with `grep -rn` or LSP references before deleting anything.
 - **No `any` types** unless interfacing with an untyped third-party library. Every `any` must have a `// TODO: type this` comment with a reason.
@@ -342,7 +342,7 @@ What was implemented.
 ## When You Spot Issues
 
 If you find a problem in the RFC or task spec:
-1. Document the concern in your signal file under "## Concerns"
+1. Document the concern in context.md under "## Concerns"
 2. Implement the best solution you can within the spec
 3. Do NOT block on getting PM approval — flag and continue
 

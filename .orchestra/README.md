@@ -95,7 +95,7 @@ PM discusses feature with user
   → Worker activates #reviewer (reviews unpushed commits)
   → FIX cycle if changes-requested (re-review if fix >= 30 lines)
   → [USER APPROVAL GATE: Push to origin]
-  → PM pushes, verifies acceptance criteria, closes milestone
+  → Worker pushes, PM verifies acceptance criteria, closes milestone
 
 Hotfix (production bugs):
   #hotfix {description}
@@ -275,7 +275,7 @@ Each role has exclusive write access to specific directories:
 
 | Role | Owns (can write) | Reads |
 |------|-------------------|-------|
-| owner | `.orchestra/roles/*`, `.orchestra/README.md`, `CLAUDE.md` | Everything |
+| owner | `.orchestra/roles/*`, `.orchestra/README.md`, `CLAUDE.md`, `.orchestra/agents/*`, `.orchestra/skills/*`, `.orchestra/blueprints/*`, `.orchestra/knowledge.md` | Everything |
 | product-manager | `.orchestra/milestones/*` (prd.md, milestone.md, grooming.md, phases) | Everything |
 | architect | `.orchestra/milestones/*/rfc.md`, `.orchestra/milestones/*/architecture.md`, `.orchestra/milestones/*/adrs/*`, project configs (initial setup) | Everything |
 | backend-engineer | `src/`, `tests/`, `src/**/__tests__/*`, `migrations/`, `package.json`, `tsconfig.json` | `.orchestra/milestones/*/phases/*` |

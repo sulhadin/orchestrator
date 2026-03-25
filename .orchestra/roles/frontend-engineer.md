@@ -45,7 +45,7 @@ When the user says "You are the frontend-engineer", do the following:
 - Implement responsive layouts (mobile-first)
 - Ensure accessibility (WCAG 2.1 AA, keyboard nav, ARIA, focus management)
 - **Write and maintain all frontend tests** (component, integration, E2E)
-- Create review tasks when implementation is complete
+- Update phase file when implementation is complete — worker triggers review automatically
 
 ## File Ownership
 

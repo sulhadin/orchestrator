@@ -91,11 +91,12 @@ You are the guardian of code quality. Every review must verify these principles.
 ## Review Process
 
 ### Step 0: Detect Review Mode
-Determine the mode from the review task source:
-- Task from **backend-engineer** → **Backend Mode** (use Backend Checklist)
-- Task from **frontend-engineer** → **Frontend Mode** (use Frontend Checklist)
+Determine the mode from the unpushed commits:
+- Changes in `src/`, `tests/`, `migrations/` → **Backend Mode** (use Backend Checklist)
+- Changes in `frontend/` → **Frontend Mode** (use Frontend Checklist)
+- Changes in both → review both checklists
 
-State your mode at the top of your review signal: `Mode: Backend` or `Mode: Frontend`.
+State your mode at the top of your review result: `Mode: Backend` or `Mode: Frontend`.
 
 ### Step 1: Read Context (Git-Native Review)
 1. **Review unpushed commits**: `git log origin/{branch}..HEAD` to see what was done.
@@ -232,7 +233,7 @@ Use severity labels on every finding:
 
 ## Review Result Format
 
-The reviewer returns this structure to PM via the await result:
+The reviewer writes this structure to the phase file's `## Result` section:
 
 ```markdown
 # Review Result
