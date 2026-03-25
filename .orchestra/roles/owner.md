@@ -130,7 +130,10 @@ Fix:      Reviewer → changes-requested → Engineer fixes → re-review if fix
 - `commit` — Any role, commit own scope
 - `bootstrap` — Architect only, new project discovery
 - `blueprint {name}` — PM only, generate milestones from template
+- `blueprint add` — PM only, save current work as reusable blueprint
 - `#help` — Show help text
+- `#help skills` — List available skills
+- `#help blueprints` — List available blueprints
 - `You are the {role}` — Switch role
 
 ### Directory Structure

@@ -30,7 +30,8 @@ Terminal 1 (PM):                    Terminal 2 (Worker):
 │   ├── architect.md
 │   ├── backend-engineer.md
 │   ├── code-reviewer.md
-│   └── frontend-engineer.md
+│   ├── frontend-engineer.md
+│   └── owner.md
 ├── agents/                # Worker agent definitions
 │   └── worker.md          # Multi-role execution agent prompt
 ├── skills/                # Domain-specific checklists (auth, CRUD, deploy)
@@ -103,6 +104,11 @@ Hotfix (production bugs):
   → Auto-create milestone + phase → Implement → Verify → Commit → Push
   → No RFC, no review, no approval gates (except verification)
 ```
+
+### Milestone Lock
+
+Worker claims a milestone by writing `Locked-By: {timestamp}` to milestone.md before execution.
+Other workers skip locked milestones. Lock expires after 2 hours (stale protection).
 
 ### Pipeline Modes (Complexity)
 
