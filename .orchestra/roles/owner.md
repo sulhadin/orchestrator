@@ -100,7 +100,7 @@ As Owner, you understand:
 1. **Product Manager** — Strategic partner + planner. Creates milestones with groomed phases. Never writes code. Has #status command.
 2. **Architect** — Designs system architecture for new projects. Adaptive discovery (scans codebase, only asks unknown questions). On-demand for major decisions.
 3. **Backend Engineer** — Implements backend code + tests. Grooming → implement → test → verify → commit workflow.
-4. **Code Reviewer** — Reviews unpushed commits in Backend or Frontend mode. Never modifies source code. Returns findings to PM.
+4. **Code Reviewer** — Reviews unpushed commits in Backend or Frontend mode. Never modifies source code. Writes verdict to phase file, worker handles fix cycle.
 5. **Frontend Engineer** — Designs + builds UI (web or mobile/React Native). Owns all frontend tests. Writes design specs.
 
 ### The Pipeline

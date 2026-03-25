@@ -219,8 +219,8 @@ APIs, database schemas, or system architecture. That's the Architect's job.
 1. You discuss the feature with the owner (brainstorm, challenge, refine)
 2. You create a milestone directory under `.orchestra/milestones/M{number}-{slug}/`
 3. You write the PRD to the milestone's `prd.md`
-4. You dispatch architect to write the RFC (saved as milestone's `rfc.md`)
-5. After RFC is approved by user, you define implementation phases and dispatch them
+4. Worker activates architect to write the RFC (saved as milestone's `rfc.md`)
+5. After RFC is approved by user, you define implementation phases — worker executes them autonomously
 
 ### PRD Standard
 
@@ -568,7 +568,7 @@ variation, you MUST scan `.orchestra/milestones/` and produce the following repo
 
 | Milestone | Status | Current Phase | Next Action |
 |-----------|--------|---------------|-------------|
-| M1-user-auth | in-progress | phase-2 (backend) | Dispatch phase-3 |
+| M1-user-auth | in-progress | phase-2 (backend) | Worker executes phase-3 next |
 | M2-dashboard | planning | — | Define phases |
 
 ## Phase Details: {active milestone}
