@@ -72,6 +72,35 @@ PM:  "Blueprint 'component-payment' saved to .orchestra/blueprints/"
 
 Next time someone needs payment integration: `blueprint component-payment`
 
+## Step-by-Step: Adding a New Blueprint
+
+### Option A: From existing work (`blueprint add`)
+
+1. Complete a milestone that represents a reusable pattern
+2. `#pm` → `blueprint add`
+3. PM reads the milestone, generates a parameterized template
+4. Review the preview, adjust parameters, confirm
+5. Blueprint saved to `.orchestra/blueprints/{name}.md`
+6. Update `docs/blueprints.md` — add the blueprint to Available Blueprints section
+
+### Option B: From scratch (manual)
+
+1. **Identify the pattern** — what type of project or component is this for?
+2. **Decide the type:**
+   - Full project (multiple milestones, e.g. `saas-starter`) — for starting new projects
+   - Component (single parameterized milestone, e.g. `component-crud-resource`) — for adding to existing projects
+3. **Create the file** — `.orchestra/blueprints/{name}.md` using the format below
+4. **Define milestones** — each with complexity, phases (role + description), skills, acceptance criteria
+5. **Identify parameters** — what should be customizable? (resource names, provider names, etc.)
+6. **Update docs** — add the blueprint to `docs/blueprints.md` Available Blueprints section
+7. **Update `.orchestra/blueprints/README.md`** — add to the Available Blueprints table
+
+**Tips:**
+- Component blueprints are more reusable than full-project blueprints — prefer them
+- Always include acceptance criteria — PM uses them to verify milestone completion
+- Assign skills where relevant — saves PM from remembering which skills apply
+- Set realistic complexity levels — don't default everything to `full`
+
 ## Creating a Blueprint Manually
 
 Create a `.md` file in `.orchestra/blueprints/`:

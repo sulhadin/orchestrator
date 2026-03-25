@@ -80,6 +80,21 @@ One line describing when PM should assign this skill to a phase.
 - **Reference current libraries** — not deprecated ones
 - **Keep it under 50 lines** — skills should be quick to read, not documentation
 
+### Step-by-Step: Adding a New Skill
+
+1. **Identify the need** — check knowledge.md retrospectives for "Missing skill: X" entries, or notice a recurring pattern across milestones
+2. **Create the file** — `.orchestra/skills/{name}.md` using the format above
+3. **Fill the checklist** — research current best practices, include 8-15 actionable items
+4. **Add common mistakes** — these are the most valuable part. Pull from knowledge.md lessons if available
+5. **Test it mentally** — read the checklist as if you're an engineer about to implement. Would you know exactly what to do?
+6. **Update docs** — add the skill to `docs/skills.md` Available Skills section
+7. **Announce** — the skill will appear in `#help skills` automatically (PM reads the directory)
+
+**What NOT to do:**
+- Don't create skills for one-off patterns — skills are for recurring domains
+- Don't make checklists longer than 15 items — if it's that complex, split into two skills
+- Don't include project-specific details — skills should be reusable across projects
+
 ## Discovering Skills
 
 ```
