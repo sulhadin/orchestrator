@@ -50,6 +50,56 @@ Covers:
 - Graceful shutdown
 - Common mistakes (running as root, no .dockerignore, hardcoded secrets)
 
+### `accessibility`
+**When to use:** Phase involves frontend UI that must meet WCAG 2.1 AA compliance.
+
+Covers: alt text, color contrast, keyboard navigation, focus management, ARIA, touch targets, heading hierarchy.
+
+### `best-practices`
+**When to use:** Phase involves web application security, compatibility, or production hardening.
+
+Covers: HTTPS, CSP headers, security headers, dependency audit, feature detection, input sanitization.
+
+### `code-optimizer`
+**When to use:** Phase involves performance optimization or audit of existing code.
+
+Covers: database (N+1, indexes), memory leaks, algorithmic complexity, I/O parallelism, bundle size, dead code, caching.
+
+### `core-web-vitals`
+**When to use:** Phase involves frontend performance targeting Google's page experience metrics.
+
+Covers: LCP <= 2.5s, INP <= 200ms, CLS <= 0.1, preloading, critical CSS, font loading, image dimensions.
+
+### `debug`
+**When to use:** Phase involves investigating a complex bug or unexpected behavior.
+
+Covers: evidence gathering, hypothesis testing, minimal reproduction, root cause analysis, fix verification.
+
+### `frontend-design`
+**When to use:** Phase involves building UI that needs to look polished and distinctive.
+
+Covers: typography, color, layout, shadows, micro-interactions, animations, optical alignment, font smoothing.
+
+### `react-best-practices`
+**When to use:** Phase involves React or Next.js frontend development.
+
+Covers: waterfall elimination, direct imports, server components, lazy loading, memoization, SWR, passive listeners.
+
+### `review`
+**When to use:** Phase involves code review or self-review before submitting.
+
+Covers: security, performance, bugs, error handling, test coverage, type safety, dead code. Severity levels: CRITICAL/HIGH/MEDIUM/LOW.
+
+### `testing`
+**When to use:** Phase involves writing tests or improving test coverage.
+
+Covers: framework detection, happy path, edge cases, error handling, async, mocking, test style matching.
+
+### `web-quality-audit`
+**When to use:** Phase involves comprehensive quality review — performance, accessibility, SEO, best practices.
+
+Covers: Core Web Vitals, WCAG AA, SEO (robots, sitemap, structured data), security headers, error pages.
+
 ## Creating a New Skill
 
 Owner creates skill files in `.orchestra/skills/`. Each skill follows this format:
