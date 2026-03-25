@@ -330,9 +330,10 @@ When approved, create a milestone directory:
     └── ...
 ```
 
-**Before grooming phases**, check `.orchestra/knowledge.md` (if it exists) for relevant
-lessons from previous milestones. Reference any relevant patterns or decisions in
-`grooming.md` to give engineers a head start. Don't repeat past mistakes.
+**Before grooming phases**, check `.orchestra/knowledge.md` (if it exists):
+- Read **Active Knowledge** for recent lessons and patterns
+- Read **Archive** for broader historical context when planning similar features
+- Reference any relevant patterns or decisions in `grooming.md` to give engineers a head start Don't repeat past mistakes.
 
 ### milestone.md Format
 

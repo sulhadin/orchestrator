@@ -209,9 +209,9 @@ to update; write incrementally as you work.
 
 The file `.orchestra/knowledge.md` is a project-wide, append-only knowledge log.
 
-**Before starting a phase:**
-- Read `.orchestra/knowledge.md` (if it exists and is non-empty)
-- Check for relevant lessons, patterns, or decisions that apply to the current phase
+**Before starting a milestone:**
+- Read ONLY the **Active Knowledge** section of `.orchestra/knowledge.md` (skip Archive)
+- Check for relevant lessons, patterns, or decisions that apply to the current work
 - If a previous lesson says "use X instead of Y" — follow it
 
 **After completing a milestone (before push gate):**
@@ -295,6 +295,16 @@ For each phase (in order, or when parallel is not applicable):
    - Record key findings in context.md under current phase before starting implementation
 5. **Print start status** — `{icon} #role ▶ phase-N: description...`
 6. **Implement** — write code, tests, following the role's engineering standards + loaded skills
+
+   **Phase Limits (enforced during implementation):**
+   - **Time limit:** If a phase exceeds ~15 minutes, pause and report:
+     "⏰ Phase-{N} exceeded 15min. Continue or stop?"
+     In `--auto` mode: continue but log the overage in context.md
+   - **Scope guard:** If you find yourself working on something NOT listed in the phase's
+     acceptance criteria → STOP. Note it as a concern in context.md, don't implement it.
+     The phase scope is defined by PM — don't expand it.
+   - **Tool call guard:** If you've made 40+ tool calls in one phase without committing,
+     you're likely over-engineering or stuck. Pause, assess: commit what you have or escalate.
 7. **Verification Gate (MANDATORY before commit)** — you MUST pass ALL checks:
    - Run type check: `npx tsc --noEmit` → must exit 0
    - Run tests: `npm test` / `npx vitest run` → must exit 0
@@ -303,15 +313,22 @@ For each phase (in order, or when parallel is not applicable):
    - Max 3 fix attempts per check. After 3 failures → set phase `failed`, report to user.
    - **NEVER commit if verification fails.**
    - If a check command doesn't exist, skip it but log: "⚠️ No {check} command found — skipping"
-8. **Commit** — one conventional commit per phase on current branch (only after verification passes)
-9. **Update phase file** — set `status: done`, fill `## Result`
-10. **Update context.md** — append what was done, decisions made, files touched
-11. **Update Cost Tracking** — append a row to the Cost Tracking table in context.md:
+8. **Acceptance Check (after verification, before commit)** — verify you built the right thing:
+   - Re-read the phase file's acceptance criteria
+   - For EACH criterion, ask: "Does my implementation satisfy this?"
+   - If YES → proceed
+   - If NO → fix it, re-run verification gate
+   - If UNCERTAIN → flag in context.md: "Unverified: {criterion} — {reason}"
+   - This catches "code works but doesn't do what was asked" — verification gate only checks if code compiles and tests pass
+9. **Commit** — one conventional commit per phase on current branch (only after verification + acceptance check pass)
+10. **Update phase file** — set `status: done`, fill `## Result`
+11. **Update context.md** — append what was done, decisions made, files touched
+12. **Update Cost Tracking** — append a row to the Cost Tracking table in context.md:
     - Phase name
     - Approximate duration (time from phase start to commit)
     - Number of verification retries (0 if passed first try)
     - This helps PM identify which phases are expensive and improve future grooming
-12. **Print completion status** — `{icon} #role ✅ phase-N done (commit message)`
+13. **Print completion status** — `{icon} #role ✅ phase-N done (commit message)`
 
 ## Architect Phase
 
