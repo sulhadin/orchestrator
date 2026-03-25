@@ -33,14 +33,14 @@ Worker appends entries after each milestone. PM references this when grooming ne
 - Fast Track Mode (quick/standard/full): Pipeline rigidity was the biggest speed bottleneck. PM now sets complexity per milestone.
 - Verification Gate before every commit: "Code without tests is not done" was a rule but had no enforcement. Now it's a hard gate with max 3 retries.
 - Selective Context Loading: Reading all 6 role files at startup wasted ~40-60% of context window. Now only the active role file is loaded per phase.
-- Research Phase before coding: GSD-2's best practice — research existing code before writing prevents "wrong assumption → rewrite" cycles.
+- Research Phase before coding: an alternative system's best practice — research existing code before writing prevents "wrong assumption → rewrite" cycles.
 - Adaptive Discovery: Architect's 8-round mandatory questions were excessive for existing projects. Now scans codebase first, only asks what's unknown.
 - Stuck Detection + Recovery: Worker had no protection against infinite retry loops. Now detects same-error-3x, circular fixes, and escalates.
 - Learning System (knowledge.md): No cross-milestone knowledge persistence existed. Now decisions, lessons, and patterns accumulate.
 
 ### Lessons Learned
-- GSD-2 comparison revealed Orchestra's strengths (simplicity, roles) and weaknesses (no verification, no learning, rigid pipeline) clearly
-- First proposal was biased toward "what GSD-2 has that we don't" → revised to "what actually blocks shipping speed"
+- an alternative system comparison revealed Orchestra's strengths (simplicity, roles) and weaknesses (no verification, no learning, rigid pipeline) clearly
+- First proposal was biased toward "what an alternative system has that we don't" → revised to "what actually blocks shipping speed"
 - User challenge ("tekrar düşünmek ister misin?") led to dropping 3 low-impact features and adding 3 high-impact ones
 - Bottom-up file editing (modify bottom lines first) prevents line number shifts when multiple features touch the same file
 
@@ -58,7 +58,7 @@ Worker appends entries after each milestone. PM references this when grooming ne
 - Rejection Flow: RFC rejected → architect revises (max 3 rounds). Push rejected → create fix phase. System no longer stalls on "no".
 
 ### Lessons Learned
-- Skills should be manual assignment (PM decides) not automatic (keyword matching) — GSD-2's keyword matching is crude and error-prone
+- Skills should be manual assignment (PM decides) not automatic (keyword matching) — an alternative system's keyword matching is crude and error-prone
 - Cost tracking without actual token counts is still valuable — duration and retry count reveal expensive phases
 - Re-review threshold of 30 lines is a heuristic, may need calibration per project
 
