@@ -129,7 +129,7 @@ PIPELINES:
 COMPLEXITY LEVELS (set by PM in milestone.md):
   quick       Config tweaks, trivial fixes → Engineer → Commit → Push
   standard    Typical features → Engineer → Review → Push
-  full        Complex features → Architect → Engineer → Review → Push
+  full        Complex features → Architect → Engineer → Review → Push (default if unset)
 
 TWO TERMINALS:
   Terminal 1: #pm      → planning, milestones, always available

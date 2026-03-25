@@ -281,6 +281,7 @@ Each role has exclusive write access to specific directories:
 | backend-engineer | `src/`, `tests/`, `src/**/__tests__/*`, `migrations/`, `package.json`, `tsconfig.json` | `.orchestra/milestones/*/phases/*` |
 | code-reviewer | Review findings only — never modifies source code | `src/`, `tests/`, `frontend/` |
 | frontend-engineer | `frontend/`, `frontend/**/__tests__/*`, `frontend/**/e2e/*`, `.orchestra/milestones/*/design.md` | `.orchestra/milestones/*/phases/*` |
+| worker (all roles) | `.orchestra/milestones/*/context.md`, `.orchestra/knowledge.md` (append only) | Everything in active milestone |
 
 ---
 
