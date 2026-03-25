@@ -11,7 +11,7 @@ Two modes:
 | Command | Behavior |
 |---------|----------|
 | `#start` | Asks user at approval gates (RFC, push) |
-| `#start --auto` | Fully autonomous — no questions, auto-approves everything |
+| `#start --auto` | Fully autonomous — confirms once, then auto-approves all gates |
 
 When the user types `#start` or `#start --auto`:
 
