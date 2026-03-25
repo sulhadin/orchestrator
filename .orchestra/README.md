@@ -90,10 +90,27 @@ PM discusses feature with user
   → Worker executes backend phases (sequential, each → commit)
   → Worker executes frontend phases (sequential, each → commit)
   → Worker activates #reviewer (reviews unpushed commits)
-  → FIX cycle if changes-requested (one round, no re-review)
+  → FIX cycle if changes-requested (re-review if fix >= 30 lines)
   → [USER APPROVAL GATE: Push to origin]
   → PM pushes, verifies acceptance criteria, closes milestone
+
+Hotfix (production bugs):
+  #hotfix {description}
+  → Auto-create milestone + phase → Implement → Verify → Commit → Push
+  → No RFC, no review, no approval gates (except verification)
 ```
+
+### Pipeline Modes (Complexity)
+
+PM sets a `Complexity` level on each milestone that determines the pipeline:
+
+| Complexity | Pipeline | Use when |
+|------------|----------|----------|
+| `quick` | Engineer → Commit → Push | Config tweaks, copy changes, trivial fixes |
+| `standard` | Engineer → Review → Push | Typical features, clear requirements |
+| `full` | Architect → Engineer → Review → Push | Complex features, new subsystems |
+
+Default is `full` if not specified. Worker reads the `Complexity` field from `milestone.md`.
 
 ### Milestone Statuses
 
@@ -170,6 +187,15 @@ The user must approve before these transitions:
 - **Push to origin** — user approves the final changeset
 
 All other transitions are automatic.
+
+### Rejection Handling
+
+If the user says **no** at any gate:
+- **RFC rejected** → Architect revises based on feedback, re-submits (max 3 rounds)
+- **Push rejected** → Worker creates fix phase, implements, re-submits push gate
+- **Milestone rejected** → PM revises in PM terminal
+
+Rejections are normal. The system does not stall — it loops back with feedback.
 
 ---
 

@@ -91,8 +91,10 @@ These commands work in ANY role, in any terminal:
 | `#status` | **PM only.** Full milestone status report. |
 | `#help` | Show all available commands and how the orchestra system works. |
 | `#{role}` | Switch to a role. Aliases: `#owner`, `#pm`, `#architect`, `#backend`, `#reviewer`, `#frontend` |
+| `#hotfix {description}` | **Any terminal.** Ultra-fast fix: implement → verify → commit → push. No RFC, no review. |
 | `commit` / `commit your changes` | Commit your work using conventional commits (only files in your ownership scope). |
 | `bootstrap` / `new project` | **Architect only.** Start the discovery phase for a new project. |
+| `blueprint {name}` | **PM only.** Generate milestones from a blueprint template. |
 
 When the user says **"#help"**, respond with:
 
@@ -103,10 +105,12 @@ COMMANDS:
   #pm                        Open PM terminal (planning, milestones)
   #start                     Execute milestones (asks at approval gates)
   #start --auto              Fully autonomous (no questions, auto-push)
+  #hotfix {desc}             Ultra-fast fix: implement → verify → commit → push
   #status                    Milestone status report (PM terminal only)
   #help                      Show this help
   commit                     Commit your changes (conventional commits, own scope only)
   bootstrap                  Start new project discovery (Architect role only)
+  blueprint {name}           Generate milestones from blueprint template (PM only)
   #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend
 
 ROLES:
@@ -120,7 +124,12 @@ ROLES:
 PIPELINES:
   New project:    PM → Architect → Engineers start building
   Feature:        PM (milestone) → Architect (RFC) → Backend phases → Frontend phases → Reviewer → PM (close)
-  Fix cycle:      Reviewer → changes-requested → Engineer fixes → proceed (no re-review)
+  Fix cycle:      Reviewer → changes-requested → Engineer fixes → re-review if fix >= 30 lines
+
+COMPLEXITY LEVELS (set by PM in milestone.md):
+  quick       Config tweaks, trivial fixes → Engineer → Commit → Push
+  standard    Typical features → Engineer → Review → Push (default)
+  full        Complex features → Architect → Engineer → Review → Push
 
 TWO TERMINALS:
   Terminal 1: #pm      → planning, milestones, always available

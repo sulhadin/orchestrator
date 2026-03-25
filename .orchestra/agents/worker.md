@@ -17,7 +17,11 @@ When the user types `#start` or `#start --auto`:
 
 1. Detect mode: if `--auto` was specified, set **auto mode** (skip all approval gates)
 2. Read `.orchestra/README.md` for orchestration rules
-3. Read all role files in `.orchestra/roles/` (architect, backend, frontend, reviewer)
+3. Do NOT read all role files upfront — only read the role file needed for each phase:
+   - At startup: read NO role files yet (wait until first phase determines the role)
+   - At each phase: read `.orchestra/roles/{role-from-phase}.md` for the active role only
+   - When switching roles between phases: read the new role file, previous role context is no longer needed
+   - Also read `.orchestra/knowledge.md` once at milestone start (if it exists)
 4. Scan `.orchestra/milestones/` for work:
    - Find milestones with `status: in-progress` → resume from last incomplete phase
    - If none, find milestones with `status: planning` → start from the beginning
@@ -25,6 +29,25 @@ When the user types `#start` or `#start --auto`:
 5. Begin the execution loop
 
 ## Execution Loop
+
+### Pipeline Selection — Based on Complexity
+
+Before starting a milestone, read the `Complexity` field from `milestone.md`:
+
+| Complexity | Pipeline | What to skip |
+|------------|----------|-------------|
+| `quick` | Phases → Commit → Push | Skip architect phase, skip review phase |
+| `standard` | Phases → Review → Push | Skip architect phase (unless a phase has `role: architect`) |
+| `full` | Architect → Phases → Review → Push | Nothing skipped — full pipeline |
+
+**Rules:**
+- If `Complexity` is missing, treat as `full` (safe default)
+- `quick` mode still requires Verification Gate (test + lint) before commit
+- `quick` mode still requires push approval gate (unless `--auto`)
+- If a `quick` milestone fails verification, escalate to `standard` automatically:
+  "⚠️ Escalating from quick to standard — verification failed, adding review phase"
+
+### Milestone Execution
 
 For each milestone (in order: in-progress first, then planning):
 
@@ -157,7 +180,34 @@ to update; write incrementally as you work.
 
 ## Concerns
 - (any issues spotted during implementation)
+
+## Cost Tracking
+| Phase | Duration | Verification Retries |
+|-------|----------|---------------------|
+| phase-1 | ~3min | 0 |
+| phase-2 | ~7min | 1 (lint fix) |
 ```
+
+### Learning System — Knowledge Persistence
+
+The file `.orchestra/knowledge.md` is a project-wide, append-only knowledge log.
+
+**Before starting a phase:**
+- Read `.orchestra/knowledge.md` (if it exists and is non-empty)
+- Check for relevant lessons, patterns, or decisions that apply to the current phase
+- If a previous lesson says "use X instead of Y" — follow it
+
+**After completing a milestone (before push gate):**
+- Append a new entry to `.orchestra/knowledge.md` with:
+  - Key technical decisions made during this milestone and WHY
+  - Lessons learned (anything harder than expected, any mistakes corrected)
+  - Reusable patterns discovered or established
+- Keep entries concise — 3-5 bullet points per section, skip empty sections
+
+**Rules:**
+- NEVER edit previous entries — append only
+- If a previous entry is wrong, add a correction entry
+- Read knowledge.md at milestone start, write to it at milestone end
 
 ### Resuming from context.md
 
@@ -169,17 +219,82 @@ When `#start` is called and a milestone has `status: in-progress`:
 
 ## Phase Execution
 
-For each phase:
+### Parallel Execution — Based on `depends_on`
+
+Before executing phases sequentially, check if parallel execution is possible:
+
+1. Read all phase files and their `depends_on` frontmatter
+2. Build a dependency graph:
+   - Phase with `depends_on: []` or no `depends_on` field → can run immediately
+   - Phase with `depends_on: [phase-1]` → must wait for phase-1 to complete
+3. Identify independent phases — phases that have no unmet dependencies at the same time
+4. If 2+ phases can run simultaneously:
+   - Launch each independent phase as a **subagent with worktree isolation** (`isolation: "worktree"`)
+   - Each subagent gets its own git worktree — no conflicts
+   - Wait for all parallel phases to complete
+   - Merge worktree changes back to the main branch
+   - If a merge conflict occurs → resolve manually or report to user
+5. Continue with the next group of phases whose dependencies are now met
+
+**Example:**
+```
+phase-1 (backend: DB migration)     depends_on: []
+phase-2 (backend: Auth endpoints)   depends_on: [phase-1]
+phase-3 (backend: User endpoints)   depends_on: [phase-1]
+phase-4 (frontend: Auth UI)         depends_on: [phase-2]
+phase-5 (frontend: User UI)         depends_on: [phase-3]
+
+Execution:
+  Round 1: phase-1 (sequential — only one ready)
+  Round 2: phase-2 + phase-3 (parallel — both depend only on phase-1 which is done)
+  Round 3: phase-4 + phase-5 (parallel — each dependency is met)
+```
+
+**Rules:**
+- If NO `depends_on` fields exist in any phase → fall back to sequential order (backward compatible)
+- Parallel execution requires `depends_on` to be explicitly set by PM
+- Each parallel subagent follows the same phase execution steps below
+- Verification Gate runs independently in each subagent's worktree
+- Commits happen in each worktree, then merge to main branch in order
+
+### Sequential Execution (default)
+
+For each phase (in order, or when parallel is not applicable):
 
 1. **Read the phase file** — check `role:` field, objective, scope, acceptance criteria
 2. **Activate the role from `role:` field** — read the corresponding role file in `.orchestra/roles/`, follow its rules, principles, ownership scope
-3. **Print start status** — `{icon} #role ▶ phase-N: description...`
-4. **Implement** — write code, tests, following the role's engineering standards
-5. **Verify** — `npx tsc --noEmit`, run tests (if applicable)
-6. **Commit** — one conventional commit per phase on current branch
-7. **Update phase file** — set `status: done`, fill `## Result`
-8. **Update context.md** — append what was done, decisions made, files touched
-9. **Print completion status** — `{icon} #role ✅ phase-N done (commit message)`
+3. **Load Skills (if specified)** — check the phase file for a `skills:` field in frontmatter:
+   - If present (e.g. `skills: [auth-setup, crud-api]`), read each skill file from `.orchestra/skills/{name}.md`
+   - Follow the skill's checklist alongside the role's engineering standards
+   - If a skill file doesn't exist, skip it and log: "⚠️ Skill '{name}' not found — skipping"
+   - Skills are supplementary — they don't override role rules, they add domain-specific checklists
+4. **Research (before writing code)** — understand the codebase before making changes:
+   - Read existing files in the directories the phase will modify
+   - Check current dependency versions in `package.json` — do NOT assume versions from memory
+   - If the phase references an external library, verify its current API
+   - Identify potential conflicts: are other phases modifying the same files?
+   - If the phase builds on a previous phase's output, verify that output exists
+   - Time-box research to ~2 minutes. Note what's unclear and proceed with best knowledge
+   - Record key findings in context.md under current phase before starting implementation
+5. **Print start status** — `{icon} #role ▶ phase-N: description...`
+6. **Implement** — write code, tests, following the role's engineering standards + loaded skills
+7. **Verification Gate (MANDATORY before commit)** — you MUST pass ALL checks:
+   - Run type check: `npx tsc --noEmit` → must exit 0
+   - Run tests: `npm test` / `npx vitest run` → must exit 0
+   - Run lint: `npm run lint` → must exit 0 (if configured)
+   - Run checks in order. Stop at first failure. Fix and re-run ALL from step 1.
+   - Max 3 fix attempts per check. After 3 failures → set phase `failed`, report to user.
+   - **NEVER commit if verification fails.**
+   - If a check command doesn't exist, skip it but log: "⚠️ No {check} command found — skipping"
+8. **Commit** — one conventional commit per phase on current branch (only after verification passes)
+9. **Update phase file** — set `status: done`, fill `## Result`
+10. **Update context.md** — append what was done, decisions made, files touched
+11. **Update Cost Tracking** — append a row to the Cost Tracking table in context.md:
+    - Phase name
+    - Approximate duration (time from phase start to commit)
+    - Number of verification retries (0 if passed first try)
+    - This helps PM identify which phases are expensive and improve future grooming
+12. **Print completion status** — `{icon} #role ✅ phase-N done (commit message)`
 
 ## Architect Phase
 
@@ -197,7 +312,24 @@ Always runs last, after all implementation phases:
 - Full changeset: `git diff origin/{branch}...HEAD`
 - Apply the full review checklist (detect backend or frontend mode)
 - If **approved** → proceed to push gate
-- If **changes-requested** → switch to the relevant role (#backend or #frontend), fix issues, commit, then proceed (no re-review)
+- If **changes-requested** → fix cycle (see below)
+
+### Fix Cycle with Conditional Re-review
+
+When reviewer returns `changes-requested`:
+
+1. Switch to the relevant role (`#backend` or `#frontend`)
+2. Fix the issues identified in the review
+3. Run Verification Gate (test + lint must pass)
+4. Commit the fix
+5. **Check fix size:** count changed lines in the fix commit (`git diff HEAD~1 --stat`)
+   - **Fix < 30 lines** → proceed to push gate (no re-review needed)
+   - **Fix >= 30 lines** → trigger **abbreviated re-review**:
+     - Switch to `#reviewer`
+     - Review ONLY the fix commit (`git diff HEAD~1`), not the entire codebase
+     - If approved → proceed to push gate
+     - If changes-requested again → one more fix round, then proceed regardless
+6. Update context.md: "Fix cycle: {N} lines changed, re-review: {yes/no}"
 
 ## Approval Gates
 
@@ -214,13 +346,122 @@ Print the gate status but don't wait:
 🚦 Push to origin — auto-pushing
 ```
 
-## Error Handling
+### Rejection Flow — When the User Says "No"
+
+Gates are not just "yes" checkpoints — the user can reject. Handle each case:
+
+**RFC Rejected:**
+1. Ask: "What would you like changed in the RFC?"
+2. Collect specific feedback from the user
+3. Switch back to `#architect` role
+4. Revise the RFC based on feedback — don't start from scratch, amend the existing RFC
+5. Update context.md: "RFC revision round {N}: {what changed}"
+6. Re-submit for approval: "🚦 RFC revised. Approve to start implementation?"
+7. Max 3 revision rounds. After 3 rejections → report: "RFC rejected 3 times. Please clarify the requirements or adjust the PRD."
+
+**Push Rejected:**
+1. Ask: "What needs to change before pushing?"
+2. Collect specific feedback
+3. Based on feedback:
+   - If code changes needed → create a fix phase, switch to relevant engineer role, implement fix, commit
+   - If review concerns → re-trigger abbreviated review (reviewer only checks the fix, not entire codebase)
+   - If scope change → report to PM terminal: "User wants scope change — PM should update milestone"
+4. After fix is done → re-submit push gate: "🚦 Fix applied. Push to origin?"
+
+**Milestone Rejected (PM terminal):**
+- PM revises the milestone based on user feedback
+- Re-present for approval
+- This is handled in the PM terminal, not the worker terminal
+
+## Error Handling & Stuck Detection
+
+### Basic Error Handling
 
 If something fails mid-phase:
 1. Set phase status to `failed`
 2. Update context.md with what went wrong
 3. Report to user: what failed, why, options (retry / skip / stop)
 4. Wait for user input before proceeding
+
+### Stuck Detection
+
+You are **stuck** when any of these happen:
+- **Same error 3 times** — you've attempted the same fix 3 times and it still fails
+- **Circular fix** — fixing issue A creates issue B, fixing B recreates A
+- **Verification loop** — verification gate fails 3 times on the same check
+- **No progress** — you're reading files and running commands but not making meaningful code changes after 5+ tool calls
+
+### Recovery Protocol
+
+When stuck is detected:
+
+1. **STOP immediately.** Do not attempt another fix.
+2. **Log the stuck state** in context.md:
+   ```
+   ## Stuck — {timestamp}
+   - Phase: {phase-name}
+   - Symptom: {what's failing}
+   - Attempts: {what you tried, numbered}
+   - Root cause hypothesis: {your best guess}
+   ```
+3. **Try a different approach** (ONE attempt):
+   - If the same code fix failed 3x → try an entirely different implementation strategy
+   - If a dependency is broken → check if an alternative library solves the problem
+   - If tests fail due to environment → try isolating the test
+4. **If the different approach also fails** → escalate to user:
+   ```
+   🚨 Stuck on phase-{N}: {description}
+   Tried: {numbered list of approaches}
+   Root cause: {hypothesis}
+   Options:
+   1. I'll try {specific alternative} — say "try"
+   2. Skip this phase and continue — say "skip"
+   3. Stop execution — say "stop"
+   ```
+5. **Wait for user input.** Do NOT auto-retry indefinitely.
+
+### Auto-Recovery (--auto mode)
+
+In `--auto` mode, stuck detection still applies but recovery changes:
+- Try the different approach (step 3) automatically
+- If that also fails → set phase to `failed`, log everything to context.md, **move to the next phase**
+- Report the failure in the milestone completion summary
+
+## Hotfix Pipeline — `#hotfix {description}`
+
+When the user types `#hotfix {description}`, execute an ultra-fast fix pipeline:
+
+```
+#hotfix fix login 500 error on invalid email
+```
+
+**Pipeline (single flow, no gates except verification):**
+
+1. **Create hotfix milestone** automatically:
+   - Directory: `.orchestra/milestones/HF-{timestamp}-{slug}/`
+   - `milestone.md` with `Complexity: quick`, `Status: in-progress`
+   - Single phase file: `phase-1.md` with `role: backend-engineer` (or frontend if user specifies)
+2. **Read relevant code** — based on description, identify likely files
+3. **Implement the fix** — focused, minimal change
+4. **Verification Gate** — test + lint MUST pass (this is the only gate)
+5. **Commit** — `fix({scope}): {description}`
+6. **Push immediately** — no push approval gate for hotfixes
+7. **Update knowledge.md** — append a one-liner:
+   `- Hotfix {date}: {description} → {root cause} → {fix applied}`
+8. **Print summary:**
+   ```
+   🚑 Hotfix complete: fix({scope}): {description}
+   Commit: {hash}
+   Pushed to: {branch}
+   ```
+
+**Rules:**
+- Hotfix NEVER skips verification gate — broken fix is worse than slow fix
+- Hotfix NEVER creates an RFC or triggers review — speed is the priority
+- If verification fails after 3 attempts → STOP, report to user, do NOT push
+- Hotfix works on current branch — no branch creation
+- If `--auto` is active, hotfix runs without any prompts
+- After hotfix, worker returns to normal milestone execution (if `#start` was active)
 
 ## User Interruptions
 
@@ -236,6 +477,27 @@ message while you're working:
    approach", adjust your implementation accordingly
 
 The user is the boss. Their input always takes priority over the current phase.
+
+## Milestone Retrospective — Auto-Generated After Completion
+
+After a milestone is pushed (or after push gate in `--auto` mode), **before moving to the next milestone**, generate a concise retrospective and append it to `.orchestra/knowledge.md`.
+
+**Format — exactly 5 lines, no more:**
+
+```
+## Retro: {milestone-id} — {milestone-title} ({date})
+- Longest phase: {phase-name} (~{duration}) — {why it was slow}
+- Verification retries: {total count} — {which phases had retries}
+- Stuck: {yes/no} — {if yes, on which phase and root cause}
+- Review findings: {N blocking, N non-blocking} — {top issue if any}
+- Missing skill: {skill name that would have helped, or "none"}
+```
+
+**Rules:**
+- Pull data from context.md Cost Tracking table + review results
+- Keep it factual, not narrative — numbers and short labels only
+- If a field has nothing notable, write "none" — don't skip the line
+- This retrospective feeds future grooming: PM reads it before creating similar milestones
 
 ## What You Do NOT Do
 

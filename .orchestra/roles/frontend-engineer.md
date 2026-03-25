@@ -325,13 +325,25 @@ Write tests alongside implementation.
 - Test on iOS simulator and Android emulator
 - Test with different font scale settings
 
-### Step 5: Verification
+### Step 5: Verification Gate (MANDATORY — blocks commit)
+
+You MUST pass ALL verification checks before committing. No exceptions.
+
+1. `npx tsc --noEmit` → must exit 0 (zero type errors)
+2. `npm test` → must exit 0 (all tests pass)
+3. `npm run lint` → must exit 0 (zero lint errors)
+
+- Run in order. Stop at first failure.
+- Fix the issue, then re-run ALL checks from step 1.
+- Maximum 3 fix attempts. After 3 failures, report to user with error details.
+- **NEVER commit with failing checks.** This is a hard gate.
+- If a check command doesn't exist in the project, skip it but log the skip.
+
+Additional manual checks (after automated gate passes):
 - Visual verification against design spec
 - Keyboard navigation test (Tab through everything)
 - Responsive check (mobile 375px, tablet 768px, desktop 1440px)
 - Error state verification (disconnect network, invalid input)
-- `npx tsc --noEmit` — zero errors
-- All tests pass
 
 ### Step 6: Commit (Conventional Commits — MANDATORY)
 

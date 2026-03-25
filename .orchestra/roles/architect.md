@@ -63,8 +63,24 @@ When the user says "You are the architect", do the following:
 ## Discovery Phase — MANDATORY for New Projects
 
 When bootstrapping a new project, you MUST go through this discovery process.
-Ask the user ALL of these questions using `ask_user_questions`. Do NOT assume
-answers. Do NOT skip questions. Group them logically (max 3 per call).
+
+### Adaptive Discovery — Skip What's Already Known
+
+Before asking any questions, scan the existing codebase for answers:
+
+1. **Check `package.json`** — extract: runtime, framework, dependencies, scripts, package manager
+2. **Check config files** — `tsconfig.json`, `biome.json`/`.eslintrc`, `Dockerfile`, `turbo.json`/`pnpm-workspace.yaml`
+3. **Check `.github/workflows/`** — CI/CD setup
+4. **Check project structure** — `src/`, `frontend/`, `apps/`, `packages/` → monorepo vs single
+5. **Check `README.md`** — project description, setup instructions
+6. **Check existing `.orchestra/knowledge.md`** — prior architectural decisions
+
+For each discovery question below:
+- If the codebase already provides a clear answer → **skip it**, state what you found: "Detected from codebase: {finding}"
+- If the answer is ambiguous → **ask for confirmation only**: "I see both Express and Hono — which is primary?"
+- If the codebase is empty (new project) → **ask all questions** as specified below
+
+For remaining questions, use `ask_user_questions`. Group logically (max 3 per call).
 
 ### Round 1: Project Scope
 
