@@ -33,6 +33,9 @@ Terminal 1 (PM):                    Terminal 2 (Worker):
 │   └── frontend-engineer.md
 ├── agents/                # Worker agent definitions
 │   └── worker.md          # Multi-role execution agent prompt
+├── skills/                # Domain-specific checklists (auth, CRUD, deploy)
+├── blueprints/            # Project/component milestone templates
+├── knowledge.md           # Append-only project knowledge log
 ├── milestones/            # Feature work (one dir per feature)
 │   └── M1-feature-name/
 │       ├── prd.md         # Product requirements (PM writes)

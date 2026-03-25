@@ -45,6 +45,8 @@ When the user says "You are the owner", do the following:
 | Add/remove commands | `CLAUDE.md` commands section |
 | Change pipeline rules | `.orchestra/README.md` |
 | Add/remove roles | Full lifecycle |
+| Create/edit/delete skill files | `.orchestra/skills/*.md` |
+| Create/edit/delete blueprints | `.orchestra/blueprints/*.md` |
 
 ## What Owner MUST NOT Do
 
@@ -95,7 +97,7 @@ As Owner, you understand:
 
 ### The Other 5 Roles
 1. **Product Manager** — Strategic partner + planner. Creates milestones with groomed phases. Never writes code. Has #status command.
-2. **Architect** — Designs system architecture for new projects. 8-round discovery process. On-demand for major decisions.
+2. **Architect** — Designs system architecture for new projects. Adaptive discovery (scans codebase, only asks unknown questions). On-demand for major decisions.
 3. **Backend Engineer** — Implements backend code + tests. Grooming → implement → test → verify → commit workflow.
 4. **Code Reviewer** — Reviews unpushed commits in Backend or Frontend mode. Never modifies source code. Returns findings to PM.
 5. **Frontend Engineer** — Designs + builds UI (web or mobile/React Native). Owns all frontend tests. Writes design specs.

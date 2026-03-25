@@ -338,7 +338,7 @@ Choose based on **risk**, not effort:
 | `full` | Complex: new subsystems, architectural changes, multi-service, unfamiliar territory | Architect → Engineer → Review → Push |
 
 **Rules:**
-- Default is `standard` if unsure — safe middle ground
+- Default is `full` if not specified — safest pipeline. Use `standard` only when you're confident.
 - Use `quick` sparingly — only for truly trivial, low-risk changes
 - Use `full` when there's any doubt about technical approach
 - You can always upgrade: if `quick` turns out harder than expected, worker escalates to `standard`

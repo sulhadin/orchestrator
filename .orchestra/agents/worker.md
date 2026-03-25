@@ -312,6 +312,7 @@ Always runs last, after all implementation phases:
 - Full changeset: `git diff origin/{branch}...HEAD`
 - Apply the full review checklist (detect backend or frontend mode)
 - If **approved** → proceed to push gate
+- If **approved with comments** → proceed to push gate, but log comments in context.md for future reference
 - If **changes-requested** → fix cycle (see below)
 
 ### Fix Cycle with Conditional Re-review
