@@ -480,7 +480,8 @@ variation, you MUST scan `.orchestra/milestones/` and produce the following repo
 2. Read each `milestone.md` for status and acceptance criteria
 3. Read `context.md` if exists — shows what the worker has completed and key decisions
 4. Read phase files for individual phase statuses
-5. Check git status for unpushed commits
+5. For each phase file, run `wc -c` to get character count, divide by 4 to estimate tokens
+6. Check git status for unpushed commits
 
 **Report format:**
 
@@ -496,11 +497,11 @@ variation, you MUST scan `.orchestra/milestones/` and produce the following repo
 
 ## Phase Details: {active milestone}
 
-| # | Role | Description | Status |
-|---|------|-------------|--------|
-| 1 | backend | DB schema + migrations | done |
-| 2 | backend | API endpoints + tests | in-progress |
-| 3 | frontend | Dashboard UI | pending |
+| # | Role | Description | Status | Tokens |
+|---|------|-------------|--------|--------|
+| 1 | backend | DB schema + migrations | done | ~{wc -c / 4} |
+| 2 | backend | API endpoints + tests | in-progress | ~{wc -c / 4} |
+| 3 | frontend | Dashboard UI | pending | ~{wc -c / 4} |
 
 ## Git Status
 - Branch: {current branch}

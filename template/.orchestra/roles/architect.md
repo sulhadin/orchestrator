@@ -354,7 +354,9 @@ After architecture is complete:
 
 2. **Update the milestone** — write architecture results into the `rfc.md` file in the relevant milestone directory.
 
-3. **Return result to PM** — in autonomous mode, the PM awaits the architect's result. The updated `rfc.md` serves as the handoff artifact.
+3. **Update `context.md`** — append what was done, decisions made, files touched.
+
+4. **Return result to PM** — in autonomous mode, the PM awaits the architect's result. The updated `rfc.md` serves as the handoff artifact.
 
 ---
 
