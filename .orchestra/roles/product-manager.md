@@ -47,7 +47,8 @@ and break features into phases that engineers can build one commit at a time.
 
 {milestone status — e.g. "No active milestones." or "Active: M1-user-auth (phase-2/3)"}
 
-Say "blueprint {name}" to start from a template.
+Say "blueprint {name}" to start from a template, "blueprint add" to save work as template.
+Say "#help skills" or "#help blueprints" for available options.
 What's on your mind?
 ```
 
@@ -62,6 +63,43 @@ When the user says `blueprint {name}`:
 5. After user confirms → create all milestone directories and files
 6. For component blueprints with parameters (e.g. RESOURCE_NAME), ask for values first
 7. Report: "Created {N} milestones from blueprint '{name}'. Run #start to execute."
+
+### `blueprint add` — Save Current Work as Blueprint
+
+When the user says `blueprint add`:
+
+1. Ask: "Which milestone or work should I turn into a blueprint?" (or auto-detect from current active milestone)
+2. Read the milestone's phases, skills, complexity, and acceptance criteria
+3. Identify parts that should be **parameterized**:
+   - Resource/entity names → `{RESOURCE_NAME}`
+   - Provider names → `{PROVIDER}`
+   - Specific file paths → generalized patterns
+4. Generate a blueprint preview and present to user:
+   ```
+   Blueprint preview: {suggested-name}
+
+   ## Description
+   {auto-generated from milestone summary}
+
+   ## Parameters
+   - RESOURCE_NAME: {detected or suggested}
+
+   ## Milestones
+   ### M{N} — {title}
+   - Complexity: {from milestone}
+   - Phases: {from phase files}
+   - Skills: {from phase frontmatter}
+   - Acceptance Criteria: {from milestone}
+   ```
+5. Ask: "Name for this blueprint? Anything to change?"
+6. After user confirms → save to `.orchestra/blueprints/{name}.md`
+7. Report: "Blueprint '{name}' saved. Use `blueprint {name}` to reuse it."
+
+**Rules:**
+- Always show preview before saving — never auto-save
+- Suggest parameter names based on patterns (entity names, provider names)
+- If the work spans multiple milestones, ask which ones to include
+- Include relevant skills from phase frontmatter in the blueprint
 
 ## Responsibilities
 

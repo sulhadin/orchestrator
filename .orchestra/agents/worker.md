@@ -15,7 +15,12 @@ Two modes:
 
 When the user types `#start` or `#start --auto`:
 
-1. Detect mode: if `--auto` was specified, set **auto mode** (skip all approval gates)
+1. Detect mode: if `--auto` was specified, show a one-time warning before proceeding:
+   ```
+   ⚠️ Auto mode: ALL approval gates will be skipped (RFC, push). Code will be pushed without confirmation.
+   Type "confirm" to proceed, or switch to #start for manual gates.
+   ```
+   Wait for user to type "confirm". Then set **auto mode** (skip all approval gates).
 2. Read `.orchestra/README.md` for orchestration rules
 3. Do NOT read all role files upfront — only read the role file needed for each phase:
    - At startup: read NO role files yet (wait until first phase determines the role)
@@ -46,6 +51,18 @@ Before starting a milestone, read the `Complexity` field from `milestone.md`:
 - `quick` mode still requires push approval gate (unless `--auto`)
 - If a `quick` milestone fails verification, escalate to `standard` automatically:
   "⚠️ Escalating from quick to standard — verification failed, adding review phase"
+
+### Milestone Lock — Prevent Concurrent Execution
+
+Before starting a milestone, check for concurrent workers:
+
+1. Read `milestone.md` — check for `Locked-By` field
+2. If `Locked-By` exists and timestamp is less than 2 hours old → **skip this milestone**:
+   "⚠️ Skipping {milestone}: locked by another worker since {timestamp}"
+3. If no lock or lock is stale (>2 hours) → **claim it**: add `Locked-By: {timestamp}` to milestone.md
+4. On milestone completion or failure → remove the `Locked-By` field
+
+This prevents two `#start` terminals from executing the same milestone simultaneously.
 
 ### Milestone Execution
 

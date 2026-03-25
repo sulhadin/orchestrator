@@ -90,11 +90,14 @@ These commands work in ANY role, in any terminal:
 | `#start --auto` | **Worker terminal.** Fully autonomous — no questions, auto-approves RFC and push. |
 | `#status` | **PM only.** Full milestone status report. |
 | `#help` | Show all available commands and how the orchestra system works. |
+| `#help skills` | List available skills with descriptions. |
+| `#help blueprints` | List available blueprints with descriptions. |
 | `#{role}` | Switch to a role. Aliases: `#owner`, `#pm`, `#architect`, `#backend`, `#reviewer`, `#frontend` |
 | `#hotfix {description}` | **Any terminal.** Ultra-fast fix: implement → verify → commit → push. No RFC, no review. |
 | `commit` / `commit your changes` | Commit your work using conventional commits (only files in your ownership scope). |
 | `bootstrap` / `new project` | **Architect only.** Start the discovery phase for a new project. |
 | `blueprint {name}` | **PM only.** Generate milestones from a blueprint template. |
+| `blueprint add` | **PM only.** Save current work as a reusable blueprint. |
 
 When the user says **"#help"**, respond with:
 
@@ -111,6 +114,7 @@ COMMANDS:
   commit                     Commit your changes (conventional commits, own scope only)
   bootstrap                  Start new project discovery (Architect role only)
   blueprint {name}           Generate milestones from blueprint template (PM only)
+  blueprint add              Save current work as reusable blueprint (PM only)
   #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend
 
 ROLES:
@@ -161,6 +165,17 @@ FILES:
 ```
 
 Do NOT add commentary. Print the help text exactly as shown above.
+
+When the user says **"#help skills"**:
+1. List all `.md` files in `.orchestra/skills/`
+2. For each, read the first line after `# Skill:` and the `## When to Use` section
+3. Present as a table: `| Skill | When to Use |`
+
+When the user says **"#help blueprints"**:
+1. List all `.md` files in `.orchestra/blueprints/` (exclude README.md)
+2. For each, read the `## Description` section
+3. Present as a table: `| Blueprint | Type | Description |`
+4. Mention: `"blueprint add"` to save current work as a blueprint
 
 ## Installation
 
