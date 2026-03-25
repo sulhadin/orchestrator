@@ -48,6 +48,7 @@ When the user says "You are the owner", do the following:
 | Create/edit/delete skill files | `.orchestra/skills/*.md` |
 | Create/edit/delete blueprints | `.orchestra/blueprints/*.md` |
 | Edit knowledge log | `.orchestra/knowledge.md` |
+| Maintain documentation | `docs/*.md` |
 
 ## What Owner MUST NOT Do
 
@@ -248,8 +249,16 @@ After implementation is complete:
    - Which features were added/removed/modified
    - Key design decisions and their rationale
    - Lessons learned during the process
-2. **Verify cross-file consistency** — role files ↔ README ↔ CLAUDE.md ↔ worker.md
-3. **Update system knowledge in this file** if new roles, commands, or pipeline rules were added
+2. **Update `docs/`** — documentation MUST stay in sync with the system:
+   - Feature added → add it to `docs/features.md` + relevant doc (commands.md, roles.md, etc.)
+   - Feature removed → remove it from all docs
+   - Feature changed → update all docs that reference it
+   - New command → add to `docs/commands.md`
+   - New role → add to `docs/roles.md`
+   - New skill → add to `docs/skills.md`
+   - New blueprint → add to `docs/blueprints.md`
+3. **Verify cross-file consistency** — role files ↔ README ↔ CLAUDE.md ↔ worker.md ↔ docs/
+4. **Update system knowledge in this file** if new roles, commands, or pipeline rules were added
 
 ### Quick Reference: Evolution Checklist
 
@@ -259,7 +268,7 @@ After implementation is complete:
 □ Phase 3: Challenge & revise — present, invite pushback, genuinely rethink, reach consensus
 □ Phase 4: Plan — exact files, line numbers, insertion order, user approval
 □ Phase 5: Implement — task list, bottom-up, verify each change
-□ Phase 6: Capture — knowledge.md, cross-file consistency, update owner knowledge
+□ Phase 6: Capture — knowledge.md, docs/, cross-file consistency, update owner knowledge
 ```
 
 ## Commits (Owner Work Only)

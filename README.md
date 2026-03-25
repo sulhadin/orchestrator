@@ -70,31 +70,19 @@ You: #start
 
 Close the terminal, reopen, type `#start` — it resumes from where it left off.
 
-## Milestones
+## Key Features
 
-Everything for a feature lives in one directory:
-
-```
-.orchestra/milestones/M1-user-auth/
-├── prd.md              What + why (PM writes)
-├── milestone.md        Status, acceptance criteria
-├── grooming.md         Discussion notes, scope decisions
-├── rfc.md              Technical design (architect writes)
-├── context.md          Running log (worker maintains for resume)
-└── phases/
-    ├── phase-1.md      backend: DB schema → commit
-    ├── phase-2.md      backend: API endpoints → commit
-    └── phase-3.md      frontend: login UI → commit
-```
-
-## Approval Gates
-
-Worker asks you at two points:
-
-1. **RFC ready** — approve before implementation starts
-2. **Push to origin** — approve before code is pushed
-
-PM asks you before creating a milestone. Everything else is automatic.
+| Feature | What it does |
+|---------|-------------|
+| **Fast Track** | `quick/standard/full` pipeline complexity — skip unnecessary steps for simple work |
+| **Verification Gate** | Tests + lint must pass before every commit — broken code can't be committed |
+| **Skills** | Domain checklists (auth, CRUD, deploy) assigned to phases |
+| **Blueprints** | Project templates — `blueprint saas-starter` creates 5 milestones instantly |
+| **Hotfix** | `#hotfix {desc}` — implement, verify, commit, push in one command |
+| **Learning** | knowledge.md accumulates decisions and lessons across milestones |
+| **Parallel Phases** | Independent phases run simultaneously via `depends_on` |
+| **Stuck Detection** | Detects infinite loops, escalates to user |
+| **Retrospective** | 5-line auto-summary after each milestone |
 
 ## Commands
 
@@ -102,11 +90,16 @@ PM asks you before creating a milestone. Everything else is automatic.
 |---------|-------|-------------|
 | `#pm` | Terminal 1 | Plan features, create milestones |
 | `#start` | Terminal 2 | Execute milestones, asks at approval gates |
-| `#start --auto` | Terminal 2 | Fully autonomous — no questions asked |
+| `#start --auto` | Terminal 2 | Confirms once, then fully autonomous |
+| `#hotfix {desc}` | Any | Ultra-fast fix: implement → verify → commit → push |
 | `#status` | Terminal 1 | Milestone status report |
 | `#help` | Any | Show all commands |
+| `#help skills` | Any | List available skills |
+| `#help blueprints` | Any | List available blueprints |
+| `blueprint {name}` | Terminal 1 | Generate milestones from template |
+| `blueprint add` | Terminal 1 | Save current work as reusable template |
 
-Manual mode (any terminal):
+Manual roles (any terminal):
 
 | Command | Role |
 |---------|------|
@@ -115,6 +108,17 @@ Manual mode (any terminal):
 | `#reviewer` | Code Reviewer |
 | `#architect` | Architect |
 | `#owner` | System maintenance |
+
+## Documentation
+
+See [docs/](docs/README.md) for full documentation:
+
+- [Getting Started](docs/getting-started.md) — installation, first milestone, two-terminal model
+- [Commands](docs/commands.md) — all commands with examples
+- [Roles](docs/roles.md) — 6 roles, responsibilities, boundaries
+- [Features](docs/features.md) — verification gate, fast track, parallel, hotfix, and more
+- [Blueprints](docs/blueprints.md) — project templates, `blueprint add`
+- [Skills](docs/skills.md) — domain checklists, creating new skills
 
 ## License
 
