@@ -96,6 +96,7 @@ PM discusses feature with user
   → FIX cycle if changes-requested (re-review if fix >= 30 lines)
   → [USER APPROVAL GATE: Push to origin]
   → Worker pushes, PM verifies acceptance criteria, closes milestone
+  → Worker appends 5-line retrospective to knowledge.md
 
 Hotfix (production bugs):
   #hotfix {description}
@@ -145,6 +146,12 @@ Phases always execute in this order:
 4. **Reviewer** — reviews all unpushed commits
 
 Within each domain (backend/frontend), phases run in order: phase-1 → phase-2 → phase-3.
+
+**Parallel execution:** If PM sets `depends_on` in phase frontmatter, independent phases
+can run in parallel via subagent worktree isolation. No `depends_on` = sequential (default).
+
+**Verification Gate:** Before every commit, worker MUST pass type check + tests + lint.
+Commit is blocked until all checks pass (max 3 retries, then phase fails).
 
 ---
 

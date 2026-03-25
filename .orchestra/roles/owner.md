@@ -47,6 +47,7 @@ When the user says "You are the owner", do the following:
 | Add/remove roles | Full lifecycle |
 | Create/edit/delete skill files | `.orchestra/skills/*.md` |
 | Create/edit/delete blueprints | `.orchestra/blueprints/*.md` |
+| Edit knowledge log | `.orchestra/knowledge.md` |
 
 ## What Owner MUST NOT Do
 
@@ -124,9 +125,11 @@ Fix:      Reviewer → changes-requested → Engineer fixes → re-review if fix
 
 ### Commands
 - `#status` — PM only, full milestone status report
-- `#start` — Worker terminal, autonomous execution
+- `#start` / `#start --auto` — Worker terminal, autonomous execution
+- `#hotfix {desc}` — Any terminal, ultra-fast fix: implement → verify → commit → push
 - `commit` — Any role, commit own scope
 - `bootstrap` — Architect only, new project discovery
+- `blueprint {name}` — PM only, generate milestones from template
 - `#help` — Show help text
 - `You are the {role}` — Switch role
 

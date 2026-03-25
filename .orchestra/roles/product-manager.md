@@ -76,9 +76,8 @@ When the user says `blueprint {name}`:
 ### Execution — Milestone-Based Orchestration
 - Create milestones in `.orchestra/milestones/`
 - Perform detailed grooming — define phases with clear objectives and scope
-- Create and manage a worker agent session for execution
-- Dispatch phases sequentially to the worker agent
-- Monitor results and drive the pipeline to completion
+- Create milestone files — worker executes phases autonomously from them
+- Monitor results via `#status` and drive the pipeline to completion
 - Verify acceptance criteria and close milestones
 
 ## File Ownership

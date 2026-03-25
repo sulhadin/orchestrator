@@ -140,7 +140,7 @@ You MUST pass ALL verification checks before committing. No exceptions.
 
 ### Step 5: Commit (Conventional Commits — MANDATORY)
 
-Before creating the signal, commit your work using **conventional commits**.
+Commit your work using **conventional commits**.
 Plan your commits by logical unit — NOT one giant commit.
 
 **Format:** `<type>(<scope>): <description>`

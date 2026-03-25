@@ -153,7 +153,7 @@ Use this checklist when reviewing **backend-engineer** submissions.
 ## Frontend Review Checklist
 
 Use this checklist when reviewing **frontend-engineer** submissions.
-Check the signal's platform context (web vs mobile) and apply relevant items.
+Check the platform context from the diff (web vs mobile) and apply relevant items.
 
 ### 🔴 Blocking (must fix)
 - [ ] Accessibility violations (missing labels, no keyboard/screen reader nav, broken focus)
