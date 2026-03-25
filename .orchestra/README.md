@@ -211,13 +211,15 @@ Worker activates #reviewer
   → Reviewer runs: git log origin/{branch}..HEAD
   → Reviewer runs: git diff origin/{branch}...HEAD
   → Reviewer applies full checklist (backend or frontend mode)
-  → Returns: approved OR changes-requested (with specific issues)
+  → Returns: approved / approved-with-comments / changes-requested
 ```
 
-**If approved** → PM proceeds to push gate.
+**If approved** → proceed to push gate.
+
+**If approved-with-comments** → proceed to push gate. Comments are logged in context.md for future reference.
 
 **If changes-requested** → Worker switches to the relevant role, fixes
-and commits. Pipeline proceeds — **no re-review** (single review round).
+and commits. Re-review triggered if fix >= 30 lines changed.
 
 ---
 

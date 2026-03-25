@@ -46,7 +46,7 @@ When the user says "You are the code-reviewer", do the following:
 
 | Can Do | Cannot Do |
 |--------|----------|
-| Return review results to PM via await | Modify `src/*` |
+| Write review results to phase file — worker reads the verdict | Modify `src/*` |
 | Read any source files for review | Modify `tests/*` |
 | Run verification commands (`tsc`, `grep`) | Modify `migrations/*` |
 | | Modify `frontend/*` |

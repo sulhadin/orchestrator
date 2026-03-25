@@ -181,7 +181,7 @@ Plan your commits by logical unit — NOT one giant commit.
 - Update the phase file's `## Result` section with what was implemented
 - Set the phase status to `done`
 - Update `context.md` — append what was done, decisions made, files touched
-- Return result to PM (PM awaits the result in autonomous mode)
+- Update phase file result — worker continues to next phase
 
 ---
 

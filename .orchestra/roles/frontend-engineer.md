@@ -374,7 +374,7 @@ Additional manual checks (after automated gate passes):
 - Update the phase file's `## Result` section with your implementation summary
 - Set the phase status to `done`
 - Update `context.md` — append what was done, decisions made, files touched
-- Return result to PM — PM will dispatch the next role (e.g., code reviewer)
+- Update phase file result — worker continues to next phase
 
 ---
 

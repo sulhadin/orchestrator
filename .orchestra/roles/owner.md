@@ -106,7 +106,7 @@ As Owner, you understand:
 ```
 Feature:  PM (milestone) → Architect (RFC) → Backend phases → Frontend phases → Reviewer → PM (close)
 New proj: PM → Architect (discovery+skeleton) → Engineers
-Fix:      Reviewer → changes-requested → Engineer fixes → proceed (no re-review)
+Fix:      Reviewer → changes-requested → Engineer fixes → re-review if fix >= 30 lines
 ```
 
 ### Key Rules
@@ -137,6 +137,9 @@ Fix:      Reviewer → changes-requested → Engineer fixes → proceed (no re-r
 ├── roles/              ← Role definitions (PROTECTED)
 ├── agents/             ← Worker agent definitions
 │   └── worker.md       ← Multi-role execution agent
+├── skills/             ← Domain-specific checklists (auth, CRUD, deploy)
+├── blueprints/         ← Project/component milestone templates
+├── knowledge.md        ← Append-only project knowledge log
 ├── milestones/         ← Feature work (one dir per milestone)
 │   └── M1-feature/
 │       ├── milestone.md
