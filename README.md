@@ -111,14 +111,14 @@ Manual roles (any terminal):
 
 ## Documentation
 
-See [docs/](docs/README.md) for full documentation:
+See [docs/](https://github.com/sulhadin/orchestrator/blob/main/docs/README.md) for full documentation:
 
-- [Getting Started](docs/getting-started.md) — installation, first milestone, two-terminal model
-- [Commands](docs/commands.md) — all commands with examples
-- [Roles](docs/roles.md) — 6 roles, responsibilities, boundaries
-- [Features](docs/features.md) — verification gate, fast track, parallel, hotfix, and more
-- [Blueprints](docs/blueprints.md) — project templates, `blueprint add`
-- [Skills](docs/skills.md) — domain checklists, creating new skills
+- [Getting Started](https://github.com/sulhadin/orchestrator/blob/main/docs/getting-started.md) — installation, first milestone, two-terminal model
+- [Commands](https://github.com/sulhadin/orchestrator/blob/main/docs/commands.md) — all commands with examples
+- [Roles](https://github.com/sulhadin/orchestrator/blob/main/docs/roles.md) — 6 roles, responsibilities, boundaries
+- [Features](https://github.com/sulhadin/orchestrator/blob/main/docs/features.md) — verification gate, fast track, parallel, hotfix, and more
+- [Blueprints](https://github.com/sulhadin/orchestrator/blob/main/docs/blueprints.md) — project templates, `blueprint add`
+- [Skills](https://github.com/sulhadin/orchestrator/blob/main/docs/skills.md) — domain checklists, creating new skills
 
 ## License
 
