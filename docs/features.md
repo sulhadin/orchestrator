@@ -140,3 +140,33 @@ Worker claims a milestone by writing `Locked-By: {timestamp}` before execution. 
 After a fix cycle:
 - Fix < 30 lines → proceed (no re-review)
 - Fix >= 30 lines → abbreviated re-review (only the fix commit)
+
+## Acceptance Check
+
+After verification gate passes (code compiles, tests pass, lint clean), worker checks whether the code does **the right thing** — not just whether it works:
+
+1. Re-read the phase's acceptance criteria
+2. For each criterion: "Does my implementation satisfy this?"
+3. If NO → fix it, re-run verification
+4. If UNCERTAIN → flag in context.md
+
+This catches "code works but doesn't do what was asked" — a gap that verification gate alone can't fill.
+
+## Phase Limits
+
+Guards against over-engineering and scope creep during implementation:
+
+- **Time limit:** Phase exceeding ~15 minutes triggers a pause ("continue or stop?"). In `--auto` mode, continues but logs the overage.
+- **Scope guard:** If implementation goes beyond the phase's acceptance criteria, worker stops and notes it as a concern — doesn't implement out-of-scope work.
+- **Tool call guard:** 40+ tool calls without committing = likely over-engineering or stuck. Worker pauses to assess.
+
+## Active Knowledge
+
+`knowledge.md` is split into two sections:
+
+| Section | Who reads | What's in it |
+|---------|-----------|-------------|
+| **Active Knowledge** | Worker + PM | Last 5 milestones — decisions, lessons, patterns |
+| **Archive** | PM only (during grooming) | Older milestones compacted to 1-2 lines each |
+
+When Active Knowledge exceeds 5 milestones, the oldest entry moves to Archive. This prevents context window bloat — worker only reads what's recent and relevant.
