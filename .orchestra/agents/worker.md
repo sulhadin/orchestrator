@@ -113,13 +113,19 @@ For each milestone (in order: in-progress first, then planning):
    ✅ M1-user-auth complete.
 
 📋 Checking for next milestone...
+   → Re-scan .orchestra/milestones/ (PM may have created new ones while you worked)
    → M2-dashboard found (status: planning)
    → Starting M2-dashboard...
    [loop continues]
 
-   → No more milestones.
+   → Re-scan found no milestones with status: planning or in-progress.
    ✅ All milestones complete. Waiting for new work from PM.
 ```
+
+**CRITICAL: After completing a milestone, ALWAYS re-scan the directory fresh.**
+PM works in a separate terminal and may have created new milestones while you
+were executing. Use Glob tool on `.orchestra/milestones/*/milestone.md` again —
+do NOT rely on your earlier scan results.
 
 ## Role Switching — Automatic, Based on Phase File
 
