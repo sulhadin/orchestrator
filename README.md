@@ -108,6 +108,7 @@ Manual roles (any terminal):
 | `#reviewer` | Code Reviewer |
 | `#architect` | Architect |
 | `#owner` | System maintenance |
+| `#specialist` | Adaptive expert (iOS, DevOps, ML, etc.) |
 
 ## Documentation
 
@@ -115,7 +116,7 @@ See [docs/](https://github.com/sulhadin/orchestrator/blob/main/docs/README.md) f
 
 - [Getting Started](https://github.com/sulhadin/orchestrator/blob/main/docs/getting-started.md) — installation, first milestone, two-terminal model
 - [Commands](https://github.com/sulhadin/orchestrator/blob/main/docs/commands.md) — all commands with examples
-- [Roles](https://github.com/sulhadin/orchestrator/blob/main/docs/roles.md) — 6 roles, responsibilities, boundaries
+- [Roles](https://github.com/sulhadin/orchestrator/blob/main/docs/roles.md) — 7 roles, responsibilities, boundaries
 - [Features](https://github.com/sulhadin/orchestrator/blob/main/docs/features.md) — verification gate, fast track, parallel, hotfix, and more
 - [Blueprints](https://github.com/sulhadin/orchestrator/blob/main/docs/blueprints.md) — project templates, `blueprint add`
 - [Skills](https://github.com/sulhadin/orchestrator/blob/main/docs/skills.md) — domain checklists, creating new skills

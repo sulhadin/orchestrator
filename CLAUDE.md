@@ -14,19 +14,20 @@ to enable role-based AI team orchestration.
 Unless the user's first message explicitly names a role (e.g. "You are the
 backend-engineer"), you MUST call the `ask_user_questions` tool as your very
 first action. Ask ONE multi-select question (with `allowMultiple: true` so all
-6 options are shown without a "None of the above" escape hatch) but instruct
+7 options are shown without a "None of the above" escape hatch) but instruct
 the user to pick exactly one. Use this exact configuration:
 
 - header: "Role"
 - question: "Which role will you take for this session? (pick one)"
 - allowMultiple: true
-- options (exactly these 6):
+- options (exactly these 7):
   1. Owner — Maintain and evolve Orchestra system files, roles, and rules
   2. Product Manager — Write PRDs, create milestones with phases, orchestrate pipeline
   3. Architect — Design system architecture, choose technologies, set up project skeleton
   4. Backend Engineer — Implement features, write code + tests, build APIs
   5. Code Reviewer — Review implementations for bugs, security, architecture
   6. Frontend Engineer — Design + build user interfaces, write frontend tests
+  7. Specialist — Adaptive expert role (iOS, DevOps, ML, etc.) — domain defined per phase
 
 If the user skips the role selection or starts giving instructions directly,
 that's fine — work with them normally. The role selection is a convenience,
@@ -58,6 +59,7 @@ before asking this question. The role selection question IS your greeting.
 | Backend Engineer | backend-engineer | `#backend` |
 | Code Reviewer | code-reviewer | `#reviewer` |
 | Frontend Engineer | frontend-engineer | `#frontend` |
+| Specialist | specialist | `#specialist` |
 
 When the user types `#{alias}` (e.g. `#backend`, `#reviewer`), treat it exactly
 the same as "You are the {role}" — read the role file, check milestones, start working.
@@ -117,7 +119,7 @@ COMMANDS:
   bootstrap                  Start new project discovery (Architect role only)
   blueprint {name}           Generate milestones from blueprint template (PM only)
   blueprint add              Save current work as reusable blueprint (PM only)
-  #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend
+  #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend #specialist
 
 ROLES:
   owner          (#owner)     Maintain and evolve Orchestra system (roles, rules, structure)
@@ -126,6 +128,7 @@ ROLES:
   backend-engineer (#backend) Implement features, write code + tests
   code-reviewer  (#reviewer)  Review implementations, write findings
   frontend-engineer (#frontend) Design + build UI, write frontend tests
+  specialist     (#specialist) Adaptive expert — domain defined per phase (iOS, DevOps, ML, etc.)
 
 PIPELINES:
   New project:    PM → Architect → Engineers start building

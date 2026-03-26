@@ -139,6 +139,7 @@ Role mapping:
 | `#backend` | backend-engineer | ⚙️ |
 | `#frontend` | frontend-engineer | 🎨 |
 | `#reviewer` | code-reviewer | 🔍 |
+| `#specialist` | specialist | 🔧 |
 
 ### Active Role Enforcement
 
@@ -150,6 +151,7 @@ You can only write to files owned by the **currently active** role:
 | `#backend` | `src/*`, `tests/*`, `migrations/*`, `package.json`, `tsconfig.json` |
 | `#frontend` | `frontend/*`, `.orchestra/milestones/*/design.md` |
 | `#reviewer` | Review findings only — never modify source code |
+| `#specialist` | Defined by `scope:` field in phase file — dynamic per phase |
 
 If you need to write outside your active role's scope, **do not do it**. Note it
 as a CONCERN in context.md and continue.

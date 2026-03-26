@@ -97,12 +97,13 @@ something, evaluate it:
 
 As Owner, you understand:
 
-### The Other 5 Roles
+### The Other 6 Roles
 1. **Product Manager** — Strategic partner + planner. Creates milestones with groomed phases. Never writes code. Has #status command.
 2. **Architect** — Designs system architecture for new projects. Adaptive discovery (scans codebase, only asks unknown questions). On-demand for major decisions.
 3. **Backend Engineer** — Implements backend code + tests. Grooming → implement → test → verify → commit workflow.
 4. **Code Reviewer** — Reviews unpushed commits in Backend or Frontend mode. Never modifies source code. Writes verdict to phase file, worker handles fix cycle.
 5. **Frontend Engineer** — Designs + builds UI (web or mobile/React Native). Owns all frontend tests. Writes design specs.
+6. **Specialist** — Adaptive expert role. Domain defined per phase via `context:` field. Ownership defined via `scope:` field. Used for iOS, DevOps, ML, game dev, or any domain not covered by default roles.
 
 ### The Pipeline
 ```

@@ -434,6 +434,7 @@ When to Use, Checklist, Common Mistakes, Reference Libraries/Patterns.
 ### Phase Rules
 
 - **Detailed grooming is mandatory** — every phase must have clear objective, scope, and acceptance criteria before dispatch. No phase begins without a fully groomed phase file.
+- **Skill assignment is mandatory** — every phase MUST have a `skills:` field reviewed. Before finalizing grooming, for each phase ask: "Which skills apply?" Run `#help skills` if unsure. Empty `skills: []` is OK only if no skill is relevant — but you must consciously decide, not skip by default.
 - **PM decides phase count and content** based on task size and complexity
 - **Backend phases always come before frontend phases**
 - **Each phase produces exactly one conventional commit** on the current branch
