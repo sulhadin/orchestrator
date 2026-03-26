@@ -30,9 +30,13 @@ Terminal 1 (PM):                    Terminal 2 (Worker):
 │   ├── architect.md
 │   ├── backend-engineer.md
 │   ├── code-reviewer.md
-│   └── frontend-engineer.md
+│   ├── frontend-engineer.md
+│   └── owner.md
 ├── agents/                # Worker agent definitions
 │   └── worker.md          # Multi-role execution agent prompt
+├── skills/                # Domain-specific checklists (auth, CRUD, deploy)
+├── blueprints/            # Project/component milestone templates
+├── knowledge.md           # Append-only project knowledge log
 ├── milestones/            # Feature work (one dir per feature)
 │   └── M1-feature-name/
 │       ├── prd.md         # Product requirements (PM writes)
@@ -90,10 +94,33 @@ PM discusses feature with user
   → Worker executes backend phases (sequential, each → commit)
   → Worker executes frontend phases (sequential, each → commit)
   → Worker activates #reviewer (reviews unpushed commits)
-  → FIX cycle if changes-requested (one round, no re-review)
+  → FIX cycle if changes-requested (re-review if fix >= 30 lines)
   → [USER APPROVAL GATE: Push to origin]
-  → PM pushes, verifies acceptance criteria, closes milestone
+  → Worker pushes, PM verifies acceptance criteria, closes milestone
+  → Worker appends 5-line retrospective to knowledge.md
+
+Hotfix (production bugs):
+  #hotfix {description}
+  → Auto-create milestone + phase → Implement → Verify → Commit → Push
+  → No RFC, no review, no approval gates (except verification)
 ```
+
+### Milestone Lock
+
+Worker claims a milestone by writing `Locked-By: {timestamp}` to milestone.md before execution.
+Other workers skip locked milestones. Lock expires after 2 hours (stale protection).
+
+### Pipeline Modes (Complexity)
+
+PM sets a `Complexity` level on each milestone that determines the pipeline:
+
+| Complexity | Pipeline | Use when |
+|------------|----------|----------|
+| `quick` | Engineer → Commit → Push | Config tweaks, copy changes, trivial fixes |
+| `standard` | Engineer → Review → Push | Typical features, clear requirements |
+| `full` | Architect → Engineer → Review → Push | Complex features, new subsystems |
+
+Default is `full` if not specified. Worker reads the `Complexity` field from `milestone.md`.
 
 ### Milestone Statuses
 
@@ -125,6 +152,12 @@ Phases always execute in this order:
 4. **Reviewer** — reviews all unpushed commits
 
 Within each domain (backend/frontend), phases run in order: phase-1 → phase-2 → phase-3.
+
+**Parallel execution:** If PM sets `depends_on` in phase frontmatter, independent phases
+can run in parallel via subagent worktree isolation. No `depends_on` = sequential (default).
+
+**Verification Gate:** Before every commit, worker MUST pass type check + tests + lint.
+Commit is blocked until all checks pass (max 3 retries, then phase fails).
 
 ---
 
@@ -158,7 +191,7 @@ Rules:
 - Breaking changes add `!` after type
 - Body explains WHY, not WHAT
 - Subject line ≤ 72 characters
-- **No `Co-Authored-By` trailers** — never add co-author lines to commit messages
+- **No `Co-Authored-By` trailers** — NEVER add co-author lines to commit messages. This applies to ALL commits in ALL repositories using Orchestra. No exceptions.
 
 ---
 
@@ -171,6 +204,15 @@ The user must approve before these transitions:
 
 All other transitions are automatic.
 
+### Rejection Handling
+
+If the user says **no** at any gate:
+- **RFC rejected** → Architect revises based on feedback, re-submits (max 3 rounds)
+- **Push rejected** → Worker creates fix phase, implements, re-submits push gate
+- **Milestone rejected** → PM revises in PM terminal
+
+Rejections are normal. The system does not stall — it loops back with feedback.
+
 ---
 
 ## Review Flow (Git-Native)
@@ -182,13 +224,15 @@ Worker activates #reviewer
   → Reviewer runs: git log origin/{branch}..HEAD
   → Reviewer runs: git diff origin/{branch}...HEAD
   → Reviewer applies full checklist (backend or frontend mode)
-  → Returns: approved OR changes-requested (with specific issues)
+  → Returns: approved / approved-with-comments / changes-requested
 ```
 
-**If approved** → PM proceeds to push gate.
+**If approved** → proceed to push gate.
+
+**If approved-with-comments** → proceed to push gate. Comments are logged in context.md for future reference.
 
 **If changes-requested** → Worker switches to the relevant role, fixes
-and commits. Pipeline proceeds — **no re-review** (single review round).
+and commits. Re-review triggered if fix >= 30 lines changed.
 
 ---
 
@@ -244,12 +288,14 @@ Each role has exclusive write access to specific directories:
 
 | Role | Owns (can write) | Reads |
 |------|-------------------|-------|
-| owner | `.orchestra/roles/*`, `.orchestra/README.md`, `CLAUDE.md` | Everything |
+| owner | `.orchestra/roles/*`, `.orchestra/README.md`, `CLAUDE.md`, `.orchestra/agents/*`, `.orchestra/skills/*`, `.orchestra/blueprints/*`, `.orchestra/knowledge.md` | Everything |
 | product-manager | `.orchestra/milestones/*` (prd.md, milestone.md, grooming.md, phases) | Everything |
 | architect | `.orchestra/milestones/*/rfc.md`, `.orchestra/milestones/*/architecture.md`, `.orchestra/milestones/*/adrs/*`, project configs (initial setup) | Everything |
 | backend-engineer | `src/`, `tests/`, `src/**/__tests__/*`, `migrations/`, `package.json`, `tsconfig.json` | `.orchestra/milestones/*/phases/*` |
 | code-reviewer | Review findings only — never modifies source code | `src/`, `tests/`, `frontend/` |
 | frontend-engineer | `frontend/`, `frontend/**/__tests__/*`, `frontend/**/e2e/*`, `.orchestra/milestones/*/design.md` | `.orchestra/milestones/*/phases/*` |
+| adaptive | Defined by `scope:` field in phase file — dynamic per phase | `.orchestra/milestones/*/phases/*` |
+| worker (all roles) | `.orchestra/milestones/*/context.md`, `.orchestra/knowledge.md` (append only) | Everything in active milestone |
 
 ---
 

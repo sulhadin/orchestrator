@@ -1,6 +1,6 @@
 # Roles
 
-Orchestra has 6 roles. Each role has strict boundaries — it can only write to files in its ownership scope.
+Orchestra has 7 roles. Each role has strict boundaries — it can only write to files in its ownership scope.
 
 ## Product Manager (`#pm`)
 

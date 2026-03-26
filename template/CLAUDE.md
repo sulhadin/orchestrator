@@ -14,19 +14,20 @@ to enable role-based AI team orchestration.
 Unless the user's first message explicitly names a role (e.g. "You are the
 backend-engineer"), you MUST call the `ask_user_questions` tool as your very
 first action. Ask ONE multi-select question (with `allowMultiple: true` so all
-6 options are shown without a "None of the above" escape hatch) but instruct
+7 options are shown without a "None of the above" escape hatch) but instruct
 the user to pick exactly one. Use this exact configuration:
 
 - header: "Role"
 - question: "Which role will you take for this session? (pick one)"
 - allowMultiple: true
-- options (exactly these 6):
+- options (exactly these 7):
   1. Owner — Maintain and evolve Orchestra system files, roles, and rules
   2. Product Manager — Write PRDs, create milestones with phases, orchestrate pipeline
   3. Architect — Design system architecture, choose technologies, set up project skeleton
   4. Backend Engineer — Implement features, write code + tests, build APIs
   5. Code Reviewer — Review implementations for bugs, security, architecture
   6. Frontend Engineer — Design + build user interfaces, write frontend tests
+  7. Adaptive — Adaptive expert role (iOS, DevOps, ML, etc.) — domain defined per phase
 
 If the user skips the role selection or starts giving instructions directly,
 that's fine — work with them normally. The role selection is a convenience,
@@ -58,6 +59,7 @@ before asking this question. The role selection question IS your greeting.
 | Backend Engineer | backend-engineer | `#backend` |
 | Code Reviewer | code-reviewer | `#reviewer` |
 | Frontend Engineer | frontend-engineer | `#frontend` |
+| Adaptive | adaptive | `#adaptive` |
 
 When the user types `#{alias}` (e.g. `#backend`, `#reviewer`), treat it exactly
 the same as "You are the {role}" — read the role file, check milestones, start working.
@@ -87,12 +89,17 @@ These commands work in ANY role, in any terminal:
 | Command | What it does |
 |---------|-------------|
 | `#start` | **Worker terminal.** Start execution — loops through milestones, asks at approval gates. |
-| `#start --auto` | **Worker terminal.** Fully autonomous — no questions, auto-approves RFC and push. |
+| `#start --auto` | **Worker terminal.** Fully autonomous — confirms once, then auto-approves RFC and push. |
 | `#status` | **PM only.** Full milestone status report. |
 | `#help` | Show all available commands and how the orchestra system works. |
+| `#help skills` | List available skills with descriptions. |
+| `#help blueprints` | List available blueprints with descriptions. |
 | `#{role}` | Switch to a role. Aliases: `#owner`, `#pm`, `#architect`, `#backend`, `#reviewer`, `#frontend` |
+| `#hotfix {description}` | **Any terminal.** Ultra-fast fix: implement → verify → commit → push. No RFC, no review. |
 | `commit` / `commit your changes` | Commit your work using conventional commits (only files in your ownership scope). |
 | `bootstrap` / `new project` | **Architect only.** Start the discovery phase for a new project. |
+| `blueprint {name}` | **PM only.** Generate milestones from a blueprint template. |
+| `blueprint add` | **PM only.** Save current work as a reusable blueprint. |
 
 When the user says **"#help"**, respond with:
 
@@ -102,12 +109,17 @@ When the user says **"#help"**, respond with:
 COMMANDS:
   #pm                        Open PM terminal (planning, milestones)
   #start                     Execute milestones (asks at approval gates)
-  #start --auto              Fully autonomous (no questions, auto-push)
+  #start --auto              Fully autonomous (confirms once, then auto-push)
+  #hotfix {desc}             Ultra-fast fix: implement → verify → commit → push
   #status                    Milestone status report (PM terminal only)
   #help                      Show this help
+  #help skills               List available skills with descriptions
+  #help blueprints           List available blueprints with descriptions
   commit                     Commit your changes (conventional commits, own scope only)
   bootstrap                  Start new project discovery (Architect role only)
-  #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend
+  blueprint {name}           Generate milestones from blueprint template (PM only)
+  blueprint add              Save current work as reusable blueprint (PM only)
+  #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend #adaptive
 
 ROLES:
   owner          (#owner)     Maintain and evolve Orchestra system (roles, rules, structure)
@@ -116,11 +128,17 @@ ROLES:
   backend-engineer (#backend) Implement features, write code + tests
   code-reviewer  (#reviewer)  Review implementations, write findings
   frontend-engineer (#frontend) Design + build UI, write frontend tests
+  adaptive       (#adaptive) Adaptive expert — domain defined per phase (iOS, DevOps, ML, etc.)
 
 PIPELINES:
   New project:    PM → Architect → Engineers start building
   Feature:        PM (milestone) → Architect (RFC) → Backend phases → Frontend phases → Reviewer → PM (close)
-  Fix cycle:      Reviewer → changes-requested → Engineer fixes → proceed (no re-review)
+  Fix cycle:      Reviewer → changes-requested → Engineer fixes → re-review if fix >= 30 lines
+
+COMPLEXITY LEVELS (set by PM in milestone.md):
+  quick       Config tweaks, trivial fixes → Engineer → Commit → Push
+  standard    Typical features → Engineer → Review → Push
+  full        Complex features → Architect → Engineer → Review → Push (default if unset)
 
 TWO TERMINALS:
   Terminal 1: #pm      → planning, milestones, always available
@@ -145,10 +163,24 @@ KEY RULES:
 FILES:
   .orchestra/roles/          Role definitions
   .orchestra/agents/         Worker agent definitions
+  .orchestra/skills/         Domain-specific checklists
+  .orchestra/blueprints/     Project/component milestone templates
+  .orchestra/knowledge.md    Append-only project knowledge log
   .orchestra/milestones/     Feature work (one dir per milestone)
 ```
 
 Do NOT add commentary. Print the help text exactly as shown above.
+
+When the user says **"#help skills"**:
+1. List all `.md` files in `.orchestra/skills/`
+2. For each, read the first line after `# Skill:` and the `## When to Use` section
+3. Present as a table: `| Skill | When to Use |`
+
+When the user says **"#help blueprints"**:
+1. List all `.md` files in `.orchestra/blueprints/` (exclude README.md)
+2. For each, read the `## Description` section
+3. Present as a table: `| Blueprint | Type | Description |`
+4. Mention: `"blueprint add"` to save current work as a blueprint
 
 ## Installation
 

@@ -29,7 +29,7 @@ When the user says "You are the architect", do the following:
 3. Check `.orchestra/milestones/` for phases with `role: architect` and `status: pending`.
 4. If a milestone has `context.md`, read it to understand what was already completed.
 5. If pending phases exist, pick the first one by order.
-6. If no pending phases and this is a **new project**, start the Discovery Phase (below).
+6. If no pending phases and this is a **new project** (or user typed `bootstrap`), start the Discovery Phase (below).
 7. If no pending phases and not a new project, report: "No pending work. Ready for instructions."
 
 ## Responsibilities
@@ -63,8 +63,24 @@ When the user says "You are the architect", do the following:
 ## Discovery Phase — MANDATORY for New Projects
 
 When bootstrapping a new project, you MUST go through this discovery process.
-Ask the user ALL of these questions using `ask_user_questions`. Do NOT assume
-answers. Do NOT skip questions. Group them logically (max 3 per call).
+
+### Adaptive Discovery — Skip What's Already Known
+
+Before asking any questions, scan the existing codebase for answers:
+
+1. **Check `package.json`** — extract: runtime, framework, dependencies, scripts, package manager
+2. **Check config files** — `tsconfig.json`, `biome.json`/`.eslintrc`, `Dockerfile`, `turbo.json`/`pnpm-workspace.yaml`
+3. **Check `.github/workflows/`** — CI/CD setup
+4. **Check project structure** — `src/`, `frontend/`, `apps/`, `packages/` → monorepo vs single
+5. **Check `README.md`** — project description, setup instructions
+6. **Check existing `.orchestra/knowledge.md`** — prior architectural decisions
+
+For each discovery question below:
+- If the codebase already provides a clear answer → **skip it**, state what you found: "Detected from codebase: {finding}"
+- If the answer is ambiguous → **ask for confirmation only**: "I see both Express and Hono — which is primary?"
+- If the codebase is empty (new project) → **ask all questions** as specified below
+
+For remaining questions, use `ask_user_questions`. Group logically (max 3 per call).
 
 ### Round 1: Project Scope
 
@@ -356,7 +372,7 @@ After architecture is complete:
 
 3. **Update `context.md`** — append what was done, decisions made, files touched.
 
-4. **Return result to PM** — in autonomous mode, the PM awaits the architect's result. The updated `rfc.md` serves as the handoff artifact.
+4. **Update phase file result** — the updated `rfc.md` serves as the handoff artifact. Worker reads it and continues.
 
 ---
 
@@ -368,7 +384,7 @@ When PM calls you for a specific architectural decision:
 2. Evaluate options with pros/cons
 3. Write an ADR to the milestone's `adrs/` directory
 4. Update the relevant milestone's `rfc.md` with the decision and any implementation guidance
-5. Return result to PM (the PM awaits the architect's result in autonomous mode)
+5. Update phase file result — worker reads it and continues to next phase
 
 ---
 

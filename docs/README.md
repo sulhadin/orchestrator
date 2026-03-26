@@ -5,7 +5,7 @@ Orchestra is an AI team orchestration system for [Claude Code](https://docs.anth
 ## What Orchestra Does
 
 - **PM plans** in one terminal, **worker builds** in another
-- 6 roles (PM, Architect, Backend, Frontend, Reviewer, Owner) with strict boundaries
+- 7 roles (PM, Architect, Backend, Frontend, Reviewer, Owner, Adaptive) with strict boundaries
 - Every phase produces one conventional commit
 - Verification gate blocks broken code from being committed
 - Knowledge system learns from past milestones

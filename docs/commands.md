@@ -77,6 +77,7 @@ Switch to a specific role for manual work:
 | `#reviewer` | Code Reviewer | Manual code review |
 | `#architect` | Architect | Design architecture, write RFCs |
 | `#owner` | Owner | Modify Orchestra system files |
+| `#adaptive` | Adaptive | Domain-specific expert (iOS, DevOps, ML, etc.) — defined per phase |
 
 ### `bootstrap`
 Start new project discovery. Architect only.

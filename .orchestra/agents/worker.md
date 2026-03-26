@@ -251,9 +251,15 @@ Before executing phases sequentially, check if parallel execution is possible:
    - Launch each independent phase as a **subagent with worktree isolation** (`isolation: "worktree"`)
    - Each subagent gets its own git worktree — no conflicts
    - Wait for all parallel phases to complete
-   - Merge worktree changes back to the main branch
-   - If a merge conflict occurs → resolve manually or report to user
-5. Continue with the next group of phases whose dependencies are now met
+5. **Merge parallel results** back to the main branch (in phase order: phase-2 before phase-3):
+   - Merge one worktree at a time, in ascending phase order
+   - After each merge, run verification gate (tsc + test + lint) to confirm no integration issues
+   - **If merge conflict occurs:**
+     - Conflicts in different files → auto-resolve (accept both changes)
+     - Conflicts in same file → STOP, report to user with both versions, ask which to keep
+     - In `--auto` mode: attempt auto-resolve. If same-file conflict → set both phases to `failed`, log details, move on
+   - **If verification fails after merge** → the last merged phase likely broke integration. Revert that merge, set its phase to `failed`, continue with remaining phases
+6. Continue with the next group of phases whose dependencies are now met
 
 **Example:**
 ```
