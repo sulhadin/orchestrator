@@ -15,12 +15,11 @@ Two modes:
 
 When the user types `#start` or `#start --auto`:
 
-1. Detect mode: if `--auto` was specified, show a one-time warning before proceeding:
+1. Detect mode: if `--auto` was specified, print a one-line warning and continue immediately:
    ```
-   ⚠️ Auto mode: ALL approval gates will be skipped (RFC, push). Code will be pushed without confirmation.
-   Type "confirm" to proceed, or switch to #start for manual gates.
+   ⚠️ Auto mode active — all gates skipped, auto-push enabled.
    ```
-   Wait for user to type "confirm". Then set **auto mode** (skip all approval gates).
+   Do NOT wait for confirmation. Set **auto mode** and proceed.
 2. Read `.orchestra/README.md` for orchestration rules
 3. Do NOT read all role files upfront — only read the role file needed for each phase:
    - At startup: read NO role files yet (wait until first phase determines the role)

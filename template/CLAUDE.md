@@ -89,7 +89,7 @@ These commands work in ANY role, in any terminal:
 | Command | What it does |
 |---------|-------------|
 | `#start` | **Worker terminal.** Start execution — loops through milestones, asks at approval gates. |
-| `#start --auto` | **Worker terminal.** Fully autonomous — confirms once, then auto-approves RFC and push. |
+| `#start --auto` | **Worker terminal.** Fully autonomous — warns once, then auto-approves RFC and push. |
 | `#status` | **PM only.** Full milestone status report. |
 | `#help` | Show all available commands and how the orchestra system works. |
 | `#help skills` | List available skills with descriptions. |
@@ -109,7 +109,7 @@ When the user says **"#help"**, respond with:
 COMMANDS:
   #pm                        Open PM terminal (planning, milestones)
   #start                     Execute milestones (asks at approval gates)
-  #start --auto              Fully autonomous (confirms once, then auto-push)
+  #start --auto              Fully autonomous (warns once, then auto-push)
   #hotfix {desc}             Ultra-fast fix: implement → verify → commit → push
   #status                    Milestone status report (PM terminal only)
   #help                      Show this help
