@@ -113,16 +113,15 @@ For each milestone (in order: in-progress first, then planning):
    ✅ M1-user-auth complete.
 
 📋 Checking for next milestone...
-   → Glob `.orchestra/milestones/*/milestone.md` + Read each to check Status
+   Re-scan .orchestra/milestones/ by using Glob tool on `.orchestra/milestones/*/milestone.md`
+   — do NOT rely on your earlier scan results. (PM may have created new ones while you worked)
    → M2-dashboard found (status: planning)
    → Starting M2-dashboard...
    [loop continues]
 
-   → Glob + Read found no milestones with status: planning or in-progress.
+   → No milestones with status: planning or in-progress.
    ✅ All milestones complete. Waiting for new work from PM.
 ```
-
-Use Glob tool on `.orchestra/milestones/*/milestone.md` — do NOT rely on your earlier scan results.
 
 
 ## Role Switching — Automatic, Based on Phase File
