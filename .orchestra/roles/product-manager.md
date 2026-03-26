@@ -339,6 +339,11 @@ When approved, create a milestone directory:
 
 Do NOT announce the milestone as ready until all 5 checks pass.
 
+**Where to save what you learn — two different systems:**
+- **knowledge.md** → project-level lessons. "Deprecation requires full removal phases", "This API needs cursor pagination", "bcrypt cost 12 for passwords". Other roles read this.
+- **Auto memory** → your personal behavior. "I should groom more granularly", "User prefers less confirmation rounds". Only you read this.
+- **Rule of thumb:** if another role (engineer, reviewer) would benefit from knowing it → knowledge.md. If it's about how YOU work → auto memory.
+
 **Before grooming phases**, check `.orchestra/knowledge.md` (if it exists):
 - Read **Active Knowledge** for recent lessons and patterns
 - Read **Archive** for broader historical context when planning similar features
