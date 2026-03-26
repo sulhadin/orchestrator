@@ -122,10 +122,6 @@ For each milestone (in order: in-progress first, then planning):
    ✅ All milestones complete. Waiting for new work from PM.
 ```
 
-**CRITICAL: After completing a milestone, ALWAYS re-scan the directory fresh.**
-PM works in a separate terminal and may have created new milestones while you
-were executing. Use Glob tool on `.orchestra/milestones/*/milestone.md` again —
-do NOT rely on your earlier scan results.
 
 ## Role Switching — Automatic, Based on Phase File
 
