@@ -14,6 +14,29 @@ To skip Claude Code permission prompts during install:
 npx @sulhadin/orchestrator --dangerously-skip-permissions
 ```
 
+## Upgrading
+
+Run the same install command to upgrade:
+
+```bash
+npx @sulhadin/orchestrator
+```
+
+Orchestra uses smart merge — your work is preserved, system files get updated:
+
+| What | On upgrade | Why |
+|------|-----------|-----|
+| **Roles, worker, README** | Updated to latest version | System files — always current |
+| **CLAUDE.md** | Orchestra section replaced, your content preserved | Only the `<!-- orchestra -->` block is touched |
+| **milestones/** | Untouched — fully preserved | Your active work, never overwritten |
+| **skills/** (template files) | Updated to latest version | e.g. `auth-setup.md` gets new checklist items |
+| **skills/** (your files) | Preserved | e.g. `my-custom-skill.md` stays as-is |
+| **blueprints/** (template files) | Updated to latest version | e.g. `saas-starter.md` gets new phases |
+| **blueprints/** (your files) | Preserved | e.g. `component-payment.md` stays as-is |
+| **knowledge.md** | Preserved if it has entries | Your accumulated decisions and lessons stay |
+
+**How it tells the difference:** Files that exist in the template are "system files" and get updated. Files that only exist in your project (you created them) are "user files" and are preserved.
+
 ## Two-Terminal Model
 
 Orchestra uses two Claude Code terminals that work in parallel:
