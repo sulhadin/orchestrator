@@ -9,7 +9,7 @@ const templateDir = path.join(__dirname, "..", "template");
 const ORCHESTRA_SECTION_START = "<!-- orchestra -->";
 const ORCHESTRA_SECTION_END = "<!-- /orchestra -->";
 
-const USER_DIRS = ["milestones"];
+const USER_DIRS = ["milestones", "skills", "blueprints"];
 
 const ALLOW_PERMISSIONS = [
   "Bash(*)",
@@ -178,6 +178,20 @@ function run() {
       }
     }
 
+    // Backup knowledge.md (single file, not a directory)
+    const knowledgeSrc = path.join(orchestraDest, "knowledge.md");
+    const knowledgeBackup = path.join(targetDir, ".orchestra-backup-knowledge.md");
+    let hasKnowledge = false;
+    if (fs.existsSync(knowledgeSrc)) {
+      const content = fs.readFileSync(knowledgeSrc, "utf-8");
+      // Only backup if it has user entries (not just the template)
+      if (content.includes("# Active Knowledge") && content.trim().split("\n").length > 30) {
+        fs.copyFileSync(knowledgeSrc, knowledgeBackup);
+        hasKnowledge = true;
+        console.log("  [~] Backed up knowledge.md");
+      }
+    }
+
     rmDirRecursive(orchestraDest);
     console.log("  [~] Removed old .orchestra/");
 
@@ -194,6 +208,13 @@ function run() {
       copyDirRecursive(backupPath, restorePath);
       rmDirRecursive(backupPath);
       console.log("  [+] Restored " + dir + "/");
+    }
+
+    // Restore knowledge.md
+    if (hasKnowledge && fs.existsSync(knowledgeBackup)) {
+      fs.copyFileSync(knowledgeBackup, path.join(orchestraDest, "knowledge.md"));
+      fs.unlinkSync(knowledgeBackup);
+      console.log("  [+] Restored knowledge.md");
     }
   } else {
     copyDirRecursive(orchestraSrc, orchestraDest);
