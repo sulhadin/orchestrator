@@ -184,11 +184,14 @@ function run() {
     let hasKnowledge = false;
     if (fs.existsSync(knowledgeSrc)) {
       const content = fs.readFileSync(knowledgeSrc, "utf-8");
-      // Only backup if it has user entries (not just the template)
-      if (content.includes("# Active Knowledge") && content.trim().split("\n").length > 30) {
+      // Backup if there are any entries after the "Active Knowledge" marker
+      const activeMarker = "<!-- New entries go here";
+      const markerIdx = content.indexOf(activeMarker);
+      const hasEntries = markerIdx !== -1 && content.slice(markerIdx + activeMarker.length).trim().length > 10;
+      if (hasEntries) {
         fs.copyFileSync(knowledgeSrc, knowledgeBackup);
         hasKnowledge = true;
-        console.log("  [~] Backed up knowledge.md");
+        console.log("  [~] Backed up knowledge.md (has project entries)");
       }
     }
 
