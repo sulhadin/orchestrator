@@ -29,7 +29,7 @@ jobs:
         id: bump
         run: |
           # Find last release commit by message (rebase-safe, unlike tags)
-          LAST_RELEASE_SHA=$(git log --all --grep="^chore(release):" --pretty=format:"%H" -1 || echo "")
+          LAST_RELEASE_SHA=$(git log --extended-regexp --grep="^chore\(release\):" --pretty=format:"%H" -1 || echo "")
 
           if [ -z "$LAST_RELEASE_SHA" ]; then
             COMMITS=$(git log --pretty=format:"%s" HEAD)
@@ -38,7 +38,7 @@ jobs:
           fi
 
           # Filter out release commits themselves
-          COMMITS=$(echo "$COMMITS" | grep -v "^chore(release):" || true)
+          COMMITS=$(echo "$COMMITS" | grep -v "^chore(release)" || true)
 
           if [ -z "$COMMITS" ]; then
             echo "bump=none" >> $GITHUB_OUTPUT
