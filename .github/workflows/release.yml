@@ -3,6 +3,8 @@ name: Release & Publish
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'package.json'  # Skip CI trigger from version bump commits
 
 permissions:
   contents: write
@@ -14,6 +16,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          fetch-tags: true
 
       - uses: actions/setup-node@v4
         with:
@@ -31,9 +34,9 @@ jobs:
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
 
           if [ -z "$LAST_TAG" ]; then
-            COMMITS=$(git log --pretty=format:"%s" HEAD)
+            COMMITS=$(git log --pretty=format:"%s" HEAD | grep -v "^chore(release):")
           else
-            COMMITS=$(git log --pretty=format:"%s" "${LAST_TAG}..HEAD")
+            COMMITS=$(git log --pretty=format:"%s" "${LAST_TAG}..HEAD" | grep -v "^chore(release):")
           fi
 
           if [ -z "$COMMITS" ]; then
