@@ -330,6 +330,15 @@ When approved, create a milestone directory:
     └── ...
 ```
 
+**Pre-flight checklist — BEFORE telling user the milestone is ready:**
+1. Every phase has `role:` set → correct?
+2. Every phase has `skills:` reviewed → not left empty by default? (`#help skills` if unsure)
+3. Every phase has clear acceptance criteria → testable, not vague?
+4. `milestone.md` has `Complexity:` set → quick/standard/full?
+5. Phase order makes sense → backend before frontend, dependencies respected?
+
+Do NOT announce the milestone as ready until all 5 checks pass.
+
 **Before grooming phases**, check `.orchestra/knowledge.md` (if it exists):
 - Read **Active Knowledge** for recent lessons and patterns
 - Read **Archive** for broader historical context when planning similar features
@@ -388,7 +397,7 @@ Choose based on **risk**, not effort:
 role: backend-engineer | frontend-engineer | architect
 status: pending | in-progress | done | failed
 order: 1
-skills: []          # optional — e.g. [auth-setup, crud-api, deployment]
+skills: []          # REVIEW THIS — run #help skills, assign relevant ones. Empty only if none apply.
 depends_on: []      # optional — e.g. [phase-1] — empty = no dependency, can run in parallel
 ---
 
