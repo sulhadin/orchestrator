@@ -70,20 +70,6 @@ You: #start
 
 Close the terminal, reopen, type `#start` — it resumes from where it left off.
 
-## Key Features
-
-| Feature | What it does |
-|---------|-------------|
-| **Fast Track** | `quick/standard/full` pipeline complexity — skip unnecessary steps for simple work |
-| **Verification Gate** | Tests + lint must pass before every commit — broken code can't be committed |
-| **Skills** | Domain checklists (auth, CRUD, deploy) assigned to phases |
-| **Blueprints** | Project templates — `#blueprint saas-starter` creates 5 milestones instantly |
-| **Hotfix** | `#hotfix {desc}` — implement, verify, commit, push in one command |
-| **Learning** | knowledge.md accumulates decisions and lessons across milestones |
-| **Parallel Phases** | Independent phases run simultaneously via `depends_on` |
-| **Stuck Detection** | Detects infinite loops, escalates to user |
-| **Retrospective** | 5-line auto-summary after each milestone |
-
 ## Commands
 
 | Command | Where | What it does |
