@@ -200,14 +200,45 @@ function run() {
 
     for (const [dir, backupPath] of Object.entries(backups)) {
       const restorePath = path.join(orchestraDest, dir);
+      const templateDirPath = path.join(orchestraSrc, dir);
 
-      if (fs.existsSync(restorePath)) {
-        rmDirRecursive(restorePath);
+      if (dir === "milestones") {
+        // Milestones are fully user-owned — restore everything
+        if (fs.existsSync(restorePath)) {
+          rmDirRecursive(restorePath);
+        }
+        copyDirRecursive(backupPath, restorePath);
+        console.log("  [+] Restored " + dir + "/");
+      } else {
+        // Skills & blueprints: template files get updated, user-created files are preserved
+        // Template files are already in place from clean install.
+        // Only copy back files that DON'T exist in template (user-created).
+        const templateFiles = fs.existsSync(templateDirPath)
+          ? fs.readdirSync(templateDirPath)
+          : [];
+        const backupFiles = fs.readdirSync(backupPath).filter((f) => f !== ".gitkeep");
+        let restored = 0;
+
+        for (const file of backupFiles) {
+          if (!templateFiles.includes(file)) {
+            const srcFile = path.join(backupPath, file);
+            const destFile = path.join(restorePath, file);
+            if (fs.statSync(srcFile).isDirectory()) {
+              copyDirRecursive(srcFile, destFile);
+            } else {
+              fs.copyFileSync(srcFile, destFile);
+            }
+            restored++;
+          }
+        }
+
+        if (restored > 0) {
+          console.log("  [+] Restored " + restored + " user-created files in " + dir + "/");
+        }
+        console.log("  [~] Updated template files in " + dir + "/");
       }
 
-      copyDirRecursive(backupPath, restorePath);
       rmDirRecursive(backupPath);
-      console.log("  [+] Restored " + dir + "/");
     }
 
     // Restore knowledge.md
