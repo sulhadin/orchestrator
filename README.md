@@ -5,13 +5,13 @@ AI team orchestration for [Claude Code](https://docs.anthropic.com/en/docs/claud
 ## Install
 
 ```bash
-npx @sulhadin/orchestrator
+npx @sulhadin/orchestrator@latest
 ```
 
 Skip permission prompts:
 
 ```bash
-npx @sulhadin/orchestrator --dangerously-skip-permissions
+npx @sulhadin/orchestrator@latest --dangerously-skip-permissions
 ```
 
 ## Two Terminals
