@@ -27,10 +27,13 @@ When the user types `#start` or `#start --auto`:
    - At each phase: read `.orchestra/roles/{role-from-phase}.md` for the active role only
    - When switching roles between phases: read the new role file, previous role context is no longer needed
    - Also read `.orchestra/knowledge.md` once at milestone start (if it exists)
-4. Scan `.orchestra/milestones/` for work:
+4. Scan `.orchestra/milestones/` for work — **you MUST list ALL directories** using `ls` or glob:
+   - Run `ls .orchestra/milestones/` to get every milestone directory (do NOT rely on memory)
+   - Read `milestone.md` in EACH directory to check its `Status` field
    - Find milestones with `status: in-progress` → resume from last incomplete phase
-   - If none, find milestones with `status: planning` → start from the beginning
-   - If none, report: "✅ All milestones complete. Waiting for new work from PM."
+   - If none in-progress, find milestones with `status: planning` → start from the beginning
+   - Only if ALL milestones are `status: done`, report: "✅ All milestones complete. Waiting for new work from PM."
+   - **NEVER assume you know all milestones** — always list the directory fresh. PM may have created new ones.
 5. Begin the execution loop
 
 ## Execution Loop
