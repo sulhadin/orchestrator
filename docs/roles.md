@@ -97,9 +97,9 @@ Orchestra has 6 roles. Each role has strict boundaries — it can only write to 
 - Updates documentation (docs/) whenever the system changes
 - Verifies cross-file consistency after every change
 
-## Specialist (`#specialist`)
+## Adaptive (`#adaptive`)
 
-**What it does:** Adaptive expert role — domain expertise comes from the phase file's `context:` field, not hardcoded. Becomes whatever the phase needs: iOS engineer, DevOps specialist, ML engineer, game developer, data engineer.
+**What it does:** Adaptive expert role — domain expertise comes from the phase file's `context:` field, not hardcoded. Becomes whatever the phase needs: iOS engineer, DevOps adaptive, ML engineer, game developer, data engineer.
 
 **Owns:** Defined by `scope:` field in phase file — dynamic per phase (e.g. `ios/`, `infra/`, `ml/`)
 
@@ -110,7 +110,7 @@ Orchestra has 6 roles. Each role has strict boundaries — it can only write to 
 **How PM sets it up:**
 ```yaml
 ---
-role: specialist
+role: adaptive
 context: "DevOps engineer, Terraform, AWS, GitHub Actions, Docker, Kubernetes"
 scope: "infra/, .github/workflows/, docker/"
 skills: [deployment]
@@ -118,7 +118,7 @@ skills: [deployment]
 ```
 
 **Key behaviors:**
-- Reads `context:` and adopts that specialist's perspective, terminology, best practices
+- Reads `context:` and adopts that adaptive's perspective, terminology, best practices
 - Reads `scope:` and only writes to those directories
 - Same engineering principles as all roles (SOLID, KISS, YAGNI, verification gate)
 - Same workflow: research → implement → verify → acceptance check → commit

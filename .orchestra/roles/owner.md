@@ -103,7 +103,7 @@ As Owner, you understand:
 3. **Backend Engineer** — Implements backend code + tests. Grooming → implement → test → verify → commit workflow.
 4. **Code Reviewer** — Reviews unpushed commits in Backend or Frontend mode. Never modifies source code. Writes verdict to phase file, worker handles fix cycle.
 5. **Frontend Engineer** — Designs + builds UI (web or mobile/React Native). Owns all frontend tests. Writes design specs.
-6. **Specialist** — Adaptive expert role. Domain defined per phase via `context:` field. Ownership defined via `scope:` field. Used for iOS, DevOps, ML, game dev, or any domain not covered by default roles.
+6. **Adaptive** — Adaptive expert role. Domain defined per phase via `context:` field. Ownership defined via `scope:` field. Used for iOS, DevOps, ML, game dev, or any domain not covered by default roles.
 
 ### The Pipeline
 ```

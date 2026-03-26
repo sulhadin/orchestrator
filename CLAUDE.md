@@ -27,7 +27,7 @@ the user to pick exactly one. Use this exact configuration:
   4. Backend Engineer — Implement features, write code + tests, build APIs
   5. Code Reviewer — Review implementations for bugs, security, architecture
   6. Frontend Engineer — Design + build user interfaces, write frontend tests
-  7. Specialist — Adaptive expert role (iOS, DevOps, ML, etc.) — domain defined per phase
+  7. Adaptive — Adaptive expert role (iOS, DevOps, ML, etc.) — domain defined per phase
 
 If the user skips the role selection or starts giving instructions directly,
 that's fine — work with them normally. The role selection is a convenience,
@@ -59,7 +59,7 @@ before asking this question. The role selection question IS your greeting.
 | Backend Engineer | backend-engineer | `#backend` |
 | Code Reviewer | code-reviewer | `#reviewer` |
 | Frontend Engineer | frontend-engineer | `#frontend` |
-| Specialist | specialist | `#specialist` |
+| Adaptive | adaptive | `#adaptive` |
 
 When the user types `#{alias}` (e.g. `#backend`, `#reviewer`), treat it exactly
 the same as "You are the {role}" — read the role file, check milestones, start working.
@@ -119,7 +119,7 @@ COMMANDS:
   bootstrap                  Start new project discovery (Architect role only)
   blueprint {name}           Generate milestones from blueprint template (PM only)
   blueprint add              Save current work as reusable blueprint (PM only)
-  #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend #specialist
+  #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend #adaptive
 
 ROLES:
   owner          (#owner)     Maintain and evolve Orchestra system (roles, rules, structure)
@@ -128,7 +128,7 @@ ROLES:
   backend-engineer (#backend) Implement features, write code + tests
   code-reviewer  (#reviewer)  Review implementations, write findings
   frontend-engineer (#frontend) Design + build UI, write frontend tests
-  specialist     (#specialist) Adaptive expert — domain defined per phase (iOS, DevOps, ML, etc.)
+  adaptive       (#adaptive) Adaptive expert — domain defined per phase (iOS, DevOps, ML, etc.)
 
 PIPELINES:
   New project:    PM → Architect → Engineers start building

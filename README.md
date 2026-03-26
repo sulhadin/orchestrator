@@ -108,7 +108,7 @@ Manual roles (any terminal):
 | `#reviewer` | Code Reviewer |
 | `#architect` | Architect |
 | `#owner` | System maintenance |
-| `#specialist` | Adaptive expert (iOS, DevOps, ML, etc.) |
+| `#adaptive` | Adaptive expert (iOS, DevOps, ML, etc.) |
 
 ## Documentation
 
