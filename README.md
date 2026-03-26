@@ -77,7 +77,7 @@ Close the terminal, reopen, type `#start` — it resumes from where it left off.
 | **Fast Track** | `quick/standard/full` pipeline complexity — skip unnecessary steps for simple work |
 | **Verification Gate** | Tests + lint must pass before every commit — broken code can't be committed |
 | **Skills** | Domain checklists (auth, CRUD, deploy) assigned to phases |
-| **Blueprints** | Project templates — `blueprint saas-starter` creates 5 milestones instantly |
+| **Blueprints** | Project templates — `#blueprint saas-starter` creates 5 milestones instantly |
 | **Hotfix** | `#hotfix {desc}` — implement, verify, commit, push in one command |
 | **Learning** | knowledge.md accumulates decisions and lessons across milestones |
 | **Parallel Phases** | Independent phases run simultaneously via `depends_on` |
@@ -96,8 +96,8 @@ Close the terminal, reopen, type `#start` — it resumes from where it left off.
 | `#help` | Any | Show all commands |
 | `#help skills` | Any | List available skills |
 | `#help blueprints` | Any | List available blueprints |
-| `blueprint {name}` | Terminal 1 | Generate milestones from template |
-| `blueprint add` | Terminal 1 | Save current work as reusable template |
+| `#blueprint {name}` | Terminal 1 | Generate milestones from template |
+| `#blueprint add` | Terminal 1 | Save current work as reusable template |
 
 Manual roles (any terminal):
 
@@ -118,7 +118,7 @@ See [docs/](https://github.com/sulhadin/orchestrator/blob/main/docs/README.md) f
 - [Commands](https://github.com/sulhadin/orchestrator/blob/main/docs/commands.md) — all commands with examples
 - [Roles](https://github.com/sulhadin/orchestrator/blob/main/docs/roles.md) — 7 roles, responsibilities, boundaries
 - [Features](https://github.com/sulhadin/orchestrator/blob/main/docs/features.md) — verification gate, fast track, parallel, hotfix, and more
-- [Blueprints](https://github.com/sulhadin/orchestrator/blob/main/docs/blueprints.md) — project templates, `blueprint add`
+- [Blueprints](https://github.com/sulhadin/orchestrator/blob/main/docs/blueprints.md) — project templates, `#blueprint add`
 - [Skills](https://github.com/sulhadin/orchestrator/blob/main/docs/skills.md) — domain checklists, creating new skills
 
 ## License

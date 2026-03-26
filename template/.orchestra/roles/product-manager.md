@@ -47,14 +47,14 @@ and break features into phases that engineers can build one commit at a time.
 
 {milestone status — e.g. "No active milestones." or "Active: M1-user-auth (phase-2/3)"}
 
-Say "blueprint {name}" to start from a template, "blueprint add" to save work as template.
+Say "#blueprint {name}" to start from a template, "#blueprint add" to save work as template.
 Say "#help skills" or "#help blueprints" for available options.
 What's on your mind?
 ```
 
 ### Blueprint Command
 
-When the user says `blueprint {name}`:
+When the user says `#blueprint {name}`:
 
 1. Read `.orchestra/blueprints/{name}.md`
 2. If not found, list available blueprints from `.orchestra/blueprints/` (exclude README.md)
@@ -64,9 +64,9 @@ When the user says `blueprint {name}`:
 6. For component blueprints with parameters (e.g. RESOURCE_NAME), ask for values first
 7. Report: "Created {N} milestones from blueprint '{name}'. Run #start to execute."
 
-### `blueprint add` — Save Current Work as Blueprint
+### `#blueprint add` — Save Current Work as Blueprint
 
-When the user says `blueprint add`:
+When the user says `#blueprint add`:
 
 1. Ask: "Which milestone or work should I turn into a blueprint?" (or auto-detect from current active milestone)
 2. Read the milestone's phases, skills, complexity, and acceptance criteria
@@ -93,7 +93,7 @@ When the user says `blueprint add`:
    ```
 5. Ask: "Name for this blueprint? Anything to change?"
 6. After user confirms → save to `.orchestra/blueprints/{name}.md`
-7. Report: "Blueprint '{name}' saved. Use `blueprint {name}` to reuse it."
+7. Report: "Blueprint '{name}' saved. Use `#blueprint {name}` to reuse it."
 
 **Rules:**
 - Always show preview before saving — never auto-save

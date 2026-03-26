@@ -6,7 +6,7 @@ Blueprints are pre-built milestone templates. Instead of PM writing every milest
 
 ```
 You: #pm
-You: blueprint saas-starter
+You: #blueprint saas-starter
 PM:  *shows 5 milestones with phases, skills, acceptance criteria*
 PM:  "Customize anything? (add/remove phases, change complexity, swap skills)"
 You: "Remove the frontend phases, this is API-only"
@@ -35,7 +35,7 @@ Parameters:
 - `FIELDS` — e.g. "name:string, price:number, active:boolean"
 
 ```
-You: blueprint component-crud-resource
+You: #blueprint component-crud-resource
 PM:  "What's the resource name?"
 You: "product"
 PM:  *creates M{N}-product-crud with 3 phases*
@@ -51,13 +51,13 @@ Blueprints are starting points. After PM generates milestones from a blueprint:
 - **Reorder milestones** — want CI/CD first? Move it up
 - **Adjust complexity** — blueprint says `full` but you know the domain? Change to `standard`
 
-## Saving Work as a Blueprint — `blueprint add`
+## Saving Work as a Blueprint — `#blueprint add`
 
 After completing a milestone (or any significant work), save it as a reusable template:
 
 ```
 You: #pm
-You: blueprint add
+You: #blueprint add
 PM:  "Which milestone should I turn into a blueprint?"
 You: "M3-payment-integration"
 PM:  *reads phases, skills, complexity, acceptance criteria*
@@ -70,14 +70,14 @@ You: "Yes"
 PM:  "Blueprint 'component-payment' saved to .orchestra/blueprints/"
 ```
 
-Next time someone needs payment integration: `blueprint component-payment`
+Next time someone needs payment integration: `#blueprint component-payment`
 
 ## Step-by-Step: Adding a New Blueprint
 
-### Option A: From existing work (`blueprint add`)
+### Option A: From existing work (`#blueprint add`)
 
 1. Complete a milestone that represents a reusable pattern
-2. `#pm` → `blueprint add`
+2. `#pm` → `#blueprint add`
 3. PM reads the milestone, generates a parameterized template
 4. Review the preview, adjust parameters, confirm
 5. Blueprint saved to `.orchestra/blueprints/{name}.md`

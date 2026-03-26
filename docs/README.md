@@ -18,7 +18,7 @@ Orchestra is an AI team orchestration system for [Claude Code](https://docs.anth
 | [Commands](commands.md) | All commands with examples |
 | [Roles](roles.md) | 6 roles: responsibilities, boundaries, when to use |
 | [Features](features.md) | All v2.0 features: verification gate, fast track, parallel, hotfix, etc. |
-| [Blueprints](blueprints.md) | Project templates: use, create, customize, `blueprint add` |
+| [Blueprints](blueprints.md) | Project templates: use, create, customize, `#blueprint add` |
 | [Skills](skills.md) | Domain checklists: use, create, available skills |
 
 ## Quick Start

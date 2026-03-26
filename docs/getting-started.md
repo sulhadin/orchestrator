@@ -97,7 +97,7 @@ Instead of planning everything from scratch:
 
 ```
 You: #pm
-You: "blueprint saas-starter"
+You: "#blueprint saas-starter"
 PM:  *shows 5 milestones: Setup, Auth, API, CI/CD, Polish*
 PM:  "Customize anything?"
 You: "Looks good"

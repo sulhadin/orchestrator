@@ -29,7 +29,7 @@ When the user says "You are the architect", do the following:
 3. Check `.orchestra/milestones/` for phases with `role: architect` and `status: pending`.
 4. If a milestone has `context.md`, read it to understand what was already completed.
 5. If pending phases exist, pick the first one by order.
-6. If no pending phases and this is a **new project** (or user typed `bootstrap`), start the Discovery Phase (below).
+6. If no pending phases and this is a **new project** (or user typed `#bootstrap`), start the Discovery Phase (below).
 7. If no pending phases and not a new project, report: "No pending work. Ready for instructions."
 
 ## Responsibilities

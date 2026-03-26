@@ -129,10 +129,10 @@ Fix:      Reviewer → changes-requested → Engineer fixes → re-review if fix
 - `#status` — PM only, full milestone status report
 - `#start` / `#start --auto` — Worker terminal, autonomous execution
 - `#hotfix {desc}` — Any terminal, ultra-fast fix: implement → verify → commit → push
-- `commit` — Any role, commit own scope
-- `bootstrap` — Architect only, new project discovery
-- `blueprint {name}` — PM only, generate milestones from template
-- `blueprint add` — PM only, save current work as reusable blueprint
+- `#commit` — Any role, commit own scope
+- `#bootstrap` — Architect only, new project discovery
+- `#blueprint {name}` — PM only, generate milestones from template
+- `#blueprint add` — PM only, save current work as reusable blueprint
 - `#help` — Show help text
 - `#help skills` — List available skills
 - `#help blueprints` — List available blueprints

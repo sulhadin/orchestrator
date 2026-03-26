@@ -18,21 +18,21 @@ You: #status
 PM:  Shows all milestones, current phases, cost tracking, next actions
 ```
 
-### `blueprint {name}`
+### `#blueprint {name}`
 Generate milestones from a blueprint template. PM only.
 
 ```
-You: blueprint saas-starter
+You: #blueprint saas-starter
 PM:  *shows 5 milestones, asks for customization*
 ```
 
 Available blueprints: `saas-starter`, `api-only`, `component-crud-resource`
 
-### `blueprint add`
+### `#blueprint add`
 Save current work as a reusable blueprint template. PM only.
 
 ```
-You: blueprint add
+You: #blueprint add
 PM:  *reads current milestone, generates parameterized template*
 PM:  "Blueprint preview: ... Save as?"
 ```
@@ -79,7 +79,7 @@ Switch to a specific role for manual work:
 | `#owner` | Owner | Modify Orchestra system files |
 | `#adaptive` | Adaptive | Domain-specific expert (iOS, DevOps, ML, etc.) — defined per phase |
 
-### `bootstrap`
+### `#bootstrap`
 Start new project discovery. Architect only.
 
 ```
@@ -88,7 +88,7 @@ You: bootstrap
 Architect: *scans codebase, asks discovery questions*
 ```
 
-### `commit`
+### `#commit`
 Commit your work using conventional commits. Any role, only files in your ownership scope.
 
 ## Help Commands

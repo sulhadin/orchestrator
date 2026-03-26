@@ -96,10 +96,10 @@ These commands work in ANY role, in any terminal:
 | `#help blueprints` | List available blueprints with descriptions. |
 | `#{role}` | Switch to a role. Aliases: `#owner`, `#pm`, `#architect`, `#backend`, `#reviewer`, `#frontend` |
 | `#hotfix {description}` | **Any terminal.** Ultra-fast fix: implement → verify → commit → push. No RFC, no review. |
-| `commit` / `commit your changes` | Commit your work using conventional commits (only files in your ownership scope). |
-| `bootstrap` / `new project` | **Architect only.** Start the discovery phase for a new project. |
-| `blueprint {name}` | **PM only.** Generate milestones from a blueprint template. |
-| `blueprint add` | **PM only.** Save current work as a reusable blueprint. |
+| `#commit` / `commit your changes` | Commit your work using conventional commits (only files in your ownership scope). |
+| `#bootstrap` / `new project` | **Architect only.** Start the discovery phase for a new project. |
+| `#blueprint {name}` | **PM only.** Generate milestones from a blueprint template. |
+| `#blueprint add` | **PM only.** Save current work as a reusable blueprint. |
 
 When the user says **"#help"**, respond with:
 
@@ -115,10 +115,10 @@ COMMANDS:
   #help                      Show this help
   #help skills               List available skills with descriptions
   #help blueprints           List available blueprints with descriptions
-  commit                     Commit your changes (conventional commits, own scope only)
-  bootstrap                  Start new project discovery (Architect role only)
-  blueprint {name}           Generate milestones from blueprint template (PM only)
-  blueprint add              Save current work as reusable blueprint (PM only)
+  #commit                    Commit your changes (conventional commits, own scope only)
+  #bootstrap                 Start new project discovery (Architect role only)
+  #blueprint {name}          Generate milestones from blueprint template (PM only)
+  #blueprint add             Save current work as reusable blueprint (PM only)
   #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend #adaptive
 
 ROLES:

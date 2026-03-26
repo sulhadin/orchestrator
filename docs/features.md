@@ -91,12 +91,12 @@ See [Skills](skills.md) for details.
 Pre-built milestone templates for common project types. PM uses them to skip manual grooming:
 
 ```
-blueprint saas-starter     → 5 milestones, full SaaS MVP
-blueprint api-only         → 4 milestones, backend API service
-blueprint component-crud-resource → 1 parameterized CRUD milestone
+#blueprint saas-starter     → 5 milestones, full SaaS MVP
+#blueprint api-only         → 4 milestones, backend API service
+#blueprint component-crud-resource → 1 parameterized CRUD milestone
 ```
 
-`blueprint add` saves current work as a new reusable template.
+`#blueprint add` saves current work as a new reusable template.
 
 See [Blueprints](blueprints.md) for details.
 
