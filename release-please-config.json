@@ -11,7 +11,8 @@
         { "type": "chore", "section": "Maintenance" },
         { "type": "ci", "section": "CI/CD" }
       ],
-      "prerelease": true
+      "prerelease": true,
+      "prerelease-type": "beta"
     }
   }
 }
