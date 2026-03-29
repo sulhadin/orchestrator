@@ -1,137 +1,59 @@
 # Roles
 
-Orchestra has 7 roles. Each role has strict boundaries — it can only write to files in its ownership scope.
+Orchestra has 6 permanent roles + 1 adaptive role. Each has strict boundaries.
 
 ## Product Manager (`#pm`)
-
-**What it does:** Strategic partner + pipeline orchestrator. Discusses ideas, challenges scope, creates milestones with groomed phases, monitors progress.
-
-**Owns:** `.orchestra/milestones/*` (prd.md, milestone.md, grooming.md, phases)
-
+**Identity:** Strategic partner + pipeline orchestrator. Challenges ideas, cuts scope, breaks features into phases.
+**Owns:** `.orchestra/milestones/*`
 **Cannot:** Write code, execute phases, modify system files
 
-**When to use:** Planning features, creating milestones, checking status, using blueprints
-
-**Key behaviors:**
-- Challenges your ideas — pushes back when scope is too wide
-- Sets complexity level (quick/standard/full) per milestone
-- Assigns skills to phases
-- Reads knowledge.md before grooming new milestones
-
 ## Architect (`#architect`)
-
-**What it does:** Designs system architecture, chooses technologies, writes RFCs. Adaptive discovery for new projects — scans codebase first, only asks unknown questions.
-
-**Owns:** `.orchestra/milestones/*/rfc.md`, `architecture.md`, `adrs/*`, project configs
-
-**Cannot:** Write feature code, tests, PRDs, or design specs
-
-**When to use:** New projects (bootstrap), major architectural decisions, technology choices
-
-**Key behaviors:**
-- Adaptive discovery — skips questions the codebase already answers
-- Writes Technical RFCs with ADRs
-- Validates PM's phase grooming
+**Identity:** Senior software architect. Foundational decisions — runtime, framework, database, deployment.
+**Owns:** `rfc.md`, `architecture.md`, `adrs/*`, project configs
+**Cannot:** Write feature code, tests, design specs
 
 ## Backend Engineer (`#backend`)
-
-**What it does:** Implements backend code and tests. Follows grooming → research → implement → test → verify → commit workflow.
-
-**Owns:** `src/`, `tests/`, `migrations/`, `package.json`, `tsconfig.json`
-
-**Cannot:** Write frontend code, RFCs, PRDs, design specs, or review own code
-
-**When to use:** API endpoints, database work, business logic, backend testing
-
-**Key behaviors:**
-- Research phase before coding (reads existing code, checks library versions)
-- Verification gate: tsc + tests + lint must pass before commit
-- Loads skill checklists if assigned (auth-setup, crud-api, etc.)
-- SOLID, KISS, YAGNI, DRY enforced
+**Identity:** Senior backend engineer. Data flow, security, error handling, performance.
+**Owns:** Defined by PM in phase scope (typically `src/`, `tests/`, `migrations/`)
+**Cannot:** Write frontend code, RFCs, design specs
 
 ## Frontend Engineer (`#frontend`)
-
-**What it does:** Designs and builds user interfaces. Supports web (React/Next.js) and mobile (React Native) modes.
-
-**Owns:** `frontend/`, `.orchestra/milestones/*/design.md`
-
-**Cannot:** Write backend code, RFCs, PRDs, or review own code
-
-**When to use:** UI components, pages, forms, responsive layouts, accessibility
-
-**Key behaviors:**
-- Design specification before coding (mandatory)
-- Dual mode: web vs mobile (detected from project or phase)
-- WCAG 2.1 AA accessibility required
-- Verification gate: tsc + tests + lint before commit
-
-## Code Reviewer (`#reviewer`)
-
-**What it does:** Reviews unpushed commits for bugs, security issues, performance, and architecture fit. Git-native — reviews actual commits, not task files.
-
-**Owns:** Review findings only — never modifies source code
-
-**Cannot:** Write or modify any source code, tests, or configs
-
-**When to use:** Worker activates reviewer automatically after all phases complete
-
-**Key behaviors:**
-- Mode detection from git diff: `src/` changes → Backend, `frontend/` → Frontend
-- Severity levels: blocking (must fix), important, suggestion, praise
-- Three verdicts: approved, approved-with-comments, changes-requested
-- Conditional re-review: if fix >= 30 lines, abbreviated re-review triggered
-
-## Owner (`#owner`)
-
-**What it does:** Maintains and evolves the Orchestra system itself. The only role that can modify system files.
-
-**Owns:** `.orchestra/roles/*`, `.orchestra/README.md`, `CLAUDE.md`, `.orchestra/agents/*`, `.orchestra/skills/*`, `.orchestra/blueprints/*`, `.orchestra/knowledge.md`, `docs/*`
-
-**Cannot:** Write feature code, PRDs, RFCs, design specs, or review code
-
-**When to use:** Adding/modifying roles, changing pipeline rules, creating skills or blueprints, system maintenance
-
-**Key behaviors:**
-- 6-phase Evolution Methodology: Analyze → Propose → Challenge → Plan → Implement → Capture
-- Always preview changes before implementing
-- Updates documentation (docs/) whenever the system changes
-- Verifies cross-file consistency after every change
+**Identity:** Senior frontend engineer. User experience first, then implementation. Design before code.
+**Owns:** Defined by PM in phase scope (typically `frontend/`, `app/`, `components/`)
+**Cannot:** Write backend code, RFCs
 
 ## Adaptive (`#adaptive`)
-
-**What it does:** Adaptive expert role — domain expertise comes from the phase file's `context:` field, not hardcoded. Becomes whatever the phase needs: iOS engineer, DevOps adaptive, ML engineer, game developer, data engineer.
-
-**Owns:** Defined by `scope:` field in phase file — dynamic per phase (e.g. `ios/`, `infra/`, `ml/`)
-
-**Cannot:** Write outside defined scope, review own code, modify system files
-
-**When to use:** The project needs expertise not covered by backend/frontend roles — iOS, Android, DevOps, ML, game dev, data engineering, security, or any other domain.
+**Identity:** Domain-specific expert — defined per phase via `context:` field. Becomes whatever the project needs: iOS, DevOps, ML, game dev, data engineering.
+**Owns:** Defined by PM in phase `scope:` field
+**Cannot:** Write outside defined scope
 
 **How PM sets it up:**
 ```yaml
 ---
 role: adaptive
-context: "DevOps engineer, Terraform, AWS, GitHub Actions, Docker, Kubernetes"
+context: "DevOps engineer, Terraform, AWS, GitHub Actions"
 scope: "infra/, .github/workflows/, docker/"
-skills: [deployment]
 ---
 ```
 
-**Key behaviors:**
-- Reads `context:` and adopts that adaptive's perspective, terminology, best practices
-- Reads `scope:` and only writes to those directories
-- Same engineering principles as all roles (SOLID, KISS, YAGNI, verification gate)
-- Same workflow: research → implement → verify → acceptance check → commit
+## Orchestrator (`#orchestrator`)
+**Identity:** Creator and guardian of the Orchestra system itself. Only role that can modify system files.
+**Owns:** `.orchestra/roles/`, `.claude/rules/*.orchestra.md`, `.claude/agents/`, `.claude/skills/*.orchestra.md`, `.claude/commands/orchestra/`, `docs/`
+**Cannot:** Write feature code, PRDs, RFCs, review code
 
-## Role Boundaries
+## Agents (not roles)
 
-Every role stays in its lane — no exceptions:
+**Conductor** (`.claude/agents/conductor.md`) — Autonomous milestone executor. Not a role — it's the engine that activates roles, executes phases, and loops through milestones.
 
-- Backend Engineer cannot write frontend code
-- Frontend Engineer cannot write backend code
-- Code Reviewer cannot modify source code
-- PM cannot write code or execute phases
-- Architect cannot write feature code
-- Only Owner can modify `.orchestra/roles/` and `.orchestra/README.md`
+**Reviewer** (`.claude/agents/reviewer.md`) — Independent code review agent. Called by conductor after implementation. Has no context from implementation — sees only the code.
 
-If a role encounters work outside its scope, it documents the concern in `context.md` and continues.
+## Architecture
+
+```
+.claude/rules/*.orchestra.md    ← Discipline (verification, commits, standards)
+.claude/skills/*.orchestra.md   ← Domain knowledge (auth, CRUD, deploy)
+.orchestra/roles/*.md           ← Identity (who you are, how you think)
+.orchestra/config.yml           ← Parameters (gates, thresholds, commands)
+```
+
+Rules are always loaded. Skills are loaded per phase. Roles are activated per phase. Config is read once at startup.
