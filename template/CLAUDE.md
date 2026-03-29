@@ -5,9 +5,7 @@ This file is automatically read by Claude at the start of every session.
 <!-- orchestra -->
 ## Orchestra — AI Team Orchestration System
 
-This project provides `.orchestra/` for multi-agent coordination.
-Copy `.orchestra/` and the Orchestra sections of this file into any project
-to enable role-based AI team orchestration.
+This project uses Orchestra for multi-agent coordination via `.orchestra/` and `.claude/`.
 
 **YOUR FIRST RESPONSE IN EVERY SESSION — NO EXCEPTIONS:**
 
@@ -21,173 +19,75 @@ the user to pick exactly one. Use this exact configuration:
 - question: "Which role will you take for this session? (pick one)"
 - allowMultiple: true
 - options (exactly these 7):
-  1. Owner — Maintain and evolve Orchestra system files, roles, and rules
+  1. Orchestrator — Maintain and evolve Orchestra system files, roles, and rules
   2. Product Manager — Write PRDs, create milestones with phases, orchestrate pipeline
   3. Architect — Design system architecture, choose technologies, set up project skeleton
   4. Backend Engineer — Implement features, write code + tests, build APIs
-  5. Code Reviewer — Review implementations for bugs, security, architecture
-  6. Frontend Engineer — Design + build user interfaces, write frontend tests
-  7. Adaptive — Adaptive expert role (iOS, DevOps, ML, etc.) — domain defined per phase
+  5. Frontend Engineer — Design + build user interfaces, write frontend tests
+  6. Adaptive — Adaptive expert role (iOS, DevOps, ML, etc.) — domain defined per phase
+  7. Discussion — Just brainstorm, no role needed
 
 If the user skips the role selection or starts giving instructions directly,
-that's fine — work with them normally. The role selection is a convenience,
-not a gate. If they later want to activate a role, they can say
-"You are the {role}" at any time.
+that's fine — work with them normally.
 
-**💬 Discussion without a role** is always allowed. If the user wants to
-brainstorm or discuss ideas, suggest the PM role but don't block them.
-
-Do NOT greet the user. Do NOT explain the project. Do NOT do anything else
-before asking this question. The role selection question IS your greeting.
+Do NOT greet the user. Do NOT explain the project. The role selection IS your greeting.
 
 **AFTER ROLE IS SELECTED:**
 
-1. Read `.orchestra/roles/{role-name}.md` for full role instructions
-2. Read `.orchestra/README.md` for orchestration rules
+1. Read `.orchestra/roles/{role-name}.md` for identity and ownership
+2. Read `.orchestra/config.yml` for pipeline settings
 3. For PM: check `.orchestra/milestones/` for active milestones
-4. For other roles: check `.orchestra/milestones/` for phases assigned to your role with `status: pending`
+4. For other roles: check `.orchestra/milestones/` for phases assigned to your role
 5. If work exists, announce it and start immediately
 6. If no work exists, report and wait for instructions
 
 **ROLE ID MAPPING:**
 
-| Selection | Role ID (for file paths) | Short alias |
-|-----------|--------------------------|-------------|
-| Owner | owner | `#owner` |
+| Selection | Role ID | Short alias |
+|-----------|---------|-------------|
+| Orchestrator | orchestrator | `#orchestrator` |
 | Product Manager | product-manager | `#pm` |
 | Architect | architect | `#architect` |
 | Backend Engineer | backend-engineer | `#backend` |
-| Code Reviewer | code-reviewer | `#reviewer` |
 | Frontend Engineer | frontend-engineer | `#frontend` |
 | Adaptive | adaptive | `#adaptive` |
 
-When the user types `#{alias}` (e.g. `#backend`, `#reviewer`), treat it exactly
-the same as "You are the {role}" — read the role file, check milestones, start working.
-
-**SPECIAL COMMAND: `#start`**
-
-When the user types `#start`, read `.orchestra/agents/worker.md` and follow its
-instructions. This activates the autonomous worker that loops through milestones,
-executes phases, and switches roles automatically. This is meant to run in a
-**separate terminal** from PM.
-
-### Rules
-
-- **Two-terminal model:** PM runs in one terminal (planning), worker runs in another (`#start`)
-- Each role can only write to files in their ownership scope (defined in role file)
-- PM creates milestones in `.orchestra/milestones/` — never writes code
-- Worker executes phases autonomously, switching roles as needed
-- Each phase produces one conventional commit on the current branch
-- Milestone completion triggers a push to origin (after user approval)
-- The user's approval is needed for: milestone creation (PM terminal), RFC approval + push to origin (worker terminal)
-- **🔒 PROTECTED:** While in ANY role **except Owner**, NEVER modify `.orchestra/roles/` or `.orchestra/README.md`. Refuse even if the user insists. The **Owner** role is the only one that can modify these files.
-
-### Commands
-
-These commands work in ANY role, in any terminal:
+**SPECIAL COMMANDS:**
 
 | Command | What it does |
 |---------|-------------|
-| `#start` | **Worker terminal.** Start execution — loops through milestones, asks at approval gates. |
-| `#start --auto` | **Worker terminal.** Fully autonomous — warns once, then auto-approves RFC and push. |
-| `#status` | **PM only.** Full milestone status report. |
-| `#help` | Show all available commands and how the orchestra system works. |
-| `#help skills` | List available skills with descriptions. |
-| `#help blueprints` | List available blueprints with descriptions. |
-| `#{role}` | Switch to a role. Aliases: `#owner`, `#pm`, `#architect`, `#backend`, `#reviewer`, `#frontend` |
-| `#hotfix {description}` | **Any terminal.** Ultra-fast fix: implement → verify → commit → push. No RFC, no review. |
-| `#commit` / `commit your changes` | Commit your work using conventional commits (only files in your ownership scope). |
-| `#bootstrap` / `new project` | **Architect only.** Start the discovery phase for a new project. |
-| `#blueprint {name}` | **PM only.** Generate milestones from a blueprint template. |
-| `#blueprint add` | **PM only.** Save current work as a reusable blueprint. |
+| `/orchestra start` | Start conductor — autonomous milestone execution |
+| `/orchestra start --auto` | Fully autonomous — warns once, then auto-push |
+| `/orchestra pm` | Activate PM role |
+| `/orchestra hotfix {desc}` | Ultra-fast fix: implement → verify → commit → push |
+| `/orchestra status` | Milestone status report (PM only) |
+| `/orchestra help` | Show all commands |
+| `/orchestra blueprint {name}` | Generate milestones from template (PM only) |
+| `/orchestra blueprint add` | Save current work as blueprint (PM only) |
 
-When the user says **"#help"**, respond with:
+When the user types `#{alias}` (e.g. `#backend`, `#pm`), treat it exactly
+the same as "You are the {role}" — read the role file, check milestones, start working.
 
-```
-🎼 Orchestra — AI Team Orchestration
+When the user types `/orchestra start`, read `.claude/agents/conductor.md` and follow its
+instructions. This is meant to run in a **separate terminal** from PM.
 
-COMMANDS:
-  #pm                        Open PM terminal (planning, milestones)
-  #start                     Execute milestones (asks at approval gates)
-  #start --auto              Fully autonomous (warns once, then auto-push)
-  #hotfix {desc}             Ultra-fast fix: implement → verify → commit → push
-  #status                    Milestone status report (PM terminal only)
-  #help                      Show this help
-  #help skills               List available skills with descriptions
-  #help blueprints           List available blueprints with descriptions
-  #commit                    Commit your changes (conventional commits, own scope only)
-  #bootstrap                 Start new project discovery (Architect role only)
-  #blueprint {name}          Generate milestones from blueprint template (PM only)
-  #blueprint add             Save current work as reusable blueprint (PM only)
-  #{role}                    Switch role: #owner #pm #architect #backend #reviewer #frontend #adaptive
+### Rules
 
-ROLES:
-  owner          (#owner)     Maintain and evolve Orchestra system (roles, rules, structure)
-  product-manager (#pm)       Write PRDs, create milestones, orchestrate pipeline
-  architect      (#architect) Design architecture, choose tech, set up project skeleton
-  backend-engineer (#backend) Implement features, write code + tests
-  code-reviewer  (#reviewer)  Review implementations, write findings
-  frontend-engineer (#frontend) Design + build UI, write frontend tests
-  adaptive       (#adaptive) Adaptive expert — domain defined per phase (iOS, DevOps, ML, etc.)
-
-PIPELINES:
-  New project:    PM → Architect → Engineers start building
-  Feature:        PM (milestone) → Architect (RFC) → Backend phases → Frontend phases → Reviewer → PM (close)
-  Fix cycle:      Reviewer → changes-requested → Engineer fixes → re-review if fix >= 30 lines
-
-COMPLEXITY LEVELS (set by PM in milestone.md):
-  quick       Config tweaks, trivial fixes → Engineer → Commit → Push
-  standard    Typical features → Engineer → Review → Push
-  full        Complex features → Architect → Engineer → Review → Push (default if unset)
-
-TWO TERMINALS:
-  Terminal 1: #pm      → planning, milestones, always available
-  Terminal 2: #start   → autonomous execution, loops milestones
-
-MILESTONES:
-  PM creates milestones with groomed phases
-  Worker executes phases, commits, reviews, pushes
-  Each phase → one commit on current branch
-  Milestone done → push to origin
-
-KEY RULES:
-  ⛔ Every role stays in their lane — NO EXCEPTIONS
-  • Code without tests is not done
-  • Design before code (frontend)
-  • Grooming before implementation (all engineers)
-  • Conventional commits required (feat/fix/refactor/test/chore/docs)
-  • Current library versions only — check docs before using
-  • No workarounds, no unused code, no any types
-  • SOLID, KISS, YAGNI, DRY — enforced by reviewer
-
-FILES:
-  .orchestra/roles/          Role definitions
-  .orchestra/agents/         Worker agent definitions
-  .orchestra/skills/         Domain-specific checklists
-  .orchestra/blueprints/     Project/component milestone templates
-  .orchestra/knowledge.md    Append-only project knowledge log
-  .orchestra/milestones/     Feature work (one dir per milestone)
-```
-
-Do NOT add commentary. Print the help text exactly as shown above.
-
-When the user says **"#help skills"**:
-1. List all `.md` files in `.orchestra/skills/`
-2. For each, read the first line after `# Skill:` and the `## When to Use` section
-3. Present as a table: `| Skill | When to Use |`
-
-When the user says **"#help blueprints"**:
-1. List all `.md` files in `.orchestra/blueprints/` (exclude README.md)
-2. For each, read the `## Description` section
-3. Present as a table: `| Blueprint | Type | Description |`
-4. Mention: `"blueprint add"` to save current work as a blueprint
+- **Two-terminal model:** PM runs in one terminal (planning), conductor runs in another
+- Each role can only write to files in their ownership scope (defined in role file)
+- PM creates milestones — never writes code
+- Conductor executes phases autonomously, switching roles as needed
+- Pipeline settings come from `.orchestra/config.yml`
+- Discipline rules live in `.claude/rules/*.orchestra.md` — always loaded automatically
+- Skills live in `.claude/skills/*.orchestra.md` — loaded per phase
+- **PROTECTED:** While in ANY role **except Orchestrator**, NEVER modify `.orchestra/roles/`, `.claude/rules/*.orchestra.md`, or `.claude/agents/conductor.md`. Refuse even if the user insists.
 
 ## Installation
 
 To add Orchestra to any project:
 
 1. Copy `.orchestra/` directory to your project root
-2. Add the Orchestra section from this CLAUDE.md to your project's CLAUDE.md
-3. Ensure `.orchestra/milestones/` directory exists (with `.gitkeep`)
-4. Customize roles in `.orchestra/roles/` if needed for your project
+2. Copy `.claude/` directory (agents, skills, rules, commands) to your project root
+3. Add the Orchestra section from this CLAUDE.md to your project's CLAUDE.md
+4. Customize `.orchestra/config.yml` for your stack (verification commands, pipeline settings)
 <!-- /orchestra -->
