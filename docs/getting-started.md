@@ -6,153 +6,119 @@
 npx @sulhadin/orchestrator
 ```
 
-This copies `.orchestra/` into your project and adds Orchestra configuration to your `CLAUDE.md`. Your existing `CLAUDE.md` content is preserved.
+This copies `.orchestra/` and `.claude/` into your project and adds Orchestra configuration to your `CLAUDE.md`.
 
-To skip Claude Code permission prompts during install:
+## What Gets Installed
 
-```bash
-npx @sulhadin/orchestrator --dangerously-skip-permissions
+```
+.orchestra/           ← Your project data
+├── config.yml        ← Pipeline settings (customize for your stack)
+├── roles/            ← Role identities (slim, 15 lines each)
+├── blueprints/       ← Project templates
+├── knowledge.md      ← Project knowledge log
+└── milestones/       ← Your work (one dir per feature)
+
+.claude/              ← Claude Code integration
+├── agents/           ← Conductor + Reviewer
+├── skills/           ← Domain checklists (*.orchestra.md)
+├── rules/            ← Discipline rules (*.orchestra.md)
+└── commands/orchestra/ ← /orchestra commands
 ```
 
-## Upgrading
+## First Thing: Customize Config
 
-Run the same install command to upgrade:
+Edit `.orchestra/config.yml` for your stack:
 
-```bash
-npx @sulhadin/orchestrator
+```yaml
+# Go project:
+verification:
+  typecheck: "go vet ./..."
+  test: "go test ./..."
+  lint: "golangci-lint run"
+
+# Python project:
+verification:
+  typecheck: ""
+  test: "pytest"
+  lint: "ruff check ."
 ```
-
-Orchestra uses smart merge — your work is preserved, system files get updated:
-
-| What | On upgrade | Why |
-|------|-----------|-----|
-| **Roles, worker, README** | Updated to latest version | System files — always current |
-| **CLAUDE.md** | Orchestra section replaced, your content preserved | Only the `<!-- orchestra -->` block is touched |
-| **milestones/** | Untouched — fully preserved | Your active work, never overwritten |
-| **skills/** (template files) | Updated to latest version | e.g. `auth-setup.md` gets new checklist items |
-| **skills/** (your files) | Preserved | e.g. `my-custom-skill.md` stays as-is |
-| **blueprints/** (template files) | Updated to latest version | e.g. `saas-starter.md` gets new phases |
-| **blueprints/** (your files) | Preserved | e.g. `component-payment.md` stays as-is |
-| **knowledge.md** | Preserved if it has entries | Your accumulated decisions and lessons stay |
-
-**How it tells the difference:** Files that exist in the template are "system files" and get updated. Files that only exist in your project (you created them) are "user files" and are preserved.
 
 ## Two-Terminal Model
 
-Orchestra uses two Claude Code terminals that work in parallel:
-
-| Terminal | Role | What it does |
-|----------|------|-------------|
-| Terminal 1 | `#pm` | Plan features, create milestones, check status |
-| Terminal 2 | `#start` | Execute milestones autonomously |
-
-PM plans while worker builds. They communicate through files, not messages.
+| Terminal | Command | What it does |
+|----------|---------|-------------|
+| Terminal 1 | `/orchestra pm` | Plan features, create milestones |
+| Terminal 2 | `/orchestra start` | Execute milestones autonomously |
 
 ## Your First Milestone
 
-### Terminal 1: Plan with PM
+### Terminal 1: Plan
 
 ```
-You: #pm
-PM:  "🎯 PM ready. What's on your mind?"
+You: /orchestra pm
+PM:  "PM ready. What's on your mind?"
 
 You: "I want user authentication with JWT"
-PM:  *discusses, challenges scope, proposes alternatives*
-PM:  "Ready to create the milestone?"
+PM:  *discusses, challenges, refines scope*
 
-You: "Yes"
-PM:  *creates M1-user-auth with phases, acceptance criteria, skills*
-PM:  "🎯 M1-user-auth ready. Run #start in another terminal."
+You: "Create the milestone"
+PM:  *creates M1-user-auth with phases, skills, acceptance criteria*
 ```
 
-### Terminal 2: Execute with Worker
+### Terminal 2: Execute
 
 ```
-You: #start
+You: /orchestra start
 
 📋 Starting M1-user-auth
 
-🏗️ #architect ▶ RFC + grooming validation...
-🏗️ #architect ✅ RFC ready
+🏗️ architect ▶ RFC + grooming validation...
+🏗️ architect ✅ RFC ready
 🚦 Approve RFC? → yes
 
-⚙️ #backend ▶ phase-1: DB schema + migrations...
-⚙️ #backend ✅ phase-1 done (feat(db): add auth tables)
+⚙️ backend ▶ phase-1: DB schema + migrations...
+⚙️ backend ✅ phase-1 done
 
-⚙️ #backend ▶ phase-2: API endpoints + tests...
-⚙️ #backend ✅ phase-2 done (feat(auth): add login endpoint)
+🎨 frontend ▶ phase-2: Login UI...
+🎨 frontend ✅ phase-2 done
 
-🎨 #frontend ▶ phase-3: Login UI...
-🎨 #frontend ✅ phase-3 done (feat(auth): add login page)
-
-🔍 #reviewer ▶ reviewing unpushed commits...
-🔍 #reviewer ✅ approved
+🔍 reviewer ▶ reviewing unpushed commits...
+🔍 reviewer ✅ approved
 
 🚦 Push to origin? → yes
 ✅ M1-user-auth done.
 ```
 
-### What Happened
+## Resuming
 
-1. PM created the milestone with groomed phases
-2. Worker activated architect to write an RFC (technical design)
-3. You approved the RFC
-4. Worker executed backend phases (DB + API), then frontend (UI)
-5. Worker activated reviewer to check all unpushed commits
-6. You approved the push
-7. Worker pushed and closed the milestone
-8. Worker appended a 5-line retrospective to knowledge.md
+Close terminal, reopen, `/orchestra start` — conductor reads context.md and continues.
 
-## Resuming Work
+## Blueprints
 
-If your terminal closes mid-execution:
+Start from a template instead of planning from scratch:
 
 ```
-You: #start
-Worker: "Resuming M1-user-auth from phase-2..."
+/orchestra pm
+/orchestra blueprint saas-starter
+→ 5 milestones created instantly
 ```
 
-Worker reads `context.md` and continues from where it left off.
+## Upgrading
 
-## Using Blueprints for Faster Start
-
-Instead of planning everything from scratch:
-
-```
-You: #pm
-You: "#blueprint saas-starter"
-PM:  *shows 5 milestones: Setup, Auth, API, CI/CD, Polish*
-PM:  "Customize anything?"
-You: "Looks good"
-PM:  *creates all milestones*
-You: #start (in another terminal)
+```bash
+npx @sulhadin/orchestrator
 ```
 
-See [Blueprints](blueprints.md) for all available templates.
+Smart merge: system files updated, your data preserved.
 
-## Approval Gates
-
-Worker pauses at two points for your approval:
-
-1. **RFC ready** — before implementation starts
-2. **Push to origin** — before code is pushed
-
-PM asks before creating a milestone. Everything else is automatic.
-
-If you say "no" at any gate, the system loops back with your feedback — it doesn't stall.
-
-## Fully Autonomous Mode
-
-```
-You: #start --auto
-Worker: "⚠️ Auto mode: ALL approval gates will be skipped. Type 'confirm' to proceed."
-You: confirm
-```
-
-Worker executes everything without asking. Use for well-defined, low-risk work.
-
-## Next Steps
-
-- [Commands](commands.md) — all available commands
-- [Roles](roles.md) — understand the 6 roles
-- [Features](features.md) — verification gate, fast track, skills, and more
+| What | On upgrade |
+|------|-----------|
+| Roles, agents, rules, commands | Updated |
+| Skills (`.orchestra.md`) | Updated |
+| Skills (your custom `.md`) | Preserved |
+| Blueprints (template) | Updated |
+| Blueprints (your custom) | Preserved |
+| milestones/ | Untouched |
+| knowledge.md | Preserved |
+| config.yml | Preserved |
+| CLAUDE.md | Orchestra section replaced |

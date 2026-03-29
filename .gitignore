@@ -13,6 +13,10 @@ lerna-debug.log*
 # Claude Code local files (not orchestra system files)
 .claude/settings.local.json
 .claude/agent-memory/
+.claude/agents/codebase-deep-analyzer.md
+.claude/agents/crewai-analyzer.md
+.claude/agents/orchestra-analyzer.md
+.claude/agents/repo-deep-analyzer.md
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
