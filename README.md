@@ -1,111 +1,86 @@
 # Orchestra
 
-AI team orchestration for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Two terminals — PM plans, worker builds.
+AI team orchestration for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Two terminals — PM plans, conductor builds.
 
 ## Install
 
 ```bash
-npx @sulhadin/orchestrator@latest
-```
-
-Skip permission prompts:
-
-```bash
-npx @sulhadin/orchestrator@latest --dangerously-skip-permissions
+npx @sulhadin/orchestrator
 ```
 
 ## Two Terminals
 
-### Terminal 1: `#pm` — Planning
+### Terminal 1: `/orchestra pm` — Planning
 
-PM is your strategic partner. Discuss ideas, challenge scope, create milestones. PM never writes code — only plans.
+PM is your strategic partner. Discuss ideas, challenge scope, create milestones.
 
 ```
-You: #pm
-PM:  "No active milestones. Ready for instructions."
+You: /orchestra pm
+PM:  "No active milestones. What's on your mind?"
 
 You: "I want user authentication with JWT"
-PM:  *discusses, challenges, refines scope*
-
-You: "Create the milestone"
-PM:  *creates prd.md, grooming.md, milestone.md, phases/*
-     "🎯 M1-user-auth ready. Run #start in another terminal."
-
-You: "Let's also plan a dashboard"
-PM:  *plans M2 while worker executes M1*
+PM:  *discusses, challenges, creates milestone with phases*
 ```
 
-PM is always available. Plan ahead while work runs in the other terminal.
+### Terminal 2: `/orchestra start` — Execution
 
-### Terminal 2: `#start` — Execution
-
-Worker picks up milestones and executes them autonomously. Loops to the next when done.
+Conductor picks up milestones and executes them autonomously.
 
 ```
-You: #start
+You: /orchestra start
 
 📋 Starting M1-user-auth
-
-🏗️ #architect ▶ RFC + grooming validation...
-🏗️ #architect ✅ RFC ready
-🚦 Approve RFC? → yes
-
-⚙️ #backend ▶ phase-1: DB schema + migrations...
-⚙️ #backend ✅ phase-1 done (feat(db): add auth tables)
-
-⚙️ #backend ▶ phase-2: API endpoints + tests...
-⚙️ #backend ✅ phase-2 done (feat(auth): add login endpoint)
-
-🎨 #frontend ▶ phase-3: Login UI...
-🎨 #frontend ✅ phase-3 done (feat(auth): add login page)
-
-🔍 #reviewer ▶ reviewing unpushed commits...
-🔍 #reviewer ✅ approved
-
-🚦 Push to origin? → yes
+🏗️ architect ▶ RFC...         ✅ done
+⚙️ backend ▶ DB schema...     ✅ done
+⚙️ backend ▶ API endpoints... ✅ done
+🎨 frontend ▶ Login UI...     ✅ done
+🔍 reviewer ▶ reviewing...    ✅ approved
+🚦 Push? → yes
 ✅ M1-user-auth done.
 
 📋 Starting M2-dashboard...
 ```
 
-Close the terminal, reopen, type `#start` — it resumes from where it left off.
-
 ## Commands
 
-| Command | Where | What it does |
-|---------|-------|-------------|
-| `#pm` | Terminal 1 | Plan features, create milestones |
-| `#start` | Terminal 2 | Execute milestones, asks at approval gates |
-| `#start --auto` | Terminal 2 | Confirms once, then fully autonomous |
-| `#hotfix {desc}` | Any | Ultra-fast fix: implement → verify → commit → push |
-| `#status` | Terminal 1 | Milestone status report |
-| `#help` | Any | Show all commands |
-| `#help skills` | Any | List available skills |
-| `#help blueprints` | Any | List available blueprints |
-| `#blueprint {name}` | Terminal 1 | Generate milestones from template |
-| `#blueprint add` | Terminal 1 | Save current work as reusable template |
+| Command | What it does |
+|---------|-------------|
+| `/orchestra pm` | Plan features, create milestones |
+| `/orchestra start` | Execute milestones (asks at approval gates) |
+| `/orchestra start --auto` | Fully autonomous |
+| `/orchestra hotfix {desc}` | Ultra-fast fix: implement → verify → commit → push |
+| `/orchestra status` | Milestone status report |
+| `/orchestra blueprint {name}` | Generate milestones from template |
+| `/orchestra help` | Show all commands |
 
-Manual roles (any terminal):
+## Architecture
 
-| Command | Role |
-|---------|------|
-| `#backend` | Backend Engineer |
-| `#frontend` | Frontend Engineer |
-| `#reviewer` | Code Reviewer |
-| `#architect` | Architect |
-| `#owner` | System maintenance |
-| `#adaptive` | Adaptive expert (iOS, DevOps, ML, etc.) |
+```
+.claude/                              ← Claude Code integration
+├── agents/conductor.md               ← Autonomous executor
+├── agents/reviewer.md                ← Independent code review
+├── skills/*.orchestra.md             ← 14 domain checklists
+├── rules/*.orchestra.md              ← Discipline rules
+└── commands/orchestra/               ← /orchestra commands
+
+.orchestra/                           ← Project data + config
+├── config.yml                        ← Pipeline settings (customize per stack)
+├── roles/                            ← Role identities (slim)
+├── blueprints/                       ← Project templates
+├── knowledge.md                      ← Project knowledge log
+└── milestones/                       ← Your work
+```
 
 ## Documentation
 
 See [docs/](https://github.com/sulhadin/orchestrator/blob/main/docs/README.md) for full documentation:
 
-- [Getting Started](https://github.com/sulhadin/orchestrator/blob/main/docs/getting-started.md) — installation, first milestone, two-terminal model
-- [Commands](https://github.com/sulhadin/orchestrator/blob/main/docs/commands.md) — all commands with examples
-- [Roles](https://github.com/sulhadin/orchestrator/blob/main/docs/roles.md) — 7 roles, responsibilities, boundaries
-- [Features](https://github.com/sulhadin/orchestrator/blob/main/docs/features.md) — verification gate, fast track, parallel, hotfix, and more
-- [Blueprints](https://github.com/sulhadin/orchestrator/blob/main/docs/blueprints.md) — project templates, `#blueprint add`
-- [Skills](https://github.com/sulhadin/orchestrator/blob/main/docs/skills.md) — domain checklists, creating new skills
+- [Getting Started](https://github.com/sulhadin/orchestrator/blob/main/docs/getting-started.md)
+- [Commands](https://github.com/sulhadin/orchestrator/blob/main/docs/commands.md)
+- [Roles](https://github.com/sulhadin/orchestrator/blob/main/docs/roles.md)
+- [Features](https://github.com/sulhadin/orchestrator/blob/main/docs/features.md)
+- [Blueprints](https://github.com/sulhadin/orchestrator/blob/main/docs/blueprints.md)
+- [Skills](https://github.com/sulhadin/orchestrator/blob/main/docs/skills.md)
 
 ## License
 

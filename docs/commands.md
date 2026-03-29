@@ -1,121 +1,47 @@
 # Commands
 
-## Planning Commands (Terminal 1)
+## Orchestra Commands
 
-### `#pm`
+### `/orchestra pm`
 Activate the Product Manager role. PM is your strategic partner — discusses ideas, challenges scope, creates milestones.
 
-```
-You: #pm
-PM:  "🎯 PM ready. What's on your mind?"
-```
+### `/orchestra start`
+Start the conductor for autonomous milestone execution. Asks at approval gates (RFC, push).
 
-### `#status`
-Show full milestone status report. PM only.
+### `/orchestra start --auto`
+Fully autonomous execution. Warns once, then skips all approval gates.
 
-```
-You: #status
-PM:  Shows all milestones, current phases, cost tracking, next actions
-```
-
-### `#blueprint {name}`
-Generate milestones from a blueprint template. PM only.
+### `/orchestra hotfix {description}`
+Ultra-fast fix pipeline. No RFC, no review, no approval gates (except verification).
 
 ```
-You: #blueprint saas-starter
-PM:  *shows 5 milestones, asks for customization*
+/orchestra hotfix fix login 500 error on invalid email
+→ implement → verify → commit → push
 ```
 
-Available blueprints: `saas-starter`, `api-only`, `component-crud-resource`
+### `/orchestra status`
+Show full milestone status report. PM role only.
 
-### `#blueprint add`
-Save current work as a reusable blueprint template. PM only.
-
-```
-You: #blueprint add
-PM:  *reads current milestone, generates parameterized template*
-PM:  "Blueprint preview: ... Save as?"
-```
-
-## Execution Commands (Terminal 2)
-
-### `#start`
-Start autonomous milestone execution. Asks at approval gates (RFC, push).
-
-```
-You: #start
-Worker: *executes milestones, pauses at gates*
-```
-
-### `#start --auto`
-Fully autonomous execution. Confirms once, then skips all approval gates.
-
-```
-You: #start --auto
-Worker: "⚠️ Auto mode: ALL gates will be skipped. Type 'confirm' to proceed."
-You: confirm
-Worker: *executes everything, auto-pushes*
-```
-
-### `#hotfix {description}`
-Ultra-fast fix pipeline. No RFC, no review, no approval gates (except verification). Works in any terminal.
-
-```
-You: #hotfix fix login 500 error on invalid email
-Worker: *implement → verify → commit → push*
-🚑 Hotfix complete: fix(auth): fix login 500 error
-```
-
-## Role Commands (Any Terminal)
-
-Switch to a specific role for manual work:
-
-| Command | Role | Use when |
-|---------|------|----------|
-| `#backend` | Backend Engineer | Write backend code + tests manually |
-| `#frontend` | Frontend Engineer | Write frontend code + tests manually |
-| `#reviewer` | Code Reviewer | Manual code review |
-| `#architect` | Architect | Design architecture, write RFCs |
-| `#owner` | Owner | Modify Orchestra system files |
-| `#adaptive` | Adaptive | Domain-specific expert (iOS, DevOps, ML, etc.) — defined per phase |
-
-### `#bootstrap`
-Start new project discovery. Architect only.
-
-```
-You: #architect
-You: bootstrap
-Architect: *scans codebase, asks discovery questions*
-```
-
-### `#commit`
-Commit your work using conventional commits. Any role, only files in your ownership scope.
-
-## Help Commands
-
-### `#help`
+### `/orchestra help`
 Show all available commands and system overview.
 
-### `#help skills`
-List available skills with descriptions.
+### `/orchestra blueprint {name}`
+Generate milestones from a blueprint template. PM only.
 
-```
-You: #help skills
-| Skill | When to Use |
-|-------|-------------|
-| auth-setup | Authentication, login, session management |
-| crud-api | CRUD resource endpoints |
-| deployment | CI/CD, Docker, environment setup |
-```
+Available: `saas-starter`, `api-only`, `component-crud-resource`
 
-### `#help blueprints`
-List available blueprints with descriptions.
+### `/orchestra blueprint add`
+Save current work as a reusable blueprint template. PM only.
 
-```
-You: #help blueprints
-| Blueprint | Type | Description |
-|-----------|------|-------------|
-| saas-starter | Full project | Auth + DB + API + Dashboard + Deploy |
-| api-only | Full project | DB + API + Auth + CI/CD |
-| component-crud-resource | Component | Single CRUD entity |
-```
+## Role Shortcuts
+
+Switch to a specific role:
+
+| Command | Role |
+|---------|------|
+| `#orchestrator` | System maintenance — modify Orchestra files |
+| `#pm` | Product Manager — plan features, create milestones |
+| `#architect` | Architect — design architecture, write RFCs |
+| `#backend` | Backend Engineer — write backend code + tests |
+| `#frontend` | Frontend Engineer — write frontend code + tests |
+| `#adaptive` | Adaptive expert — domain defined per phase |
