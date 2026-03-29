@@ -2,121 +2,49 @@ name: Release & Publish
 
 on:
   push:
-    branches: [main]
-
-concurrency:
-  group: release
-  cancel-in-progress: false
+    branches: [main, next]
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
-  release:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
 
-      - name: Get current version
-        id: current
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
-      - name: Determine version bump from commits
-        id: bump
+      - name: Determine npm tag
+        id: npm-tag
         run: |
-          # Find last release commit by message (rebase-safe, unlike tags)
-          LAST_RELEASE_SHA=$(git log --extended-regexp --grep="^chore\(release\):" --pretty=format:"%H" -1 || echo "")
-
-          if [ -z "$LAST_RELEASE_SHA" ]; then
-            COMMITS=$(git log --pretty=format:"%s" HEAD)
+          VERSION="${{ needs.release-please.outputs.version }}"
+          if echo "$VERSION" | grep -q "beta\|alpha\|rc"; then
+            echo "tag=beta" >> $GITHUB_OUTPUT
           else
-            COMMITS=$(git log --pretty=format:"%s" "${LAST_RELEASE_SHA}..HEAD")
+            echo "tag=latest" >> $GITHUB_OUTPUT
           fi
-
-          # Filter out release commits
-          COMMITS=$(echo "$COMMITS" | grep -v "^chore(release)" || true)
-
-          if [ -z "$COMMITS" ]; then
-            echo "bump=none" >> $GITHUB_OUTPUT
-            echo "No new commits since last release"
-            exit 0
-          fi
-
-          echo "Commits since last release:"
-          echo "$COMMITS"
-
-          BUMP="none"
-
-          # Check for breaking changes (major)
-          if echo "$COMMITS" | grep -qE "^[a-z]+!(\(.+\))?:|^[a-z]+(\(.+\))?!:"; then
-            BUMP="major"
-          # Check for feat (minor)
-          elif echo "$COMMITS" | grep -qE "^feat(\(.+\))?:"; then
-            BUMP="minor"
-          # Check for fix, refactor, perf, etc. (patch)
-          elif echo "$COMMITS" | grep -qE "^(fix|refactor|perf|chore|docs|style|test|ci)(\(.+\))?:"; then
-            BUMP="patch"
-          fi
-
-          echo "Detected bump: $BUMP"
-          echo "bump=$BUMP" >> $GITHUB_OUTPUT
-
-      - name: Bump version
-        if: steps.bump.outputs.bump != 'none'
-        id: version
-        env:
-          BUMP: ${{ steps.bump.outputs.bump }}
-          CURRENT: ${{ steps.current.outputs.version }}
-        run: |
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
-
-          case "$BUMP" in
-            major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
-            minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
-            patch) PATCH=$((PATCH + 1)) ;;
-          esac
-
-          NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-
-          # Update package.json
-          node -e "
-            const pkg = require('./package.json');
-            pkg.version = '${NEW_VERSION}';
-            require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-          "
-
-          echo "Version: $CURRENT → $NEW_VERSION ($BUMP)"
+          echo "Publishing v${VERSION} with tag: $(cat $GITHUB_OUTPUT | grep tag | cut -d= -f2)"
 
       - name: Publish to npm
-        if: steps.bump.outputs.bump != 'none'
-        run: npm publish --access public
+        run: npm publish --access public --tag ${{ steps.npm-tag.outputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Commit version bump and tag
-        if: steps.bump.outputs.bump != 'none'
-        env:
-          NEW_VERSION: ${{ steps.version.outputs.new_version }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add package.json
-          git commit -m "chore(release): v${NEW_VERSION} [skip ci]"
-          git tag "v${NEW_VERSION}"
-          git push
-          git push --tags
-
-      - name: Create GitHub Release
-        if: steps.bump.outputs.bump != 'none'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NEW_VERSION: ${{ steps.version.outputs.new_version }}
-        run: gh release create "v${NEW_VERSION}" --generate-notes --title "v${NEW_VERSION}"
