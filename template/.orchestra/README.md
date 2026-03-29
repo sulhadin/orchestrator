@@ -25,16 +25,14 @@ Terminal 1 (PM):                    Terminal 2 (Worker):
 ```
 .orchestra/
 ├── README.md              # This file
-├── roles/                 # Role definitions (system prompts)
+├── roles/                 # Role identities (slim, ~15 lines each)
 │   ├── product-manager.md
 │   ├── architect.md
 │   ├── backend-engineer.md
-│   ├── code-reviewer.md
 │   ├── frontend-engineer.md
-│   └── owner.md
-├── agents/                # Worker agent definitions
-│   └── worker.md          # Multi-role execution agent prompt
-├── skills/                # Domain-specific checklists (auth, CRUD, deploy)
+│   ├── adaptive.md
+│   └── orchestrator.md
+├── config.yml             # Pipeline settings, thresholds, verification commands
 ├── blueprints/            # Project/component milestone templates
 ├── knowledge.md           # Append-only project knowledge log
 ├── milestones/            # Feature work (one dir per feature)
@@ -265,11 +263,10 @@ Switch to the Owner role first to modify these files.
 
 | If you are... | You MUST NOT... |
 |---------------|-----------------|
-| Owner | Write feature code, RFCs, design specs, architecture docs, review code, create milestones, run tests |
+| Orchestrator | Write feature code, RFCs, design specs, architecture docs, review code, create milestones, run tests |
 | Product Manager | Write code, fix bugs, run tests, create design specs |
 | Architect | Write feature code, implement endpoints, fix bugs, write tests |
 | Backend Engineer | Write RFCs, design UI, review your own code, make product decisions |
-| Code Reviewer | Modify source code, write tests, create RFCs, make design specs |
 | Frontend Engineer | Modify backend code, write RFCs, review your own code |
 
 **When you encounter work outside your scope:**
@@ -288,14 +285,13 @@ Each role has exclusive write access to specific directories:
 
 | Role | Owns (can write) | Reads |
 |------|-------------------|-------|
-| owner | `.orchestra/roles/*`, `.orchestra/README.md`, `CLAUDE.md`, `.orchestra/agents/*`, `.orchestra/skills/*`, `.orchestra/blueprints/*`, `.orchestra/knowledge.md` | Everything |
+| orchestrator | `.orchestra/roles/*`, `.orchestra/config.yml`, `CLAUDE.md`, `.claude/agents/`, `.claude/skills/*.orchestra.md`, `.claude/rules/*.orchestra.md`, `.claude/commands/orchestra/`, `.orchestra/knowledge.md`, `docs/` | Everything |
 | product-manager | `.orchestra/milestones/*` (prd.md, milestone.md, grooming.md, phases) | Everything |
-| architect | `.orchestra/milestones/*/rfc.md`, `.orchestra/milestones/*/architecture.md`, `.orchestra/milestones/*/adrs/*`, project configs (initial setup) | Everything |
-| backend-engineer | `src/`, `tests/`, `src/**/__tests__/*`, `migrations/`, `package.json`, `tsconfig.json` | `.orchestra/milestones/*/phases/*` |
-| code-reviewer | Review findings only — never modifies source code | `src/`, `tests/`, `frontend/` |
-| frontend-engineer | `frontend/`, `frontend/**/__tests__/*`, `frontend/**/e2e/*`, `.orchestra/milestones/*/design.md` | `.orchestra/milestones/*/phases/*` |
+| architect | `.orchestra/milestones/*/rfc.md`, `.orchestra/milestones/*/architecture.md`, `.orchestra/milestones/*/adrs/*`, project configs | Everything |
+| backend-engineer | Defined by PM in phase scope (typically `src/`, `tests/`, `migrations/`) | `.orchestra/milestones/*/phases/*` |
+| frontend-engineer | Defined by PM in phase scope (typically `frontend/`, `app/`) | `.orchestra/milestones/*/phases/*` |
 | adaptive | Defined by `scope:` field in phase file — dynamic per phase | `.orchestra/milestones/*/phases/*` |
-| worker (all roles) | `.orchestra/milestones/*/context.md`, `.orchestra/knowledge.md` (append only) | Everything in active milestone |
+| conductor (all roles) | `.orchestra/milestones/*/context.md`, `.orchestra/knowledge.md` (append only) | Everything in active milestone |
 
 ---
 
