@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -27,24 +31,31 @@ jobs:
       - name: Determine version bump from commits
         id: bump
         run: |
-          # Get commits since last tag (or all commits if no tags)
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          # Find last release commit by message (rebase-safe, unlike tags)
+          LAST_RELEASE_SHA=$(git log --extended-regexp --grep="^chore\(release\):" --pretty=format:"%H" -1 || echo "")
 
-          if [ -z "$LAST_TAG" ]; then
+          if [ -z "$LAST_RELEASE_SHA" ]; then
             COMMITS=$(git log --pretty=format:"%s" HEAD)
           else
-            COMMITS=$(git log --pretty=format:"%s" "${LAST_TAG}..HEAD")
+            COMMITS=$(git log --pretty=format:"%s" "${LAST_RELEASE_SHA}..HEAD")
           fi
+
+          # Filter out release commits
+          COMMITS=$(echo "$COMMITS" | grep -v "^chore(release)" || true)
 
           if [ -z "$COMMITS" ]; then
             echo "bump=none" >> $GITHUB_OUTPUT
+            echo "No new commits since last release"
             exit 0
           fi
+
+          echo "Commits since last release:"
+          echo "$COMMITS"
 
           BUMP="none"
 
           # Check for breaking changes (major)
-          if echo "$COMMITS" | grep -qE "^[a-z]+(\(.+\))?!:"; then
+          if echo "$COMMITS" | grep -qE "^[a-z]+!(\(.+\))?:|^[a-z]+(\(.+\))?!:"; then
             BUMP="major"
           # Check for feat (minor)
           elif echo "$COMMITS" | grep -qE "^feat(\(.+\))?:"; then
@@ -54,15 +65,16 @@ jobs:
             BUMP="patch"
           fi
 
+          echo "Detected bump: $BUMP"
           echo "bump=$BUMP" >> $GITHUB_OUTPUT
 
       - name: Bump version
         if: steps.bump.outputs.bump != 'none'
         id: version
+        env:
+          BUMP: ${{ steps.bump.outputs.bump }}
+          CURRENT: ${{ steps.current.outputs.version }}
         run: |
-          BUMP=${{ steps.bump.outputs.bump }}
-          CURRENT=${{ steps.current.outputs.version }}
-
           IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
 
           case "$BUMP" in
@@ -83,19 +95,28 @@ jobs:
 
           echo "Version: $CURRENT → $NEW_VERSION ($BUMP)"
 
-      - name: Commit version bump
-        if: steps.bump.outputs.bump != 'none'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add package.json
-          git commit -m "chore(release): v${{ steps.version.outputs.new_version }}"
-          git tag "v${{ steps.version.outputs.new_version }}"
-          git push
-          git push --tags
-
       - name: Publish to npm
         if: steps.bump.outputs.bump != 'none'
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Commit version bump and tag
+        if: steps.bump.outputs.bump != 'none'
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json
+          git commit -m "chore(release): v${NEW_VERSION} [skip ci]"
+          git tag "v${NEW_VERSION}"
+          git push
+          git push --tags
+
+      - name: Create GitHub Release
+        if: steps.bump.outputs.bump != 'none'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
+        run: gh release create "v${NEW_VERSION}" --generate-notes --title "v${NEW_VERSION}"

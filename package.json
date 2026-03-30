@@ -1,6 +1,6 @@
 {
   "name": "@sulhadin/orchestrator",
-  "version": "1.10.0",
+  "version": "2.0.0",
   "description": "AI Team Orchestration System — multi-role coordination for Claude Code",
   "bin": {
     "orchestrator": "bin/index.js"
@@ -17,6 +17,14 @@
     "multi-agent",
     "claude-code"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sulhadin/orchestrator.git"
+  },
+  "homepage": "https://github.com/sulhadin/orchestrator/blob/main/docs/README.md",
+  "bugs": {
+    "url": "https://github.com/sulhadin/orchestrator/issues"
+  },
   "author": "Sulhadin Öney",
   "license": "MIT",
   "packageManager": "yarn@4.13.0"

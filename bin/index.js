@@ -9,7 +9,7 @@ const templateDir = path.join(__dirname, "..", "template");
 const ORCHESTRA_SECTION_START = "<!-- orchestra -->";
 const ORCHESTRA_SECTION_END = "<!-- /orchestra -->";
 
-const USER_DIRS = ["milestones"];
+const USER_DIRS = ["milestones", "skills", "blueprints"];
 
 const ALLOW_PERMISSIONS = [
   "Bash(*)",
@@ -178,6 +178,23 @@ function run() {
       }
     }
 
+    // Backup knowledge.md (single file, not a directory)
+    const knowledgeSrc = path.join(orchestraDest, "knowledge.md");
+    const knowledgeBackup = path.join(targetDir, ".orchestra-backup-knowledge.md");
+    let hasKnowledge = false;
+    if (fs.existsSync(knowledgeSrc)) {
+      const content = fs.readFileSync(knowledgeSrc, "utf-8");
+      // Backup if there are any entries after the "Active Knowledge" marker
+      const activeMarker = "<!-- New entries go here";
+      const markerIdx = content.indexOf(activeMarker);
+      const hasEntries = markerIdx !== -1 && content.slice(markerIdx + activeMarker.length).trim().length > 10;
+      if (hasEntries) {
+        fs.copyFileSync(knowledgeSrc, knowledgeBackup);
+        hasKnowledge = true;
+        console.log("  [~] Backed up knowledge.md (has project entries)");
+      }
+    }
+
     rmDirRecursive(orchestraDest);
     console.log("  [~] Removed old .orchestra/");
 
@@ -186,14 +203,52 @@ function run() {
 
     for (const [dir, backupPath] of Object.entries(backups)) {
       const restorePath = path.join(orchestraDest, dir);
+      const templateDirPath = path.join(orchestraSrc, dir);
 
-      if (fs.existsSync(restorePath)) {
-        rmDirRecursive(restorePath);
+      if (dir === "milestones") {
+        // Milestones are fully user-owned — restore everything
+        if (fs.existsSync(restorePath)) {
+          rmDirRecursive(restorePath);
+        }
+        copyDirRecursive(backupPath, restorePath);
+        console.log("  [+] Restored " + dir + "/");
+      } else {
+        // Skills & blueprints: template files get updated, user-created files are preserved
+        // Template files are already in place from clean install.
+        // Only copy back files that DON'T exist in template (user-created).
+        const templateFiles = fs.existsSync(templateDirPath)
+          ? fs.readdirSync(templateDirPath)
+          : [];
+        const backupFiles = fs.readdirSync(backupPath).filter((f) => f !== ".gitkeep");
+        let restored = 0;
+
+        for (const file of backupFiles) {
+          if (!templateFiles.includes(file)) {
+            const srcFile = path.join(backupPath, file);
+            const destFile = path.join(restorePath, file);
+            if (fs.statSync(srcFile).isDirectory()) {
+              copyDirRecursive(srcFile, destFile);
+            } else {
+              fs.copyFileSync(srcFile, destFile);
+            }
+            restored++;
+          }
+        }
+
+        if (restored > 0) {
+          console.log("  [+] Restored " + restored + " user-created files in " + dir + "/");
+        }
+        console.log("  [~] Updated template files in " + dir + "/");
       }
 
-      copyDirRecursive(backupPath, restorePath);
       rmDirRecursive(backupPath);
-      console.log("  [+] Restored " + dir + "/");
+    }
+
+    // Restore knowledge.md
+    if (hasKnowledge && fs.existsSync(knowledgeBackup)) {
+      fs.copyFileSync(knowledgeBackup, path.join(orchestraDest, "knowledge.md"));
+      fs.unlinkSync(knowledgeBackup);
+      console.log("  [+] Restored knowledge.md");
     }
   } else {
     copyDirRecursive(orchestraSrc, orchestraDest);

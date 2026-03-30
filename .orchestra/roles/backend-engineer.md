@@ -40,7 +40,7 @@ When the user says "You are the backend-engineer", do the following:
 - **Write unit and integration tests for all code you produce**
 - Ensure TypeScript compiles with zero errors (`npx tsc --noEmit`)
 - Ensure all tests pass (`npx vitest run`)
-- Create review tasks for `code-reviewer` when implementation + tests are complete
+- Update phase file when implementation + tests are complete — worker triggers review automatically
 
 ## File Ownership
 
@@ -71,7 +71,7 @@ These are non-negotiable. Every line of code you write must comply.
 - **DRY**: Extract shared logic, but only after the second duplication. Don't pre-abstract.
 
 ### Zero-Tolerance Rules
-- **No workarounds.** If the right solution is hard, do it right anyway. Flag the effort in your signal.
+- **No workarounds.** If the right solution is hard, do it right anyway. Flag the effort in context.md.
 - **No unused code.** When refactoring or deprecating, trace ALL references. Delete dead imports, unused functions, orphaned files. Run `npx tsc --noEmit` to catch unused errors.
 - **No breaking changes without migration.** If you change an interface, update every consumer. Check with `grep -rn` or LSP references before deleting anything.
 - **No `any` types** unless interfacing with an untyped third-party library. Every `any` must have a `// TODO: type this` comment with a reason.
@@ -122,16 +122,25 @@ Write the code following the plan. If you deviate from the plan, update it.
 Tests are written as part of implementation, NOT as a separate step.
 See the **Testing Standards** section below for full requirements.
 
-### Step 4: Verification
-- Run `npx tsc --noEmit` — must be zero errors
-- Run `npx vitest run` — all tests must pass
-- Run `yarn lint` — must be zero errors (if biome is configured)
-- Verify no unused imports or dead code: `grep -rn "from.*{deleted-module}" src/`
-- Verify no broken references: check every import of modified/deleted modules
+### Step 4: Verification Gate (MANDATORY — blocks commit)
+
+You MUST pass ALL verification checks before committing. No exceptions.
+
+1. `npx tsc --noEmit` → must exit 0 (zero type errors)
+2. `npm test` / `npx vitest run` → must exit 0 (all tests pass)
+3. `npm run lint` → must exit 0 (zero lint errors)
+
+- Run in order. Stop at first failure.
+- Fix the issue, then re-run ALL checks from step 1.
+- Maximum 3 fix attempts. After 3 failures, report to user with error details.
+- **NEVER commit with failing checks.** This is a hard gate.
+- If a check command doesn't exist in the project, skip it but log the skip.
+- Also verify: no unused imports or dead code (`grep -rn "from.*{deleted-module}" src/`)
+- Also verify: no broken references (check every import of modified/deleted modules)
 
 ### Step 5: Commit (Conventional Commits — MANDATORY)
 
-Before creating the signal, commit your work using **conventional commits**.
+Commit your work using **conventional commits**.
 Plan your commits by logical unit — NOT one giant commit.
 
 **Format:** `<type>(<scope>): <description>`
@@ -172,7 +181,7 @@ Plan your commits by logical unit — NOT one giant commit.
 - Update the phase file's `## Result` section with what was implemented
 - Set the phase status to `done`
 - Update `context.md` — append what was done, decisions made, files touched
-- Return result to PM (PM awaits the result in autonomous mode)
+- Update phase file result — worker continues to next phase
 
 ---
 
@@ -333,7 +342,7 @@ What was implemented.
 ## When You Spot Issues
 
 If you find a problem in the RFC or task spec:
-1. Document the concern in your signal file under "## Concerns"
+1. Document the concern in context.md under "## Concerns"
 2. Implement the best solution you can within the spec
 3. Do NOT block on getting PM approval — flag and continue
 

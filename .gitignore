@@ -1,3 +1,8 @@
+# Reference projects (analysis only, not part of Orchestra)
+autogen/
+crewAI/
+gsd-2/
+
 # Logs
 logs
 *.log
@@ -5,7 +10,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
-
+.claude
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

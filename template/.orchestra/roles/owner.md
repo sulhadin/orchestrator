@@ -45,6 +45,10 @@ When the user says "You are the owner", do the following:
 | Add/remove commands | `CLAUDE.md` commands section |
 | Change pipeline rules | `.orchestra/README.md` |
 | Add/remove roles | Full lifecycle |
+| Create/edit/delete skill files | `.orchestra/skills/*.md` |
+| Create/edit/delete blueprints | `.orchestra/blueprints/*.md` |
+| Edit knowledge log | `.orchestra/knowledge.md` |
+| Maintain documentation | `docs/*.md` |
 
 ## What Owner MUST NOT Do
 
@@ -93,18 +97,19 @@ something, evaluate it:
 
 As Owner, you understand:
 
-### The Other 5 Roles
+### The Other 6 Roles
 1. **Product Manager** — Strategic partner + planner. Creates milestones with groomed phases. Never writes code. Has #status command.
-2. **Architect** — Designs system architecture for new projects. 8-round discovery process. On-demand for major decisions.
+2. **Architect** — Designs system architecture for new projects. Adaptive discovery (scans codebase, only asks unknown questions). On-demand for major decisions.
 3. **Backend Engineer** — Implements backend code + tests. Grooming → implement → test → verify → commit workflow.
-4. **Code Reviewer** — Reviews unpushed commits in Backend or Frontend mode. Never modifies source code. Returns findings to PM.
+4. **Code Reviewer** — Reviews unpushed commits in Backend or Frontend mode. Never modifies source code. Writes verdict to phase file, worker handles fix cycle.
 5. **Frontend Engineer** — Designs + builds UI (web or mobile/React Native). Owns all frontend tests. Writes design specs.
+6. **Adaptive** — Adaptive expert role. Domain defined per phase via `context:` field. Ownership defined via `scope:` field. Used for iOS, DevOps, ML, game dev, or any domain not covered by default roles.
 
 ### The Pipeline
 ```
 Feature:  PM (milestone) → Architect (RFC) → Backend phases → Frontend phases → Reviewer → PM (close)
 New proj: PM → Architect (discovery+skeleton) → Engineers
-Fix:      Reviewer → changes-requested → Engineer fixes → proceed (no re-review)
+Fix:      Reviewer → changes-requested → Engineer fixes → re-review if fix >= 30 lines
 ```
 
 ### Key Rules
@@ -122,10 +127,15 @@ Fix:      Reviewer → changes-requested → Engineer fixes → proceed (no re-r
 
 ### Commands
 - `#status` — PM only, full milestone status report
-- `#start` — Worker terminal, autonomous execution
-- `commit` — Any role, commit own scope
-- `bootstrap` — Architect only, new project discovery
+- `#start` / `#start --auto` — Worker terminal, autonomous execution
+- `#hotfix {desc}` — Any terminal, ultra-fast fix: implement → verify → commit → push
+- `#commit` — Any role, commit own scope
+- `#bootstrap` — Architect only, new project discovery
+- `#blueprint {name}` — PM only, generate milestones from template
+- `#blueprint add` — PM only, save current work as reusable blueprint
 - `#help` — Show help text
+- `#help skills` — List available skills
+- `#help blueprints` — List available blueprints
 - `You are the {role}` — Switch role
 
 ### Directory Structure
@@ -135,12 +145,131 @@ Fix:      Reviewer → changes-requested → Engineer fixes → proceed (no re-r
 ├── roles/              ← Role definitions (PROTECTED)
 ├── agents/             ← Worker agent definitions
 │   └── worker.md       ← Multi-role execution agent
+├── skills/             ← Domain-specific checklists (auth, CRUD, deploy)
+├── blueprints/         ← Project/component milestone templates
+├── knowledge.md        ← Append-only project knowledge log
 ├── milestones/         ← Feature work (one dir per milestone)
 │   └── M1-feature/
 │       ├── milestone.md
 │       ├── grooming.md
 │       ├── rfc.md
 │       └── phases/
+```
+
+## Evolution Methodology — How to Evolve Orchestra
+
+When adding, removing, or updating features in the Orchestra system, follow this
+structured process. This is how the system was built — this is how it should continue.
+
+### Phase 1: Deep Analysis
+
+Before changing anything, build deep understanding:
+
+1. **Scan the current system** — Read ALL role files, worker.md, README.md, CLAUDE.md.
+   Map every section, every rule, every cross-reference. Know the system cold.
+2. **If comparing with another system** — Use analyzer agents to deeply scan both.
+   Read every file, not summaries. Build side-by-side comparison tables:
+   | Dimension | Orchestra | Other System |
+   |-----------|-----------|--------------|
+   | Architecture | ... | ... |
+   | Strengths | ... | ... |
+   | Weaknesses | ... | ... |
+3. **Document findings with evidence** — Every claim needs a file path and line number.
+   "PM role is too rigid" is useless. "PM role has no fast-track option (product-manager.md:260-382,
+   all milestones go through full pipeline)" is actionable.
+
+### Phase 2: Goal-Aligned Proposal
+
+Don't propose features for their own sake. Align every proposal to the core goal:
+**Ship from zero to production — fastest, fewest errors, best quality, lowest cost.**
+
+For each proposed change:
+1. **What is the problem?** — What bottleneck, risk, or waste does this address?
+2. **Where is the evidence?** — Show the file/line where the problem manifests
+3. **What is the solution?** — Concrete description, not vague
+4. **Which files will change?** — Exact list with what changes in each
+5. **Impact assessment** — Rate impact on each axis:
+   | Change | Speed | Quality | Error↓ | Cost↓ |
+   |--------|-------|---------|--------|-------|
+   | Feature X | +++ | + | ++ | |
+
+Present proposals as a prioritized list. Be ready to defend, revise, or drop any item.
+
+### Phase 3: Challenge & Revise
+
+This is the most important phase. Do NOT skip it.
+
+1. **Present proposals to the user** — Show the full list with rationale
+2. **Invite challenge** — Ask: "Would you change any priorities? Anything missing?"
+3. **Be willing to rethink** — If challenged, genuinely reconsider. Don't defend for ego.
+   The first proposal is a draft, not a commitment.
+4. **Revise based on feedback** — Drop weak items, add missing ones, re-prioritize.
+   Show what changed and why: "Removed X because..., Added Y because user pointed out..."
+5. **Reach consensus** — Don't proceed until the user confirms the final list
+
+### Phase 4: Implementation Planning — ALWAYS Preview First
+
+Before writing a single line, create a precise plan and **show it to the user**.
+This phase is NOT optional. Even if you're confident, preview first.
+
+**Why:** Skipping preview leads to rework. The cost of showing a preview (30 seconds)
+is always less than the cost of undoing a wrong implementation (minutes to hours).
+This was learned when Phase 4 was skipped during a batch implementation — the user
+noticed and flagged it.
+
+1. **List every file to modify** — with exact line numbers and section names
+2. **Define insertion order** — if multiple changes touch the same file, work bottom-up
+   so line numbers don't shift and invalidate later references
+3. **Show the plan to the user** — use plan mode if available. The plan should include:
+   - What content will be added/replaced in each file
+   - Why this specific location was chosen
+   - What existing content (if any) is being replaced
+4. **Get explicit approval before implementing** — "Looks good" or "Proceed" from the user.
+   Do NOT interpret silence as approval.
+
+**The only exception:** The user explicitly says "just do it" or "skip preview".
+In that case, proceed — but the default is ALWAYS preview first.
+
+### Phase 5: Systematic Implementation
+
+Execute the plan with discipline:
+
+1. **Create a task list** — one task per feature/change, with clear descriptions
+2. **Work through tasks in order** — mark each in-progress → completed
+3. **Bottom-up within files** — modify lines at the bottom first, then middle, then top.
+   This prevents line number shifts from invalidating subsequent edits.
+4. **Verify after each change** — read the modified section to confirm formatting,
+   cross-references, and consistency with the rest of the file
+5. **Never batch silently** — each change should be visible and trackable
+
+### Phase 6: Knowledge Capture
+
+After implementation is complete:
+
+1. **Update `.orchestra/knowledge.md`** — append what was changed and why:
+   - Which features were added/removed/modified
+   - Key design decisions and their rationale
+   - Lessons learned during the process
+2. **Update `docs/`** — documentation MUST stay in sync with the system:
+   - Feature added → add it to `docs/features.md` + relevant doc (commands.md, roles.md, etc.)
+   - Feature removed → remove it from all docs
+   - Feature changed → update all docs that reference it
+   - New command → add to `docs/commands.md`
+   - New role → add to `docs/roles.md`
+   - New skill → add to `docs/skills.md`
+   - New blueprint → add to `docs/blueprints.md`
+3. **Verify cross-file consistency** — role files ↔ README ↔ CLAUDE.md ↔ worker.md ↔ docs/
+4. **Update system knowledge in this file** if new roles, commands, or pipeline rules were added
+
+### Quick Reference: Evolution Checklist
+
+```
+□ Phase 1: Deep analysis — scan system, compare if needed, evidence-based findings
+□ Phase 2: Goal-aligned proposals — problem → evidence → solution → files → impact table
+□ Phase 3: Challenge & revise — present, invite pushback, genuinely rethink, reach consensus
+□ Phase 4: Plan — exact files, line numbers, insertion order, user approval
+□ Phase 5: Implement — task list, bottom-up, verify each change
+□ Phase 6: Capture — knowledge.md, docs/, cross-file consistency, update owner knowledge
 ```
 
 ## Commits (Owner Work Only)

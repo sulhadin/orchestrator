@@ -5,13 +5,13 @@ AI team orchestration for [Claude Code](https://docs.anthropic.com/en/docs/claud
 ## Install
 
 ```bash
-npx @sulhadin/orchestrator
+npx @sulhadin/orchestrator@latest
 ```
 
 Skip permission prompts:
 
 ```bash
-npx @sulhadin/orchestrator --dangerously-skip-permissions
+npx @sulhadin/orchestrator@latest --dangerously-skip-permissions
 ```
 
 ## Two Terminals
@@ -70,43 +70,22 @@ You: #start
 
 Close the terminal, reopen, type `#start` — it resumes from where it left off.
 
-## Milestones
-
-Everything for a feature lives in one directory:
-
-```
-.orchestra/milestones/M1-user-auth/
-├── prd.md              What + why (PM writes)
-├── milestone.md        Status, acceptance criteria
-├── grooming.md         Discussion notes, scope decisions
-├── rfc.md              Technical design (architect writes)
-├── context.md          Running log (worker maintains for resume)
-└── phases/
-    ├── phase-1.md      backend: DB schema → commit
-    ├── phase-2.md      backend: API endpoints → commit
-    └── phase-3.md      frontend: login UI → commit
-```
-
-## Approval Gates
-
-Worker asks you at two points:
-
-1. **RFC ready** — approve before implementation starts
-2. **Push to origin** — approve before code is pushed
-
-PM asks you before creating a milestone. Everything else is automatic.
-
 ## Commands
 
 | Command | Where | What it does |
 |---------|-------|-------------|
 | `#pm` | Terminal 1 | Plan features, create milestones |
 | `#start` | Terminal 2 | Execute milestones, asks at approval gates |
-| `#start --auto` | Terminal 2 | Fully autonomous — no questions asked |
+| `#start --auto` | Terminal 2 | Confirms once, then fully autonomous |
+| `#hotfix {desc}` | Any | Ultra-fast fix: implement → verify → commit → push |
 | `#status` | Terminal 1 | Milestone status report |
 | `#help` | Any | Show all commands |
+| `#help skills` | Any | List available skills |
+| `#help blueprints` | Any | List available blueprints |
+| `#blueprint {name}` | Terminal 1 | Generate milestones from template |
+| `#blueprint add` | Terminal 1 | Save current work as reusable template |
 
-Manual mode (any terminal):
+Manual roles (any terminal):
 
 | Command | Role |
 |---------|------|
@@ -115,6 +94,18 @@ Manual mode (any terminal):
 | `#reviewer` | Code Reviewer |
 | `#architect` | Architect |
 | `#owner` | System maintenance |
+| `#adaptive` | Adaptive expert (iOS, DevOps, ML, etc.) |
+
+## Documentation
+
+See [docs/](https://github.com/sulhadin/orchestrator/blob/main/docs/README.md) for full documentation:
+
+- [Getting Started](https://github.com/sulhadin/orchestrator/blob/main/docs/getting-started.md) — installation, first milestone, two-terminal model
+- [Commands](https://github.com/sulhadin/orchestrator/blob/main/docs/commands.md) — all commands with examples
+- [Roles](https://github.com/sulhadin/orchestrator/blob/main/docs/roles.md) — 7 roles, responsibilities, boundaries
+- [Features](https://github.com/sulhadin/orchestrator/blob/main/docs/features.md) — verification gate, fast track, parallel, hotfix, and more
+- [Blueprints](https://github.com/sulhadin/orchestrator/blob/main/docs/blueprints.md) — project templates, `#blueprint add`
+- [Skills](https://github.com/sulhadin/orchestrator/blob/main/docs/skills.md) — domain checklists, creating new skills
 
 ## License
 

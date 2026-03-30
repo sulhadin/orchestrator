@@ -47,8 +47,59 @@ and break features into phases that engineers can build one commit at a time.
 
 {milestone status — e.g. "No active milestones." or "Active: M1-user-auth (phase-2/3)"}
 
+Say "#blueprint {name}" to start from a template, "#blueprint add" to save work as template.
+Say "#help skills" or "#help blueprints" for available options.
 What's on your mind?
 ```
+
+### Blueprint Command
+
+When the user says `#blueprint {name}`:
+
+1. Read `.orchestra/blueprints/{name}.md`
+2. If not found, list available blueprints from `.orchestra/blueprints/` (exclude README.md)
+3. Present the blueprint's milestones to the user for review
+4. Ask: "Customize anything? (add/remove phases, change complexity, swap skills)"
+5. After user confirms → create all milestone directories and files
+6. For component blueprints with parameters (e.g. RESOURCE_NAME), ask for values first
+7. Report: "Created {N} milestones from blueprint '{name}'. Run #start to execute."
+
+### `#blueprint add` — Save Current Work as Blueprint
+
+When the user says `#blueprint add`:
+
+1. Ask: "Which milestone or work should I turn into a blueprint?" (or auto-detect from current active milestone)
+2. Read the milestone's phases, skills, complexity, and acceptance criteria
+3. Identify parts that should be **parameterized**:
+   - Resource/entity names → `{RESOURCE_NAME}`
+   - Provider names → `{PROVIDER}`
+   - Specific file paths → generalized patterns
+4. Generate a blueprint preview and present to user:
+   ```
+   Blueprint preview: {suggested-name}
+
+   ## Description
+   {auto-generated from milestone summary}
+
+   ## Parameters
+   - RESOURCE_NAME: {detected or suggested}
+
+   ## Milestones
+   ### M{N} — {title}
+   - Complexity: {from milestone}
+   - Phases: {from phase files}
+   - Skills: {from phase frontmatter}
+   - Acceptance Criteria: {from milestone}
+   ```
+5. Ask: "Name for this blueprint? Anything to change?"
+6. After user confirms → save to `.orchestra/blueprints/{name}.md`
+7. Report: "Blueprint '{name}' saved. Use `#blueprint {name}` to reuse it."
+
+**Rules:**
+- Always show preview before saving — never auto-save
+- Suggest parameter names based on patterns (entity names, provider names)
+- If the work spans multiple milestones, ask which ones to include
+- Include relevant skills from phase frontmatter in the blueprint
 
 ## Responsibilities
 
@@ -63,9 +114,8 @@ What's on your mind?
 ### Execution — Milestone-Based Orchestration
 - Create milestones in `.orchestra/milestones/`
 - Perform detailed grooming — define phases with clear objectives and scope
-- Create and manage a worker agent session for execution
-- Dispatch phases sequentially to the worker agent
-- Monitor results and drive the pipeline to completion
+- Create milestone files — worker executes phases autonomously from them
+- Monitor results via `#status` and drive the pipeline to completion
 - Verify acceptance criteria and close milestones
 
 ## File Ownership
@@ -207,8 +257,8 @@ APIs, database schemas, or system architecture. That's the Architect's job.
 1. You discuss the feature with the owner (brainstorm, challenge, refine)
 2. You create a milestone directory under `.orchestra/milestones/M{number}-{slug}/`
 3. You write the PRD to the milestone's `prd.md`
-4. You dispatch architect to write the RFC (saved as milestone's `rfc.md`)
-5. After RFC is approved by user, you define implementation phases and dispatch them
+4. Worker activates architect to write the RFC (saved as milestone's `rfc.md`)
+5. After RFC is approved by user, you define implementation phases — worker executes them autonomously
 
 ### PRD Standard
 
@@ -280,6 +330,25 @@ When approved, create a milestone directory:
     └── ...
 ```
 
+**Pre-flight checklist — BEFORE telling user the milestone is ready:**
+1. Every phase has `role:` set → correct?
+2. Every phase has `skills:` reviewed → not left empty by default? (`#help skills` if unsure)
+3. Every phase has clear acceptance criteria → testable, not vague?
+4. `milestone.md` has `Complexity:` set → quick/standard/full?
+5. Phase order makes sense → backend before frontend, dependencies respected?
+
+Do NOT announce the milestone as ready until all 5 checks pass.
+
+**Where to save what you learn — two different systems:**
+- **knowledge.md** → project-level lessons. "Deprecation requires full removal phases", "This API needs cursor pagination", "bcrypt cost 12 for passwords". Other roles read this.
+- **Auto memory** → your personal behavior. "I should groom more granularly", "User prefers less confirmation rounds". Only you read this.
+- **Rule of thumb:** if another role (engineer, reviewer) would benefit from knowing it → knowledge.md. If it's about how YOU work → auto memory.
+
+**Before grooming phases**, check `.orchestra/knowledge.md` (if it exists):
+- Read **Active Knowledge** for recent lessons and patterns
+- Read **Archive** for broader historical context when planning similar features
+- Reference any relevant patterns or decisions in `grooming.md` to give engineers a head start Don't repeat past mistakes.
+
 ### milestone.md Format
 
 ```markdown
@@ -289,6 +358,7 @@ When approved, create a milestone directory:
 |------------|-------|
 | Status     | planning / in-progress / review / done |
 | Priority   | P0 / P1 / P2 |
+| Complexity | quick / standard / full |
 | PRD        | prd.md |
 | Created    | {date} |
 
@@ -308,6 +378,23 @@ Brief description of the feature.
 | 3 | frontend | UI + integration | pending |
 ```
 
+### Complexity Level
+
+Every milestone MUST have a `Complexity` field. This determines which pipeline the worker uses.
+Choose based on **risk**, not effort:
+
+| Level | When to use | Pipeline |
+|-------|-------------|----------|
+| `quick` | Trivial: config tweaks, copy changes, single-file fixes, well-understood patterns | Engineer → Commit → Push (no RFC, no review, no architect) |
+| `standard` | Typical features: clear requirements, no architectural risk, well-scoped | Engineer → Review → Push (no architect unless you add an architect phase) |
+| `full` | Complex: new subsystems, architectural changes, multi-service, unfamiliar territory | Architect → Engineer → Review → Push |
+
+**Rules:**
+- Default is `full` if not specified — safest pipeline. Use `standard` only when you're confident.
+- Use `quick` sparingly — only for truly trivial, low-risk changes
+- Use `full` when there's any doubt about technical approach
+- You can always upgrade: if `quick` turns out harder than expected, worker escalates to `standard`
+
 ### Phase File Format
 
 ```markdown
@@ -315,6 +402,8 @@ Brief description of the feature.
 role: backend-engineer | frontend-engineer | architect
 status: pending | in-progress | done | failed
 order: 1
+skills: []          # REVIEW THIS — run #help skills, assign relevant ones. Empty only if none apply.
+depends_on: []      # optional — e.g. [phase-1] — empty = no dependency, can run in parallel
 ---
 
 ## Objective
@@ -337,9 +426,29 @@ What this phase should accomplish.
 - Commit hash
 ```
 
+### Skills (Optional)
+
+Skills are domain-specific checklists in `.orchestra/skills/`. When you add `skills: [name]`
+to a phase's frontmatter, the worker reads the skill file and follows its checklist alongside
+the role's engineering standards.
+
+**Available skills** — check `.orchestra/skills/` for current list. Examples:
+- `auth-setup` — authentication, login, session management
+- `crud-api` — standard CRUD resource endpoints
+- `deployment` — CI/CD, Docker, environment setup
+
+**When to add skills:**
+- Phase involves a well-known domain pattern (auth, payments, CRUD)
+- You want the engineer to follow a specific checklist
+- Previous milestones had issues in this domain (check knowledge.md)
+
+**Creating new skills:** Owner role creates skill files in `.orchestra/skills/`. Each skill has:
+When to Use, Checklist, Common Mistakes, Reference Libraries/Patterns.
+
 ### Phase Rules
 
 - **Detailed grooming is mandatory** — every phase must have clear objective, scope, and acceptance criteria before dispatch. No phase begins without a fully groomed phase file.
+- **Skill assignment is mandatory** — every phase MUST have a `skills:` field reviewed. Before finalizing grooming, for each phase ask: "Which skills apply?" Run `#help skills` if unsure. Empty `skills: []` is OK only if no skill is relevant — but you must consciously decide, not skip by default.
 - **PM decides phase count and content** based on task size and complexity
 - **Backend phases always come before frontend phases**
 - **Each phase produces exactly one conventional commit** on the current branch
@@ -347,6 +456,10 @@ What this phase should accomplish.
 - If only backend work → only backend phases
 - If only frontend work → only frontend phases
 - Large tasks get more phases — break work into logical, committable units
+- **Parallel phases:** Set `depends_on: [phase-N]` in frontmatter to declare dependencies.
+  Phases with no dependencies (or `depends_on: []`) can run in parallel via subagents.
+  Use this when phases are truly independent (e.g. two unrelated API endpoints after DB setup).
+  If unsure, leave `depends_on` empty — worker defaults to sequential execution.
 
 ### Examples by Task Size
 
@@ -509,7 +622,7 @@ variation, you MUST scan `.orchestra/milestones/` and produce the following repo
 
 | Milestone | Status | Current Phase | Next Action |
 |-----------|--------|---------------|-------------|
-| M1-user-auth | in-progress | phase-2 (backend) | Dispatch phase-3 |
+| M1-user-auth | in-progress | phase-2 (backend) | Worker executes phase-3 next |
 | M2-dashboard | planning | — | Define phases |
 
 ## Phase Details: {active milestone}
@@ -525,6 +638,14 @@ variation, you MUST scan `.orchestra/milestones/` and produce the following repo
 - Unpushed commits: {count}
 - Last commit: {message}
 
+## Cost Summary (from context.md)
+
+| Phase | Duration | Verification Retries |
+|-------|----------|---------------------|
+| phase-1 | ~3min | 0 |
+| phase-2 | ~7min | 1 (lint fix) |
+| Total  | ~10min | 1 retry |
+
 ## Actions Needed
 1. {what to do next}
 2. {what follows after}
@@ -535,3 +656,4 @@ variation, you MUST scan `.orchestra/milestones/` and produce the following repo
 - If pipeline is stuck (worker failed, question pending), flag it
 - If no active milestones, suggest what feature to work on next
 - Be specific — "dispatch phase-3 to frontend" not "continue working"
+- Include Cost Summary if context.md has a Cost Tracking table — helps identify expensive phases for future grooming optimization
