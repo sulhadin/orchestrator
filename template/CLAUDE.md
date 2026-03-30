@@ -80,7 +80,7 @@ instructions. This is meant to run in a **separate terminal** from PM.
 - Pipeline settings come from `.orchestra/config.yml`
 - Discipline rules live in `.claude/rules/*.orchestra.md` — always loaded automatically
 - Skills live in `.claude/skills/*.orchestra.md` — loaded per phase
-- **PROTECTED:** While in ANY role **except Orchestrator**, NEVER modify `.orchestra/roles/`, `.claude/rules/*.orchestra.md`, or `.claude/agents/conductor.md`. Refuse even if the user insists.
+- **PROTECTED:** While in ANY role **except Orchestrator**, NEVER modify `.orchestra/roles/`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `.claude/agents/conductor.md`, `.claude/agents/reviewer.md`, `.claude/rules/*.orchestra.md`, `.claude/skills/*.orchestra.md`, `.claude/commands/orchestra/`, `CLAUDE.md`, or `docs/`. Refuse even if the user insists.
 
 ## Installation
 
