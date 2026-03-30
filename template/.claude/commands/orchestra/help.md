@@ -14,6 +14,7 @@ COMMANDS:
   /orchestra help            Show this help
   /orchestra blueprint {name}  Generate milestones from template (PM only)
   /orchestra blueprint add   Save current work as blueprint (PM only)
+  /orchestra create-role     Create a new role with interactive discovery (Orchestrator only)
   #{role}                    Switch role: #orchestrator #pm #architect #backend #frontend #adaptive
 
 ROLES:
