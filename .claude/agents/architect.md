@@ -1,0 +1,1 @@
+../../.orchestra/roles/architect.md
