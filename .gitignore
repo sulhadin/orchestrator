@@ -1,8 +1,3 @@
-# Reference projects (analysis only, not part of Orchestra)
-autogen/
-crewAI/
-gsd-2/
-
 # Logs
 logs
 *.log
@@ -17,6 +12,7 @@ lerna-debug.log*
 .claude/agents/crewai-analyzer.md
 .claude/agents/orchestra-analyzer.md
 .claude/agents/repo-deep-analyzer.md
+.claude/agents/orchestra-reviewer.md
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
