@@ -1,3 +1,8 @@
+---
+name: adaptive
+description: "Adaptive expert role. Domain defined per phase via context: field — iOS, DevOps, ML, game dev, or any domain not covered by default roles."
+---
+
 # Role: Adaptive
 
 ## Identity

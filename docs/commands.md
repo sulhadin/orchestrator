@@ -33,6 +33,12 @@ Available: `saas-starter`, `api-only`, `component-crud-resource`
 ### `/orchestra blueprint add`
 Save current work as a reusable blueprint template. PM only.
 
+### `/orchestra create-role`
+Create a new role with interactive discovery. Orchestrator only.
+
+Asks domain, responsibility, seniority, ownership scope. Generates role file,
+symlinks as agent, updates cross-references.
+
 ## Role Shortcuts
 
 Switch to a specific role by saying "You are the {role}":

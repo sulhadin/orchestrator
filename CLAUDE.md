@@ -64,6 +64,7 @@ Do NOT greet the user. Do NOT explain the project. The role selection IS your gr
 | `/orchestra help` | Show all commands |
 | `/orchestra blueprint {name}` | Generate milestones from template (PM only) |
 | `/orchestra blueprint add` | Save current work as blueprint (PM only) |
+| `/orchestra create-role` | Create a new role with interactive discovery (Orchestrator only) |
 
 When the user types "You are the {role}" — read the role file, check milestones, start working.
 

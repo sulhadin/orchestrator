@@ -1,15 +1,15 @@
 # Blueprints — Pre-Built Milestone Templates
 
 Blueprints are ready-made milestone sets for common project types. Instead of
-PM writing every milestone from scratch, say `#blueprint{name}` and get a full
+PM writing every milestone from scratch, say `/orchestra blueprint {name}` and get a full
 set of milestones pre-groomed with phases, skills, and acceptance criteria.
 
 ## How to Use
 
-1. PM activates: `#blueprintsaas-starter`
+1. PM activates: `/orchestra blueprint saas-starter`
 2. PM reviews the generated milestones — customize as needed
 3. PM approves → milestones are created in `.orchestra/milestones/`
-4. Worker executes with `#start`
+4. Conductor executes with `/orchestra start`
 
 ## How to Customize
 
@@ -76,7 +76,7 @@ Use this whenever you need a new entity in your API.
   - [ ] Tests cover happy path + edge cases
 ```
 
-PM uses it: `#blueprintcomponent-crud-resource` with `RESOURCE_NAME=product`.
+PM uses it: `/orchestra blueprint component-crud-resource` with `RESOURCE_NAME=product`.
 
 ## Available Blueprints
 
