@@ -15,15 +15,14 @@ COMMANDS:
   /orchestra blueprint {name}  Generate milestones from template (PM only)
   /orchestra blueprint add   Save current work as blueprint (PM only)
   /orchestra create-role     Create a new role with interactive discovery (Orchestrator only)
-  #{role}                    Switch role: #orchestrator #pm #architect #backend #frontend #adaptive
 
 ROLES:
-  orchestrator (#orchestrator)     Maintain and evolve Orchestra system
-  product-manager (#pm)            Write PRDs, create milestones, orchestrate pipeline
-  architect (#architect)           Design architecture, choose tech
-  backend-engineer (#backend)      Implement backend code + tests
-  frontend-engineer (#frontend)    Design + build UI, write frontend tests
-  adaptive (#adaptive)             Adaptive expert — domain defined per phase
+  orchestrator                     Maintain and evolve Orchestra system
+  product-manager                  Write PRDs, create milestones, orchestrate pipeline
+  architect                        Design architecture, choose tech
+  backend-engineer                 Implement backend code + tests
+  frontend-engineer                Design + build UI, write frontend tests
+  adaptive                         Adaptive expert — domain defined per phase
 
 AGENTS:
   conductor                        Autonomous milestone executor (/orchestra start)

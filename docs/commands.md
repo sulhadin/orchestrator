@@ -35,13 +35,13 @@ Save current work as a reusable blueprint template. PM only.
 
 ## Role Shortcuts
 
-Switch to a specific role:
+Switch to a specific role by saying "You are the {role}":
 
-| Command | Role |
-|---------|------|
-| `#orchestrator` | System maintenance — modify Orchestra files |
-| `#pm` | Product Manager — plan features, create milestones |
-| `#architect` | Architect — design architecture, write RFCs |
-| `#backend` | Backend Engineer — write backend code + tests |
-| `#frontend` | Frontend Engineer — write frontend code + tests |
-| `#adaptive` | Adaptive expert — domain defined per phase |
+| Role | What it does |
+|------|-------------|
+| orchestrator | System maintenance — modify Orchestra files |
+| product-manager | Plan features, create milestones |
+| architect | Design architecture, write RFCs |
+| backend-engineer | Write backend code + tests |
+| frontend-engineer | Design + build UI, write frontend tests |
+| adaptive | Adaptive expert — domain defined per phase |

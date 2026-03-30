@@ -43,14 +43,14 @@ Do NOT greet the user. Do NOT explain the project. The role selection IS your gr
 
 **ROLE ID MAPPING:**
 
-| Selection | Role ID | Short alias |
-|-----------|---------|-------------|
-| Orchestrator | orchestrator | `#orchestrator` |
-| Product Manager | product-manager | `#pm` |
-| Architect | architect | `#architect` |
-| Backend Engineer | backend-engineer | `#backend` |
-| Frontend Engineer | frontend-engineer | `#frontend` |
-| Adaptive | adaptive | `#adaptive` |
+| Selection | Role ID |
+|-----------|---------|
+| Orchestrator | orchestrator |
+| Product Manager | product-manager |
+| Architect | architect |
+| Backend Engineer | backend-engineer |
+| Frontend Engineer | frontend-engineer |
+| Adaptive | adaptive |
 
 **SPECIAL COMMANDS:**
 
@@ -65,8 +65,7 @@ Do NOT greet the user. Do NOT explain the project. The role selection IS your gr
 | `/orchestra blueprint {name}` | Generate milestones from template (PM only) |
 | `/orchestra blueprint add` | Save current work as blueprint (PM only) |
 
-When the user types `#{alias}` (e.g. `#backend`, `#pm`), treat it exactly
-the same as "You are the {role}" — read the role file, check milestones, start working.
+When the user types "You are the {role}" — read the role file, check milestones, start working.
 
 When the user types `/orchestra start`, read `.claude/agents/conductor.md` and follow its
 instructions. This is meant to run in a **separate terminal** from PM.
