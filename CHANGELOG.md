@@ -1,5 +1,25 @@
 # Changelog
 
+## [3.0.0-beta.2](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.1...orchestrator-v3.0.0-beta.2) (2026-03-30)
+
+
+### Features
+
+* **orchestra:** add agent frontmatter to all role files for Claude Code discovery ([4e8d7e6](https://github.com/sulhadin/orchestrator/commit/4e8d7e65f59e44be47115779278975387d7e9588))
+* **orchestra:** add orchestra-reviewer agent for system consistency audits ([7b2da00](https://github.com/sulhadin/orchestrator/commit/7b2da00de3b463589e5d8fe0639137026e2e44ad))
+* **orchestra:** add role boundary enforcement rule ([ff1ed17](https://github.com/sulhadin/orchestrator/commit/ff1ed17c38992fa730c0805a5056c316db1a0cbf))
+
+
+### Bug Fixes
+
+* **orchestra:** resolve 16 consistency issues from orchestra-reviewer audit ([04d93bc](https://github.com/sulhadin/orchestrator/commit/04d93bc7b99659d05ef789f402b862b4c9a73f2e))
+* **orchestra:** resolve remaining 6 audit issues ([68af80d](https://github.com/sulhadin/orchestrator/commit/68af80de027d414beb8c3b41a53d26a6014c5a6a))
+
+
+### Refactoring
+
+* **orchestra:** remove all legacy # command references, use /orchestra convention ([6bfbbe1](https://github.com/sulhadin/orchestrator/commit/6bfbbe1dd5f18a78b5a1948c7b6c1bfa3e000c2b))
+
 ## [3.0.0-beta.1](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta...orchestrator-v3.0.0-beta.1) (2026-03-30)
 
 
