@@ -19,7 +19,7 @@ labels: bug
 ```
 
 ## Which role/command?
-<!-- e.g. #start --auto, #pm, #hotfix, #backend, etc. -->
+<!-- e.g. /orchestra start --auto, /orchestra pm, /orchestra hotfix, backend-engineer, etc. -->
 
 ## Milestone context
 <!-- If applicable: milestone name, phase number, complexity level -->
