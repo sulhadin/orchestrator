@@ -1,6 +1,6 @@
 ---
 name: conductor
-description: "Orchestra conductor — autonomous milestone executor. Scans milestones, activates roles, executes phases, triggers review, pushes code. Use when the user types /orchestra start or #start."
+description: "Orchestra conductor — autonomous milestone executor. Scans milestones, activates roles, executes phases, triggers review, pushes code. Use when the user types /orchestra start."
 model: sonnet
 ---
 

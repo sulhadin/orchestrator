@@ -44,8 +44,8 @@ ln -s ../../.orchestra/roles/{name}.md .claude/agents/{name}.md
 ```
 
 This gives dual access:
-- `#{name}` → role (conductor uses, context preserved)
-- `@"{name} (agent)"` → standalone agent (separate process)
+- Role: conductor activates it during phase execution (context preserved)
+- Agent: `@"{name} (agent)"` for standalone use (separate process)
 
 ### Step 4: Update Cross-References
 

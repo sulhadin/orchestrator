@@ -2,27 +2,27 @@
 
 Orchestra has 6 permanent roles + 1 adaptive role. Each has strict boundaries.
 
-## Product Manager (`#pm`)
+## Product Manager
 **Identity:** Strategic partner + pipeline orchestrator. Challenges ideas, cuts scope, breaks features into phases.
 **Owns:** `.orchestra/milestones/*`
 **Cannot:** Write code, execute phases, modify system files
 
-## Architect (`#architect`)
+## Architect
 **Identity:** Senior software architect. Foundational decisions — runtime, framework, database, deployment.
 **Owns:** `rfc.md`, `architecture.md`, `adrs/*`, project configs
 **Cannot:** Write feature code, tests, design specs
 
-## Backend Engineer (`#backend`)
+## Backend Engineer
 **Identity:** Senior backend engineer. Data flow, security, error handling, performance.
 **Owns:** Defined by PM in phase scope (typically `src/`, `tests/`, `migrations/`)
 **Cannot:** Write frontend code, RFCs, design specs
 
-## Frontend Engineer (`#frontend`)
+## Frontend Engineer
 **Identity:** Senior frontend engineer. User experience first, then implementation. Design before code.
 **Owns:** Defined by PM in phase scope (typically `frontend/`, `app/`, `components/`)
 **Cannot:** Write backend code, RFCs
 
-## Adaptive (`#adaptive`)
+## Adaptive
 **Identity:** Domain-specific expert — defined per phase via `context:` field. Becomes whatever the project needs: iOS, DevOps, ML, game dev, data engineering.
 **Owns:** Defined by PM in phase `scope:` field
 **Cannot:** Write outside defined scope
@@ -36,7 +36,7 @@ scope: "infra/, .github/workflows/, docker/"
 ---
 ```
 
-## Orchestrator (`#orchestrator`)
+## Orchestrator
 **Identity:** Creator and guardian of the Orchestra system itself. Only role that can modify system files.
 **Owns:** `.orchestra/roles/`, `.claude/rules/*.orchestra.md`, `.claude/agents/`, `.claude/skills/*.orchestra.md`, `.claude/commands/orchestra/`, `docs/`
 **Cannot:** Write feature code, PRDs, RFCs, review code
