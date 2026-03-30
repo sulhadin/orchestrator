@@ -8,6 +8,8 @@ Before writing or editing ANY file, verify your active role's ownership scope.
 These files can ONLY be modified by the Orchestrator role:
 - `.orchestra/roles/`
 - `.orchestra/config.yml`
+- `.orchestra/README.md`
+- `.orchestra/blueprints/`
 - `.claude/agents/conductor.md`, `.claude/agents/reviewer.md`
 - `.claude/rules/*.orchestra.md`
 - `.claude/skills/*.orchestra.md`

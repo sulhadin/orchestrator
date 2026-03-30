@@ -5,7 +5,7 @@ Orchestra is an AI team orchestration system for [Claude Code](https://docs.anth
 ## What Orchestra Does
 
 - **PM plans** in one terminal, **conductor builds** in another
-- 7 roles with strict boundaries (including adaptive role for any domain)
+- 6 permanent roles + adaptive role for any domain, with strict boundaries
 - Config-driven pipeline (quick/standard/full)
 - Verification gate blocks broken code from being committed
 - Knowledge system learns from past milestones
@@ -33,7 +33,7 @@ Orchestra is an AI team orchestration system for [Claude Code](https://docs.anth
 |-----|---------------|
 | [Getting Started](getting-started.md) | Installation, first milestone, two-terminal model |
 | [Commands](commands.md) | All commands with examples |
-| [Roles](roles.md) | 7 roles: responsibilities, boundaries, when to use |
+| [Roles](roles.md) | 6 roles + adaptive: responsibilities, boundaries, when to use |
 | [Features](features.md) | All features: config, verification, skills, blueprints, and more |
 | [Blueprints](blueprints.md) | Project templates: use, create, customize |
 | [Skills](skills.md) | Domain checklists: use, create, available skills |

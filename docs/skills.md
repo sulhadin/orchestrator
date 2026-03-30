@@ -55,4 +55,4 @@ One line describing when to assign this skill.
 /orchestra help
 ```
 
-Lists all available skills in the help output.
+Shows the skills directory path. To see individual skills, check `.claude/skills/`.
