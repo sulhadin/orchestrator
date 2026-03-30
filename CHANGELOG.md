@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.0.0-beta.1](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta...orchestrator-v3.0.0-beta.1) (2026-03-30)
+
+
+### Features
+
+* **orchestra:** add /orchestra create-role command ([4d54c3e](https://github.com/sulhadin/orchestrator/commit/4d54c3e2aebeda1337058daa3d4b002a2cb0aed3))
+* **orchestra:** add orchestrator agent with role creation via symlink ([2850ff2](https://github.com/sulhadin/orchestrator/commit/2850ff2eb6fcb87675652c5b84a50bdf6a7a0d96))
+* **orchestra:** symlink all roles as agents for standalone access ([9e35346](https://github.com/sulhadin/orchestrator/commit/9e35346167ae36830035e51e842869a90e97394e))
+
 ## [3.0.0-beta](https://github.com/sulhadin/orchestrator/compare/orchestrator-v2.0.0...orchestrator-v3.0.0-beta) (2026-03-30)
 
 
