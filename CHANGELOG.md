@@ -1,5 +1,30 @@
 # Changelog
 
+## [3.0.0-beta.3](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.2...orchestrator-v3.0.0-beta.3) (2026-03-31)
+
+
+### Bug Fixes
+
+* **orchestra:** add explicit hard boundaries to PM role — never write code ([7eff4d2](https://github.com/sulhadin/orchestrator/commit/7eff4d296089640b05e1d0fd94545a18779da7fd))
+* **orchestra:** align all role restrictions — engineers + adaptive cannot write system files ([e342913](https://github.com/sulhadin/orchestrator/commit/e342913e1e9ec822025db75054e41171eeffeb06))
+* **orchestra:** strengthen PM boundary — refuse code even when user insists ([b79ffe1](https://github.com/sulhadin/orchestrator/commit/b79ffe1fb84b9d02f0c8f04d3be547566fae4def))
+
+
+### Refactoring
+
+* **orchestra:** centralize all role boundaries in rules, remove duplicate from PM ([c28a1c0](https://github.com/sulhadin/orchestrator/commit/c28a1c0f9e844208f182205b1e2afe1c794488b2))
+* **orchestra:** simplify role boundaries — check file path, not user words ([4cc1cc2](https://github.com/sulhadin/orchestrator/commit/4cc1cc2aa4f38d4f95330973362232056f51562c))
+
+
+### Maintenance
+
+* ignore personal skill and DS_Store ([f1a5726](https://github.com/sulhadin/orchestrator/commit/f1a5726ab927e42296239e26c1f34efba3205533))
+
+
+### CI/CD
+
+* **orchestra:** add template sync check workflow ([6a3fe47](https://github.com/sulhadin/orchestrator/commit/6a3fe47121f4d4957d75cd6949da091bb320f6b5))
+
 ## [3.0.0-beta.2](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.1...orchestrator-v3.0.0-beta.2) (2026-03-30)
 
 
