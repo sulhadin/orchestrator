@@ -1,1 +1,0 @@
-../../.orchestra/roles/adaptive.md

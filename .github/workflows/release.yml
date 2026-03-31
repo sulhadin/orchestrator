@@ -36,6 +36,12 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org
 
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build template
+        run: yarn run template
+
       - name: Determine npm tag
         id: npm-tag
         run: |
