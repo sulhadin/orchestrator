@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.0-beta.4](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.3...orchestrator-v3.0.0-beta.4) (2026-03-31)
+
+
+### Features
+
+* **orchestra:** add /orchestra {role} commands, remove free-text role switching ([1373096](https://github.com/sulhadin/orchestrator/commit/13730963c0130a3b9ad8dad156ad5da0df278795))
+
+
+### Documentation
+
+* **orchestra:** rewrite README and docs index for v3 architecture ([406bebe](https://github.com/sulhadin/orchestrator/commit/406bebe064c437a39a9030bd042e0e997a46065e))
+
 ## [3.0.0-beta.3](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.2...orchestrator-v3.0.0-beta.3) (2026-03-31)
 
 
