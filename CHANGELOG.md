@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0-beta.5](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.4...orchestrator-v3.0.0-beta.5) (2026-03-31)
+
+
+### Bug Fixes
+
+* **orchestra:** audit fixes — stale refs, missing protected path, symlink handling ([9992b47](https://github.com/sulhadin/orchestrator/commit/9992b475341bd5902cf7e9897e61aba7d2752358))
+
 ## [3.0.0-beta.4](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.3...orchestrator-v3.0.0-beta.4) (2026-03-31)
 
 
