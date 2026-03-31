@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0-beta.7](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.6...orchestrator-v3.0.0-beta.7) (2026-03-31)
+
+
+### Bug Fixes
+
+* **ci:** enable corepack before yarn install for Yarn 4 support ([355c312](https://github.com/sulhadin/orchestrator/commit/355c312413fc2e47e6c20211ae32647bf87555e1))
+
 ## [3.0.0-beta.6](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.5...orchestrator-v3.0.0-beta.6) (2026-03-31)
 
 
