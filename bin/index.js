@@ -71,6 +71,10 @@ function copyDirRecursive(src, dest) {
     const destPath = path.join(dest, entry.name);
     if (entry.isDirectory()) {
       copyDirRecursive(srcPath, destPath);
+    } else if (entry.isSymbolicLink()) {
+      const linkTarget = fs.readlinkSync(srcPath);
+      if (fs.existsSync(destPath)) fs.unlinkSync(destPath);
+      fs.symlinkSync(linkTarget, destPath);
     } else {
       fs.copyFileSync(srcPath, destPath);
     }

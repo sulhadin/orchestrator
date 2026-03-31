@@ -3,8 +3,8 @@
 Append-only log of decisions, lessons, and patterns discovered during development.
 
 **Two sections:**
-- **Active Knowledge** — last 5 milestones. Worker reads this before every milestone. PM reads before grooming.
-- **Archive** — older milestones, compacted to 1-2 lines each. PM reads during grooming for broader context. Worker skips.
+- **Active Knowledge** — last 5 milestones. Conductor reads this before every milestone. PM reads before grooming.
+- **Archive** — older milestones, compacted to 1-2 lines each. PM reads during grooming for broader context. Conductor skips.
 
 **Rules:**
 - NEVER edit or delete previous entries — append only
@@ -31,7 +31,7 @@ Append-only log of decisions, lessons, and patterns discovered during developmen
 
 # Archive
 
-Compacted entries from older milestones. PM reads during grooming. Worker skips.
+Compacted entries from older milestones. PM reads during grooming. Conductor skips.
 
 <!-- Oldest entries go here as 1-2 line summaries -->
 
@@ -39,7 +39,7 @@ Compacted entries from older milestones. PM reads during grooming. Worker skips.
 
 # Active Knowledge
 
-Last 5 milestones. Worker reads before every milestone start. PM reads before grooming.
+Last 5 milestones. Conductor reads before every milestone start. PM reads before grooming.
 
 <!-- New entries go here — move oldest to Archive when count exceeds 5 -->
 
@@ -91,3 +91,9 @@ Last 5 milestones. Worker reads before every milestone start. PM reads before gr
 - Parallel execution must be opt-in (depends_on) not default — breaking existing sequential behavior would be dangerous
 - Blueprint component pattern (parameterized single-milestone templates) is more reusable than full-project blueprints
 - Retrospective must be fixed-format (5 lines) to prevent data clutter — user raised this concern explicitly
+
+## 2026-03-31 — Terminology Corrections
+
+### Corrections
+- Correction: "codified in owner.md" (v2.0 entry) → "codified in orchestrator.md", because `owner` was the v1 role name renamed to `orchestrator` in v2
+- Correction: `#status` and `#hotfix {desc}` (v2.0 Tier 2/3 entries) → `/orchestra status` and `/orchestra hotfix {desc}`, because command syntax changed from `#command` to `/orchestra command` in v3
