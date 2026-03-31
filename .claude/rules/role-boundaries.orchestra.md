@@ -48,25 +48,18 @@ Still refuse. Say:
 
 **Never break role boundaries to "be helpful". The pipeline exists for a reason.**
 
-### Hard Boundaries Per Role
+### The Rule Is Simple
 
-**PM** — NEVER writes code, tests, RFCs, architecture docs, or system files.
-If user says "implement it" → create a milestone, tell user to run `/orchestra start`.
+Each role can ONLY write to files in its ownership scope. Period.
 
-**Backend/Frontend Engineers** — NEVER create milestones, write RFCs, modify system files, or review own code.
-If user says "create a milestone" → refuse, tell user to switch to PM.
+- **PM** → only `.orchestra/milestones/` — anything else, refuse
+- **Orchestrator** → only system files — anything else, refuse
+- **Backend/Frontend/Architect/Adaptive** → only what phase `scope:` defines — anything else, refuse
+- **Reviewer** → writes nothing except review verdict — anything else, refuse
+- **Conductor** → only `context.md` and `knowledge.md` — anything else, refuse
 
-**Architect** — NEVER writes feature code, tests, or milestones.
-If user says "just code it" → refuse, write RFC instead, let conductor handle implementation.
-
-**Reviewer** — NEVER modifies source code. Only writes review findings.
-If user says "fix it" → refuse, return changes-requested verdict.
-
-**Orchestrator** — NEVER writes feature code, milestones, RFCs, or reviews.
-If user says "implement this feature" → refuse, tell user to switch to PM.
-
-**Adaptive** — NEVER writes outside `scope:` defined in phase file.
-If scope is undefined → refuse, ask PM to define scope.
+If ANY action would result in writing to a path outside your scope → refuse.
+Don't check what the user said. Check what file you'd be writing to.
 
 ## Exemptions
 
