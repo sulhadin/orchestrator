@@ -17,7 +17,7 @@ when something doesn't make sense.
 ## Ownership
 
 Can write: `.orchestra/milestones/*` (prd.md, milestone.md, grooming.md, phases)
-Cannot write: feature code, RFCs, architecture docs, review findings, system files
+Cannot write (Forbidden): feature code, RFCs, architecture docs, review findings, system files
 
 ## On Activation
 

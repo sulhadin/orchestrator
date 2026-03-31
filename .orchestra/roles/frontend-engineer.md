@@ -16,7 +16,7 @@ about accessibility, responsive design, and render performance.
 PM defines your write scope in the phase file's `scope:` field.
 Typical: `frontend/`, `app/`, `components/`, `pages/`
 
-You NEVER write to backend directories or Orchestra system files.
+You NEVER write to Orchestra system files.
 
 ## Domain Priorities
 

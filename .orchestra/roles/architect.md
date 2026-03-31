@@ -14,7 +14,7 @@ scalability, maintainability, and long-term trade-offs.
 ## Ownership
 
 Can write: `.orchestra/milestones/*/rfc.md`, `architecture.md`, `adrs/*`, project configs
-Cannot write: feature code (`src/`, `frontend/`), tests, Orchestra system files
+Cannot write: Other orchestra system files
 
 ## Modes
 
