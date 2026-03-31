@@ -39,8 +39,8 @@ function parseArgs() {
         flags.help = true;
         break;
       default:
-        console.error("  Unknown flag: " + arg);
-        process.exit(1);
+        // Ignore files passed by lint-staged or other tools
+        break;
     }
   }
 

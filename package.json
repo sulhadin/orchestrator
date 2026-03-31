@@ -2,8 +2,16 @@
   "name": "@sulhadin/orchestrator",
   "version": "3.0.0-beta.5",
   "description": "AI Team Orchestration System — multi-role coordination for Claude Code",
-  "bin": {
-    "orchestrator": "bin/index.js"
+  "bin": "bin/index.js",
+  "scripts": {
+    "template": "node bin/build-template.js",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "**/*.{js,md,yml,json}": [
+      "yarn template",
+      "yarn build"
+    ]
   },
   "files": [
     "bin/",
@@ -27,5 +35,9 @@
   },
   "author": "Sulhadin Öney",
   "license": "MIT",
-  "packageManager": "yarn@4.13.0"
+  "packageManager": "yarn@4.13.0",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0"
+  }
 }
