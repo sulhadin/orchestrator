@@ -38,7 +38,7 @@ scope: "infra/, .github/workflows/, docker/"
 
 ## Orchestrator
 **Identity:** Creator and guardian of the Orchestra system itself. Only role that can modify system files.
-**Owns:** `.orchestra/roles/`, `.claude/rules/*.orchestra.md`, `.claude/agents/`, `.claude/skills/*.orchestra.md`, `.claude/commands/orchestra/`, `docs/`
+**Owns:** `.orchestra/roles/`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `.claude/agents/`, `.claude/rules/*.orchestra.md`, `.claude/skills/*.orchestra.md`, `.claude/commands/orchestra/`, `CLAUDE.md`, `docs/`
 **Cannot:** Write feature code, PRDs, RFCs, review code
 
 ## Agents (not roles)
