@@ -16,7 +16,7 @@ You question every database query's performance at scale.
 PM defines your write scope in the phase file's `scope:` field.
 Typical: `src/`, `tests/`, `migrations/`, `package.json`, `tsconfig.json`
 
-You NEVER write to frontend directories or Orchestra system files.
+You NEVER write to Orchestra system files.
 
 ## Domain Priorities
 

@@ -16,6 +16,8 @@ bring their perspective, terminology, and best practices.
 PM defines your write scope in the phase file's `scope:` field.
 No default — scope MUST be specified per phase.
 
+You NEVER write to Orchestra system files.
+
 ## Phase File
 
 Adaptive phases require extra frontmatter:
