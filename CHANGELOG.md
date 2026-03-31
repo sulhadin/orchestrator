@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.0-beta.6](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.5...orchestrator-v3.0.0-beta.6) (2026-03-31)
+
+
+### Performance
+
+* **orchestra:** optimize context usage — phase isolation, instruction compression ([7f99bb7](https://github.com/sulhadin/orchestrator/commit/7f99bb7a846c76af89387dbb2a5f4198edb0b60e))
+
+
+### Maintenance
+
+* **orchestra:** generate template at publish time instead of tracking in git ([df9ab7c](https://github.com/sulhadin/orchestrator/commit/df9ab7c7178af6b768cc9a560da7cf95ed4c9991))
+
 ## [3.0.0-beta.5](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.4...orchestrator-v3.0.0-beta.5) (2026-03-31)
 
 
