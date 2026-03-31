@@ -1,21 +1,10 @@
 # Phase Limits
 
-Read thresholds from `.orchestra/config.yml`:
+Read thresholds from `.orchestra/config.yml` (`phase_time_limit`, `phase_tool_limit`).
 
-```yaml
-thresholds:
-  phase_time_limit: 15    # minutes
-  phase_tool_limit: 40    # tool calls
-```
+**Time limit:** Phase exceeds limit → pause: "Phase-{N} exceeded {limit}min. Continue or stop?"
+In `--auto` mode: continue, log overage in context.md.
 
-**Time limit:** If a phase exceeds the configured time limit, pause and report:
-"Phase-{N} exceeded {limit}min. Continue or stop?"
-In `--auto` mode: continue but log the overage in context.md.
+**Scope guard:** Working on something NOT in phase acceptance criteria → STOP. Note in context.md, don't implement.
 
-**Scope guard:** If you find yourself working on something NOT listed in the phase's
-acceptance criteria → STOP. Note it as a concern in context.md, don't implement it.
-The phase scope is defined by PM — don't expand it.
-
-**Tool call guard:** If you've made more tool calls than the configured limit in one
-phase without committing, you're likely over-engineering or stuck. Pause, assess:
-commit what you have or escalate.
+**Tool call guard:** More tool calls than limit without committing → pause, assess: commit what you have or escalate.
