@@ -16,13 +16,13 @@ COMMANDS:
   /orchestra blueprint add   Save current work as blueprint (PM only)
   /orchestra create-role     Create a new role with interactive discovery (Orchestrator only)
 
-ROLES:
-  orchestrator                     Maintain and evolve Orchestra system
-  product-manager                  Write PRDs, create milestones, orchestrate pipeline
-  architect                        Design architecture, choose tech
-  backend-engineer                 Implement backend code + tests
-  frontend-engineer                Design + build UI, write frontend tests
-  adaptive                         Adaptive expert — domain defined per phase
+ROLES (activate via /orchestra {role}):
+  /orchestra orchestrator    Maintain and evolve Orchestra system
+  /orchestra pm              Plan features, create milestones
+  /orchestra architect       Design architecture, choose tech
+  /orchestra backend         Implement backend code + tests
+  /orchestra frontend        Design + build UI, write frontend tests
+  /orchestra adaptive        Adaptive expert — domain defined per phase
 
 AGENTS:
   conductor                        Autonomous milestone executor (/orchestra start)

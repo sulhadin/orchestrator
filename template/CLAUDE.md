@@ -66,7 +66,10 @@ Do NOT greet the user. Do NOT explain the project. The role selection IS your gr
 | `/orchestra blueprint add` | Save current work as blueprint (PM only) |
 | `/orchestra create-role` | Create a new role with interactive discovery (Orchestrator only) |
 
-When the user types "You are the {role}" — read the role file, check milestones, start working.
+When the user types `/orchestra {role}` (e.g. `/orchestra backend`, `/orchestra pm`), the
+corresponding command file activates that role. Do NOT switch roles based on free text
+like "be the backend engineer" or "you are the architect" — roles are activated ONLY
+via `/orchestra {role}` commands.
 
 When the user types `/orchestra start`, read `.claude/agents/conductor.md` and follow its
 instructions. This is meant to run in a **separate terminal** from PM.
