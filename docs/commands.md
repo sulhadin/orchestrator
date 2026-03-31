@@ -41,13 +41,13 @@ symlinks as agent, updates cross-references.
 
 ## Role Shortcuts
 
-Switch to a specific role by saying "You are the {role}":
+Switch to a specific role using `/orchestra {role}`:
 
-| Role | What it does |
-|------|-------------|
-| orchestrator | System maintenance — modify Orchestra files |
-| product-manager | Plan features, create milestones |
-| architect | Design architecture, write RFCs |
-| backend-engineer | Write backend code + tests |
-| frontend-engineer | Design + build UI, write frontend tests |
-| adaptive | Adaptive expert — domain defined per phase |
+| Command | What it does |
+|---------|-------------|
+| `/orchestra orchestrator` | System maintenance — modify Orchestra files |
+| `/orchestra pm` | Plan features, create milestones |
+| `/orchestra architect` | Design architecture, write RFCs |
+| `/orchestra backend` | Write backend code + tests |
+| `/orchestra frontend` | Design + build UI, write frontend tests |
+| `/orchestra adaptive` | Adaptive expert — domain defined per phase |

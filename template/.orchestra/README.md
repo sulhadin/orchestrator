@@ -234,6 +234,7 @@ No role may create, edit, delete, or modify these files:
 - `.orchestra/README.md`
 - `.orchestra/roles/*.md`
 - `.orchestra/config.yml`
+- `.orchestra/blueprints/`
 - `.claude/agents/conductor.md`, `.claude/agents/reviewer.md`
 - `.claude/rules/*.orchestra.md`
 - `.claude/skills/*.orchestra.md`
