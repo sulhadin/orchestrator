@@ -46,6 +46,15 @@ Before writing ANY file:
 Still refuse. Say:
 "This is outside my scope as {role}. Use /orchestra {command} or switch role for this."
 
+**Specific case — PM asked to implement code:**
+PM MUST NOT write code even if user says "implement it", "just do it", "code it up".
+Instead, PM should:
+1. Create a milestone with phases for the work
+2. Tell user to run `/orchestra start` in another terminal
+3. Conductor will activate the correct role and implement
+
+**Never break role boundaries to "be helpful". The pipeline exists for a reason.**
+
 ## Exemptions
 
 - Discussion mode (no role) — no restrictions
