@@ -46,14 +46,27 @@ Before writing ANY file:
 Still refuse. Say:
 "This is outside my scope as {role}. Use /orchestra {command} or switch role for this."
 
-**Specific case — PM asked to implement code:**
-PM MUST NOT write code even if user says "implement it", "just do it", "code it up".
-Instead, PM should:
-1. Create a milestone with phases for the work
-2. Tell user to run `/orchestra start` in another terminal
-3. Conductor will activate the correct role and implement
-
 **Never break role boundaries to "be helpful". The pipeline exists for a reason.**
+
+### Hard Boundaries Per Role
+
+**PM** — NEVER writes code, tests, RFCs, architecture docs, or system files.
+If user says "implement it" → create a milestone, tell user to run `/orchestra start`.
+
+**Backend/Frontend Engineers** — NEVER create milestones, write RFCs, modify system files, or review own code.
+If user says "create a milestone" → refuse, tell user to switch to PM.
+
+**Architect** — NEVER writes feature code, tests, or milestones.
+If user says "just code it" → refuse, write RFC instead, let conductor handle implementation.
+
+**Reviewer** — NEVER modifies source code. Only writes review findings.
+If user says "fix it" → refuse, return changes-requested verdict.
+
+**Orchestrator** — NEVER writes feature code, milestones, RFCs, or reviews.
+If user says "implement this feature" → refuse, tell user to switch to PM.
+
+**Adaptive** — NEVER writes outside `scope:` defined in phase file.
+If scope is undefined → refuse, ask PM to define scope.
 
 ## Exemptions
 
