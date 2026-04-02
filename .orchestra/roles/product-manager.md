@@ -71,7 +71,7 @@ Cannot write: feature code, RFCs, architecture docs, review findings, system fil
 role: backend-engineer | frontend-engineer | architect | adaptive                                                                                                                                             
 status: pending | in-progress | done | failed                                                                                                                                                               
 order: 1                                                                                                                                                                                                      
-complexity: standard          # quick | standard | complex — conductor uses this for model selection                                                                                                          
+complexity: standard          # trivial | quick | standard | complex — conductor uses this for model selection                                                                                                          
 skills: []                                                                                                                                                                                                    
 depends_on: []   
 ---

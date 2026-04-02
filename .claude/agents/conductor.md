@@ -76,7 +76,8 @@ phases with the same role.
 1. Read `.orchestra/roles/{role}.md` → role_content (skip if same role as previous phase)
 2. Read skill files from phase → skills_content (skip already-read skills)
 3. Read phase file → phase_content
-4. Read codebase map from context.md (if exists) → codebase_map
+4. Extract verification commands from config.yml (read once at startup, reuse)
+5. Read codebase map from context.md (if exists) → codebase_map
 
 ### 3. Delegate to Phase Sub-Agent
 
@@ -92,6 +93,11 @@ same role runs consecutive phases), dynamic content last.
 You are executing a phase for Orchestra conductor.
 Rules from `.claude/rules/*.orchestra.md` are automatically loaded.
 
+**Verification commands (run in this order, stop at first failure):**
+typecheck: {typecheck_cmd}
+test: {test_cmd}
+lint: {lint_cmd}
+
 **Role:**
 {role_content}
 
@@ -105,46 +111,46 @@ Rules from `.claude/rules/*.orchestra.md` are automatically loaded.
 {codebase_map}
 
 **Previous phase summary:**
-{previous_phase_result_summary — 5-10 lines max, omit for first phase}
+{previous_phase_result_summary — concise summary of decisions and artifacts
+that affect this phase. Omit for first phase.}
 
 ## Your Task
 1. Research — read existing code in scope (use codebase map to target files)
 2. Implement — write code + tests following role identity + skill checklists
-3. Acceptance — check each acceptance criterion from phase. Note any gaps.
-4. Report — when done, report back. Do NOT run verification or commit.
-   Conductor handles verification and commit separately.
+3. Verify — run verification commands: typecheck → test → lint (in order, stop at first failure).
+   Fix and retry until all pass (max {stuck_retry_limit} attempts). Error logs stay in your
+   context — this is intentional, your context is ephemeral.
+4. Acceptance — check each acceptance criterion from phase. Note any gaps.
+5. Report — when all verification passes and acceptance is checked, report back.
+   Do NOT commit — conductor handles commit.
 
 ## Return Format
 - status: done | failed
 - files_changed: [list]
-- error_summary: (if failed, max 5 lines)
+- verification_retries: N
+- error_summary: (if failed after max retries, include last error)
 - acceptance_notes: (any unverified criteria)
 - notes: (workarounds flagged, effort concerns, anything conductor should know)
 ```
 
 ### 4. Process Sub-Agent Result (Conductor does this)
 
-- If **done**:
-  1. Conductor runs verification directly via Bash (no sub-agent — avoids CLAUDE.md + rules overhead):
-     - Run typecheck → test → lint from config.yml, in order, stop at first failure
-     - Pipe output through `| head -20` to limit context growth
-     - In parallel mode, run commands in the worktree path from sub-agent result
-  2. If passes → conductor commits → update phase status → `done`
-  3. If fails → try SendMessage to continue implementation sub-agent with error summary.
-     If sub-agent no longer available → launch new sub-agent with: error summary +
-     files_changed list + original phase prompt.
-  4. Max fix cycles: config.yml `stuck_retry_limit` (default 3)
-  5. After max retries → set phase `failed`, log in context.md, escalate to user
-- If **failed**: log in context.md, decide to retry with new sub-agent or escalate
+- If **done** (verification passed):
+  1. Conductor commits → update phase status → `done`, update context.md
+  2. Store sub-agent ID for potential review fix cycle
+- If **failed** (verification failed after max retries):
+  1. Log in context.md: phase name, last error summary, retry count
+  2. Decide: retry with new sub-agent or escalate to user
 
-**Note:** Conductor owns verification and commit — sub-agents do neither.
+**Note:** Conductor owns commit only. Sub-agents own implementation + verification.
 
 ### Sub-Agent Configuration
 - Model selected per phase complexity via config.yml `pipeline.models:`
 - Use Agent tool `isolation: "worktree"` when `pipeline.parallel: enabled`
 - Each sub-agent starts with fresh context — no carryover from previous phases
-- Conductor stores sub-agent ID after launch for SendMessage fix cycles
-- Conductor passes previous phase result summary (5-10 lines) to next phase
+- Sub-agent runs its own verification loop (tight feedback, errors stay in ephemeral context)
+- Conductor stores sub-agent ID for potential review fix cycles
+- Conductor passes previous phase result summary to next phase
 
 ## Parallel Execution
 
@@ -154,7 +160,7 @@ If config.yml `pipeline.parallel: enabled`:
    - Use Agent tool with `run_in_background: true` and `isolation: "worktree"` for each
    - Track launched count, process each completion notification as it arrives
    - Proceed to step 3 only when all launched sub-agents have completed
-3. Merge results in phase order, conductor runs verification in each worktree path
+3. Merge results in phase order (sub-agents already verified in their worktrees)
 4. If `depends_on` not set on any phase → sequential (backward compatible)
 
 ## Review
@@ -211,9 +217,8 @@ On resume: read context.md, continue from last completed phase.
 
 When user types `/orchestra hotfix {description}`:
 1. Auto-create hotfix milestone + single phase
-2. Launch implementation sub-agent (model: standard)
-3. Conductor runs verification directly (typecheck → test → lint)
-4. If passes → conductor commits → push immediately (no RFC, no review, no gates)
+2. Launch implementation sub-agent (model: standard) — implements, verifies, reports
+3. If done → conductor commits → push immediately (no RFC, no review, no gates)
 5. Append one-liner to knowledge.md
 6. Return to normal execution if active
 
