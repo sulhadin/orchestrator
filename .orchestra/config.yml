@@ -2,6 +2,10 @@
 # Customize pipeline behavior, thresholds, and verification commands.
 
 pipeline:
+  models:
+    quick: haiku
+    standard: sonnet
+    complex: opus
   # RFC approval gate: required | optional | skip
   rfc_approval: required
 
