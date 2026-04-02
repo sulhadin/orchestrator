@@ -23,6 +23,7 @@ Call `ask_user_questions` with:
   7. Discussion — Just brainstorm, no role needed
 
 If user skips or starts giving instructions directly — work with them normally.
+Sub-agents spawned by conductor skip role selection — they already have a role assigned in their prompt.
 Do NOT greet. Do NOT explain. The role selection IS your greeting.
 
 **AFTER ROLE SELECTED:**

@@ -9,7 +9,7 @@
 **DRY** — Don't repeat yourself. Extract after second duplication, not before.
 
 **Zero-tolerance rules:**
-- No workarounds — if the right solution is hard, do it right. Flag effort in context.md.
+- No workarounds — if the right solution is hard, do it right. Flag effort in report or context.md.
 - No unused code — delete dead imports, functions, files. Don't comment out.
 - No breaking changes without migration — update every consumer.
 - Current library versions only — verify before using, don't assume from memory.

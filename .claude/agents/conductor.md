@@ -26,7 +26,12 @@ When started:
    - Glob `.orchestra/milestones/*/milestone.md`
    - Read each to check Status field
    - `status: in-progress` → resume | `status: planning` → start | all `done` → report complete
-6. Begin execution loop.
+6. If milestone scope spans 3+ directories or 20+ files, launch scout sub-agent (haiku):
+   - Scan project structure within milestone's phase scopes
+   - Return max 30-line map: `path/file — one-line description`
+   - Write map to context.md under `## Codebase Map`
+   - For smaller scopes, skip — sub-agents can explore directly.
+7. Begin execution loop.
 
 ## Pipeline Selection
 
@@ -59,53 +64,97 @@ For each phase:
 - Read phase file — extract role, skills, scope, acceptance criteria, depends_on
 - Check phase status — skip if `done`, resume if `in-progress`
 - Verify dependencies — all `depends_on` phases must be `done`
+- Select model: read `complexity` from phase file, map via config.yml `pipeline.models:` (default: `standard`)
 
-### 2. Delegate to Phase Sub-Agent
-Launch a sub-agent with this prompt template:
+### 2. Pre-read & Compose Prompt (Conductor does this)
+
+Before launching the sub-agent, conductor reads required files and inlines
+their content into the prompt. This eliminates sub-agent startup Read calls.
+Cache role/skills content in conductor context — don't re-read for consecutive
+phases with the same role.
+
+1. Read `.orchestra/roles/{role}.md` → role_content (skip if same role as previous phase)
+2. Read skill files from phase → skills_content (skip already-read skills)
+3. Read phase file → phase_content
+4. Read codebase map from context.md (if exists) → codebase_map
+
+### 3. Delegate to Phase Sub-Agent
+
+Launch sub-agent with model from pre-flight step. Always use default
+(general-purpose) subagent_type — role identity is provided in the prompt,
+using named types like "backend-engineer" would load a conflicting agent definition.
+Save the sub-agent ID for potential fix cycles via SendMessage.
+
+Prompt structure: static content first (better prefix cache hit chance when
+same role runs consecutive phases), dynamic content last.
 
 ```
 You are executing a phase for Orchestra conductor.
-
-**Role:** Read `.orchestra/roles/{role}.md` — adopt this identity.
-**Skills:** Read these skill files: {skill_files_list}
-**Phase file:** Read `{phase_file_path}` for objective, scope, and acceptance criteria.
-**Config:** Read `.orchestra/config.yml` for verification commands.
 Rules from `.claude/rules/*.orchestra.md` are automatically loaded.
 
+**Role:**
+{role_content}
+
+**Skills:**
+{skills_content}
+
+**Phase:**
+{phase_content}
+
+**Codebase map:**
+{codebase_map}
+
+**Previous phase summary:**
+{previous_phase_result_summary — 5-10 lines max, omit for first phase}
+
 ## Your Task
-1. Research — read existing code in scope, check dependency versions
+1. Research — read existing code in scope (use codebase map to target files)
 2. Implement — write code + tests following role identity + skill checklists
-3. Verify — run verification commands from config.yml (typecheck → test → lint)
-   - If verification fails, fix and retry (max {stuck_retry_limit} attempts)
-   - If still failing after max retries, report failure with error summary
-4. Acceptance — verify each acceptance criterion from phase file is satisfied
-5. Commit — one conventional commit per phase
+3. Acceptance — check each acceptance criterion from phase. Note any gaps.
+4. Report — when done, report back. Do NOT run verification or commit.
+   Conductor handles verification and commit separately.
 
 ## Return Format
-Report back with:
 - status: done | failed
-- commit_hash: (if committed)
 - files_changed: [list]
-- verification_retries: N
 - error_summary: (if failed, max 5 lines)
 - acceptance_notes: (any unverified criteria)
+- notes: (workarounds flagged, effort concerns, anything conductor should know)
 ```
 
-### 3. Process Sub-Agent Result (Conductor does this)
-- If **done**: update phase file status → `done`, fill Result section, update context.md
-- If **failed**: log in context.md, check stuck_retry_limit, decide to retry or escalate
+### 4. Process Sub-Agent Result (Conductor does this)
+
+- If **done**:
+  1. Conductor runs verification directly via Bash (no sub-agent — avoids CLAUDE.md + rules overhead):
+     - Run typecheck → test → lint from config.yml, in order, stop at first failure
+     - Pipe output through `| head -20` to limit context growth
+     - In parallel mode, run commands in the worktree path from sub-agent result
+  2. If passes → conductor commits → update phase status → `done`
+  3. If fails → try SendMessage to continue implementation sub-agent with error summary.
+     If sub-agent no longer available → launch new sub-agent with: error summary +
+     files_changed list + original phase prompt.
+  4. Max fix cycles: config.yml `stuck_retry_limit` (default 3)
+  5. After max retries → set phase `failed`, log in context.md, escalate to user
+- If **failed**: log in context.md, decide to retry with new sub-agent or escalate
+
+**Note:** Conductor owns verification and commit — sub-agents do neither.
 
 ### Sub-Agent Configuration
-- Use worktree isolation when `pipeline.parallel: enabled`
-- Sub-agent inherits model from conductor config
+- Model selected per phase complexity via config.yml `pipeline.models:`
+- Use Agent tool `isolation: "worktree"` when `pipeline.parallel: enabled`
 - Each sub-agent starts with fresh context — no carryover from previous phases
+- Conductor stores sub-agent ID after launch for SendMessage fix cycles
+- Conductor passes previous phase result summary (5-10 lines) to next phase
 
 ## Parallel Execution
 
 If config.yml `pipeline.parallel: enabled`:
 1. Read all phase files and `depends_on` fields
-2. Phases with `depends_on: []` launch as concurrent sub-agents with worktree isolation
-3. Merge results in phase order, verify after each merge
+2. Phases with `depends_on: []` launch as concurrent sub-agents:
+   - Use Agent tool with `run_in_background: true` and `isolation: "worktree"` for each
+   - Track launched count, process each completion notification as it arrives
+   - Proceed to step 3 only when all launched sub-agents have completed
+3. Merge results in phase order, conductor runs verification in each worktree path
 4. If `depends_on` not set on any phase → sequential (backward compatible)
 
 ## Review
@@ -116,7 +165,8 @@ After all implementation phases (unless config says `review: skip`):
 3. **approved** → push gate
 4. **approved-with-comments** → push gate, log comments in context.md
 5. **changes-requested** → fix cycle:
-   - Launch fix sub-agent with reviewer findings + relevant role
+   - Use SendMessage to continue the last phase's sub-agent with reviewer findings
+     (if sub-agent no longer available, launch new sub-agent with findings + role)
    - If fix < config `re_review_lines` → proceed
    - If fix >= config `re_review_lines` → abbreviated re-review
 
@@ -134,7 +184,7 @@ Read gate behavior from config.yml:
 ## Milestone Completion
 
 After push:
-1. Update milestone.md `status: done`, remove `Locked-By`
+1. Update milestone.md `status: done`, remove `Locked-By`.
 2. Append 5-line retrospective to knowledge.md:
    ```
    ## Retro: {id} — {title} ({date})
@@ -161,14 +211,14 @@ On resume: read context.md, continue from last completed phase.
 
 When user types `/orchestra hotfix {description}`:
 1. Auto-create hotfix milestone + single phase
-2. Launch single sub-agent: implement → verify → commit
-3. Push immediately (no RFC, no review, no approval gates)
-4. Append one-liner to knowledge.md
-5. Return to normal execution if active
+2. Launch implementation sub-agent (model: standard)
+3. Conductor runs verification directly (typecheck → test → lint)
+4. If passes → conductor commits → push immediately (no RFC, no review, no gates)
+5. Append one-liner to knowledge.md
+6. Return to normal execution if active
 
 ## What Conductor Does NOT Do
 
-- Does NOT implement code (sub-agents do)
-- Does NOT run verification commands directly (sub-agents do)
+- Does NOT implement code (implementation sub-agents do)
 - Does NOT create milestones (PM does)
 - Does NOT modify Orchestra system files (Orchestrator does)

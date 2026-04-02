@@ -23,7 +23,8 @@
     "ai",
     "agent",
     "multi-agent",
-    "claude-code"
+    "claude-code",
+    "team"
   ],
   "repository": {
     "type": "git",
