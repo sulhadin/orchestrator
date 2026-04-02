@@ -42,13 +42,44 @@ Cannot write: feature code, RFCs, architecture docs, review findings, system fil
     └── phase-2.md
 ```
 
-### Pre-flight Checklist
+### Milestone Review Loop
 
+After creating milestone files, launch a milestone-reviewer sub-agent before
+marking the milestone as ready. This catches planning errors before conductor executes.
+
+**Flow:** PM creates → reviewer sub-agent → PM fixes → reviewer again → max `pipeline.max_milestone_review_rounds`
+
+Launch sub-agent (general-purpose, model: sonnet) with this prompt:
+
+```
+You are reviewing a milestone for quality before execution. Read these files
+in {milestone_path}/: prd.md, milestone.md, grooming.md, and all files in phases/.
+(rfc.md and context.md don't exist yet — don't flag them as missing.)
+
+## Checklist
 1. Every phase has `role:` set?
-2. Every phase has `skills:` reviewed?
-3. Every phase has clear, testable acceptance criteria?
-4. `milestone.md` has `Complexity:` set?
-5. Phase order and dependencies correct?
+2. Every phase has `complexity:` set?
+3. Every phase has `skills:` appropriate for the role and task?
+4. Every phase has `scope:` defining which files/dirs to touch?
+5. Acceptance criteria are testable? (not vague like "works well" — specific like "returns 200")
+6. `milestone.md` has `Complexity:` set?
+7. Phase order and `depends_on` are correct? (frontend depends on backend, etc.)
+8. No overlapping scope between phases? (two phases writing same files)
+9. PRD explains WHY, not just WHAT?
+
+## Return Format
+verdict: approved | changes-requested
+issues:
+- [severity: blocking|suggestion] {description} — {file}
+summary: {2-3 sentences}
+```
+
+**Process:**
+1. If **approved** → proceed, milestone is ready for conductor
+2. If **changes-requested** → PM reads issues, fixes milestone files, re-launches reviewer
+3. After max rounds with no blocking issues → proceed with suggestions logged in grooming.md
+4. After max rounds with blocking issues still open → escalate to user, do NOT proceed
+5. Present verdict to user before finalizing
 
 ### milestone.md Format
 
@@ -59,7 +90,7 @@ Cannot write: feature code, RFCs, architecture docs, review findings, system fil
 |-------|-------|
 | Status | planning / in-progress / review / done |
 | Priority | P0 / P1 / P2 |
-| Complexity | quick / standard / full |
+| Complexity | trivial / quick / standard / complex |
 | PRD | prd.md |
 | Created | {date} |
 ```
@@ -85,11 +116,12 @@ depends_on: []
 
 ### Complexity Levels
 
-| Level | Pipeline | When |
-|-------|----------|------|
-| `quick` | Engineer → Commit → Push | Trivial: config, copy, single-file fix |
-| `standard` | Engineer → Review → Push | Typical features, clear requirements |
-| `full` | Architect → Engineer → Review → Push | Complex: new subsystems, unfamiliar territory |
+| Level | Model | Pipeline | When |
+|-------|-------|----------|------|
+| `trivial` | Haiku | Phases → Commit → Push | Version bumps, env vars, config changes |
+| `quick` | Sonnet | Phases → Commit → Push (skip review) | Single-file fixes, simple CRUD |
+| `standard` | Sonnet | Phases → Review → Push | Typical features (default) |
+| `complex` | Opus | Architect → Phases → Review → Push | New subsystems, unfamiliar territory |
 
 ### Blueprint Command
 
