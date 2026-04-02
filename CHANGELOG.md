@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0-beta.10](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.9...orchestrator-v3.0.0-beta.10) (2026-04-02)
+
+
+### Bug Fixes
+
+* **test:** move test files to test/ to exclude from npm package ([fe0b5ea](https://github.com/sulhadin/orchestrator/commit/fe0b5ea0f99489f718d2bdb733d9ab3901ca877c))
+
 ## [3.0.0-beta.9](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.8...orchestrator-v3.0.0-beta.9) (2026-04-02)
 
 
