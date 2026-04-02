@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0-beta.9](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.8...orchestrator-v3.0.0-beta.9) (2026-04-02)
+
+
+### Features
+
+* **orchestra:** smart config merge + parametric pipeline settings ([06f2cf3](https://github.com/sulhadin/orchestrator/commit/06f2cf3737dfa78befd396a1a2267fd96d3e4260))
+
 ## [3.0.0-beta.8](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.7...orchestrator-v3.0.0-beta.8) (2026-04-02)
 
 
