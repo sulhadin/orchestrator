@@ -8,7 +8,7 @@ Orchestra splits work between two terminals:
 
 **Terminal 1 — PM** (`/orchestra pm`): You discuss features, challenge scope, and create milestones with groomed phases. PM never writes code — only plans.
 
-**Terminal 2 — Conductor** (`/orchestra start`): The conductor reads your milestones and executes them autonomously. It activates the right role for each phase (backend, frontend, architect), runs verification before every commit, triggers code review, and pushes when done. Then loops to the next milestone.
+**Terminal 2 — Conductor** (`/orchestra start`): The conductor reads your milestones and delegates each phase to a sub-agent with the right role (backend, frontend, architect). Sub-agents implement code, run verification, and report back. Conductor commits, triggers code review, and pushes when done. Then loops to the next milestone.
 
 The two terminals communicate through files — no direct messaging. PM writes milestone files, conductor reads them. You can plan the next feature while the current one is being built.
 
@@ -25,7 +25,7 @@ The two terminals communicate through files — no direct messaging. PM writes m
 | Feature | What it does |
 |---------|-------------|
 | **Config-driven pipeline** | `.orchestra/config.yml` — customize verification commands, gates, thresholds per stack |
-| **Three complexity levels** | `quick` (skip RFC + review), `standard` (skip RFC), `full` (everything) |
+| **Four complexity levels + model tiering** | `trivial` (haiku), `quick`/`standard` (sonnet), `complex` (opus) — configurable in config.yml |
 | **Verification Gate** | Tests + lint must pass before every commit — commands from config |
 | **Acceptance Check** | Verifies implementation meets acceptance criteria, not just "does it compile" |
 | **14 Skills** | Domain checklists (auth, CRUD, deploy, React, accessibility, etc.) assigned to phases |
@@ -40,6 +40,9 @@ The two terminals communicate through files — no direct messaging. PM writes m
 | **Milestone Lock** | Prevents two conductors from executing the same milestone |
 | **Conditional Re-review** | Re-review only if fix exceeds threshold (configurable) |
 | **Role Creation** | `/orchestra create-role` — interactive discovery, auto-symlink as agent |
+| **Sub-agent delegation** | Each phase runs in isolated sub-agent — prevents context accumulation |
+| **Smart config merge** | On upgrade: new keys added, user values preserved |
+| **Codebase map** | Scout sub-agent generates file map for large milestones |
 
 ## Documentation
 

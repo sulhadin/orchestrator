@@ -6,12 +6,21 @@
 
 ```yaml
 pipeline:
+  models:
+    trivial: haiku          # version bumps, env vars
+    quick: sonnet           # single-file fixes, simple CRUD
+    standard: sonnet        # typical features
+    complex: opus           # new subsystems, architectural changes
   rfc_approval: required    # required | optional | skip
   push_approval: required   # required | auto
   review: required          # required | optional | skip
   parallel: disabled        # enabled | disabled
+  default_pipeline: full    # quick | standard | full
+  default_complexity: standard  # trivial | quick | standard | complex
+  max_rfc_rounds: 3
 
 thresholds:
+  milestone_lock_timeout: 120  # minutes
   re_review_lines: 30
   phase_time_limit: 15      # minutes
   phase_tool_limit: 40
@@ -25,23 +34,26 @@ verification:
 
 Change `verification` commands for Go (`go test ./...`), Python (`pytest`), or any stack.
 
-## Complexity Levels
+## Complexity Levels & Model Tiering
 
-PM sets per milestone. Determines which pipeline steps run:
+PM sets `complexity` per phase (or milestone-level `Complexity` for pipeline). Determines which LLM model runs the sub-agent and which pipeline steps apply:
 
-| Level | Pipeline | When |
-|-------|----------|------|
-| `quick` | Engineer → Commit → Push | Trivial changes |
-| `standard` | Engineer → Review → Push | Typical features |
-| `full` | Architect → Engineer → Review → Push | Complex work (default) |
+| Level | Model | Pipeline | When |
+|-------|-------|----------|------|
+| `trivial` | Haiku | Phases → Commit → Push | Version bumps, env vars, config changes |
+| `quick` | Sonnet | Phases → Commit → Push (skip review) | Single-file fixes, simple CRUD |
+| `standard` | Sonnet | Phases → Review → Push | Typical features (default) |
+| `complex` | Opus | Architect → Phases → Review → Push | New subsystems, architectural changes |
+
+Defaults configurable: `pipeline.default_pipeline` and `pipeline.default_complexity` in config.yml.
 
 ## Verification Gate
 
-Before every commit, conductor runs commands from config.yml. All must pass. Max retries from config. NEVER commits if verification fails.
+Sub-agents run verification commands from config.yml before reporting back. All must pass. Max retries from config. Conductor NEVER commits if verification fails.
 
 ## Acceptance Check
 
-After verification passes, conductor checks: "Does this satisfy every acceptance criterion in the phase file?" Catches "code works but wrong thing built."
+After verification passes, sub-agent checks: "Does this satisfy every acceptance criterion in the phase file?" Catches "code works but wrong thing built."
 
 ## Phase Limits
 
@@ -64,13 +76,27 @@ Domain checklists in `.claude/skills/*.orchestra.md`. PM assigns via phase front
 
 Pre-built milestone templates. `/orchestra blueprint saas-starter` creates 5 milestones instantly. `/orchestra blueprint add` saves current work as template.
 
+## Sub-Agent Delegation
+
+Conductor never implements code directly. Each phase runs in an isolated sub-agent:
+
+1. Conductor pre-reads role, skills, phase content and inlines into sub-agent prompt
+2. Sub-agent implements, verifies, checks acceptance, reports back
+3. Conductor commits, updates status, passes summary to next phase
+
+Error logs stay in sub-agent's ephemeral context — conductor stays clean across phases.
+
 ## Parallel Execution
 
-If `config.yml parallel: enabled`, phases with `depends_on: []` run simultaneously via subagent worktree isolation. Default is sequential.
+If `config.yml parallel: enabled`, phases with `depends_on: []` run simultaneously via `run_in_background` + worktree isolation. Default is sequential.
+
+## Codebase Map
+
+For milestones spanning 3+ directories or 20+ files, conductor launches a haiku scout sub-agent to generate a file map. Sub-agents use this map to target files directly instead of exploring.
 
 ## Hotfix Pipeline
 
-`/orchestra hotfix {desc}` — implement, verify, commit, push. No RFC, no review, no gates.
+`/orchestra hotfix {desc}` — sub-agent implements + verifies, conductor commits + pushes. No RFC, no review, no gates.
 
 ## Learning System
 
@@ -82,11 +108,11 @@ If `config.yml parallel: enabled`, phases with `depends_on: []` run simultaneous
 
 ## Rejection Flow
 
-RFC rejected → architect revises (max 3 rounds). Push rejected → fix phase created.
+RFC rejected → architect revises (max `pipeline.max_rfc_rounds`). Push rejected → fix phase created.
 
 ## Milestone Lock
 
-Conductor claims milestone with `Locked-By: {timestamp}`. Other conductors skip it. Expires after 2 hours.
+Conductor claims milestone with `Locked-By: {timestamp}`. Other conductors skip it. Expires after `thresholds.milestone_lock_timeout` minutes (default 120).
 
 ## Conditional Re-review
 

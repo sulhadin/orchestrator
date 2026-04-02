@@ -4,7 +4,7 @@ AI team orchestration for [Claude Code](https://docs.anthropic.com/en/docs/claud
 
 ## What is Orchestra?
 
-Orchestra turns a single Claude Code session into a coordinated development team. A Product Manager plans features, a Conductor executes them — switching between specialized roles (backend, frontend, architect) automatically. Each role has strict boundaries, every commit passes verification, and the system learns from past milestones.
+Orchestra turns a single Claude Code session into a coordinated development team. A Product Manager plans features, a Conductor orchestrates them — delegating each phase to a sub-agent with the right role (backend, frontend, architect). Sub-agents own implementation and verification; conductor owns commits. Each role has strict boundaries, every commit passes verification, and the system learns from past milestones.
 
 No infrastructure. No API keys. Just markdown files and Claude Code.
 
@@ -23,9 +23,9 @@ Terminal 1 (PM):                    Terminal 2 (Conductor):
   /orchestra pm                       /orchestra start
   │                                   │
   ├─ Discuss features                 ├─ Scan milestones
-  ├─ Create milestones                ├─ Activate architect → RFC
-  ├─ Groom phases                     ├─ Activate backend → code + tests
-  │                                   ├─ Activate frontend → UI
+  ├─ Create milestones                ├─ Delegate to architect → RFC
+  ├─ Groom phases                     ├─ Delegate to backend → code + tests
+  │                                   ├─ Delegate to frontend → UI
   │  (plan M2 while M1 runs)          ├─ Call reviewer → code review
   │                                   ├─ Push → milestone done
   │                                   └─ Loop → next milestone
@@ -86,7 +86,7 @@ PM challenges scope, creates M1-user-auth with 3 phases
 │   ├── conductor.md                    ← Autonomous milestone executor
 │   └── reviewer.md                     ← Independent code review
 ├── skills/*.orchestra.md               ← 14 domain checklists
-├── rules/*.orchestra.md                ← 8 discipline rules
+├── rules/*.orchestra.md                ← Discipline rules (auto-loaded)
 └── commands/orchestra/                 ← /orchestra commands
 
 .orchestra/                             ← Project data + config
@@ -101,10 +101,11 @@ PM challenges scope, creates M1-user-auth with 3 phases
 
 **Config-driven pipeline** — `.orchestra/config.yml` controls everything: verification commands (customize for Go, Python, Rust), approval gates, thresholds, parallel execution. No hardcoded assumptions.
 
-**Three complexity levels** — PM sets per milestone:
-- `quick` → Engineer → Commit → Push (trivial changes)
-- `standard` → Engineer → Review → Push (typical features)
-- `full` → Architect → Engineer → Review → Push (complex work)
+**Four complexity levels with model tiering** — PM sets per phase:
+- `trivial` (haiku) → Config changes, version bumps
+- `quick` (sonnet) → Single-file fixes, simple CRUD
+- `standard` (sonnet) → Typical features (default)
+- `complex` (opus) → New subsystems, architectural changes
 
 **Verification gate** — Tests + lint must pass before every commit. Commands come from config. Fails 3 times → phase marked failed, escalated to user.
 
@@ -135,7 +136,7 @@ Smart merge on upgrade:
 | Blueprints (your custom) | Preserved |
 | milestones/ | Untouched |
 | knowledge.md | Preserved |
-| config.yml | Preserved |
+| config.yml | Smart merged (user values preserved, new keys added) |
 
 ## Documentation
 

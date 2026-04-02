@@ -109,7 +109,7 @@ Start from a template instead of planning from scratch:
 npx @sulhadin/orchestrator
 ```
 
-Smart merge: system files updated, your data preserved.
+Smart merge: system files updated, your data preserved, config intelligently merged.
 
 | What | On upgrade |
 |------|-----------|
@@ -120,5 +120,5 @@ Smart merge: system files updated, your data preserved.
 | Blueprints (your custom) | Preserved |
 | milestones/ | Untouched |
 | knowledge.md | Preserved |
-| config.yml | Preserved |
+| config.yml | Smart merged (user values preserved, new keys added) |
 | CLAUDE.md | Orchestra section replaced |
