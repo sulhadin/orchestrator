@@ -25,7 +25,19 @@ pipeline:
   # When enabled, phases with depends_on: [] run in parallel
   parallel: disabled
 
+  # Default pipeline when milestone Complexity is missing
+  default_pipeline: full  # quick | standard | full
+
+  # Default phase complexity when not set by PM
+  default_complexity: standard  # trivial | quick | standard | complex
+
+  # Max RFC rejection rounds before escalating to user
+  max_rfc_rounds: 3
+
 thresholds:
+  # Milestone lock timeout in minutes (stale locks are ignored)
+  milestone_lock_timeout: 120
+
   # Fix cycle: re-review if fix exceeds this many lines
   re_review_lines: 30
 

@@ -43,13 +43,13 @@ Read `Complexity` from milestone.md + `pipeline` from config.yml:
 | `standard` | Phases → Review → Push |
 | `full` | Architect → Phases → Review → Push |
 
-Default: `full` if Complexity missing.
+Default: config.yml `pipeline.default_pipeline` (default `full`).
 
 ## Milestone Lock
 
 Before starting a milestone:
 1. Check milestone.md for `Locked-By` field
-2. If locked and < 2 hours old → skip this milestone
+2. If locked and < config.yml `thresholds.milestone_lock_timeout` minutes → skip this milestone
 3. If no lock or stale → write `Locked-By: {timestamp}`
 4. On completion or failure → remove `Locked-By`
 
@@ -64,7 +64,7 @@ For each phase:
 - Read phase file — extract role, skills, scope, acceptance criteria, depends_on
 - Check phase status — skip if `done`, resume if `in-progress`
 - Verify dependencies — all `depends_on` phases must be `done`
-- Select model: read `complexity` from phase file, map via config.yml `pipeline.models:` (default: `standard`)
+- Select model: read `complexity` from phase file (default: config.yml `pipeline.default_complexity`), map via `pipeline.models:`
 
 ### 2. Pre-read & Compose Prompt (Conductor does this)
 
@@ -184,7 +184,7 @@ Read gate behavior from config.yml:
 
 ## Rejection Flow
 
-- **RFC Rejected:** Ask feedback → architect revises → re-submit (max 3 rounds).
+- **RFC Rejected:** Ask feedback → architect revises → re-submit (max config.yml `pipeline.max_rfc_rounds`).
 - **Push Rejected:** Ask feedback → create fix phase → re-submit.
 
 ## Milestone Completion

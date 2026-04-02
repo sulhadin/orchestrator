@@ -95,6 +95,123 @@ function rmDirRecursive(dir) {
   fs.rmdirSync(dir);
 }
 
+/**
+ * Simple YAML config merge: adds new keys from template, preserves user values.
+ * Works with flat and one-level nested YAML (no deep nesting needed for config.yml).
+ */
+function mergeConfigYaml(userContent, templateContent) {
+  const userLines = userContent.split("\n");
+  const templateLines = templateContent.split("\n");
+
+  // Parse YAML into { key: value } with awareness of sections
+  function parseYaml(lines) {
+    const result = {};
+    let currentSection = null;
+    for (const line of lines) {
+      // Skip comments and empty lines for parsing, but we'll preserve them
+      if (line.trim() === "" || line.trim().startsWith("#")) continue;
+      // Top-level section (no indent)
+      const sectionMatch = line.match(/^(\w[\w_-]*):\s*$/);
+      if (sectionMatch) {
+        currentSection = sectionMatch[1];
+        result[currentSection] = result[currentSection] || {};
+        continue;
+      }
+      // Nested key (2-space indent)
+      const nestedMatch = line.match(/^  (\w[\w_-]*):\s*(.+)?$/);
+      if (nestedMatch && currentSection) {
+        const key = nestedMatch[1];
+        const value = nestedMatch[2] || "";
+        if (!result[currentSection]) result[currentSection] = {};
+        // Check if this is a sub-section (value is empty, next lines are indented more)
+        if (!value) {
+          result[currentSection][key] = result[currentSection][key] || {};
+        } else {
+          result[currentSection][key] = value;
+        }
+        continue;
+      }
+      // Deeper nested key (4-space indent)
+      const deepMatch = line.match(/^    (\w[\w_-]*):\s*(.+)$/);
+      if (deepMatch && currentSection) {
+        // Find parent key (last nested key without value)
+        const parentKeys = Object.keys(result[currentSection] || {});
+        const parentKey = parentKeys.reverse().find(
+          (k) => typeof result[currentSection][k] === "object"
+        );
+        if (parentKey) {
+          result[currentSection][parentKey][deepMatch[1]] = deepMatch[2];
+        }
+      }
+    }
+    return result;
+  }
+
+  const userParsed = parseYaml(userLines);
+  const templateParsed = parseYaml(templateLines);
+
+  // Build merged config: start with template (has comments + structure), fill with user values
+  const merged = [];
+  let currentSection = null;
+  let currentSubSection = null;
+
+  for (const line of templateLines) {
+    const sectionMatch = line.match(/^(\w[\w_-]*):\s*$/);
+    if (sectionMatch) {
+      currentSection = sectionMatch[1];
+      currentSubSection = null;
+      merged.push(line);
+      continue;
+    }
+
+    const nestedMatch = line.match(/^  (\w[\w_-]*):\s*(.+)?$/);
+    if (nestedMatch && currentSection) {
+      const key = nestedMatch[1];
+      const templateValue = nestedMatch[2] || "";
+
+      if (!templateValue) {
+        // Sub-section header (e.g., "models:")
+        currentSubSection = key;
+        merged.push(line);
+        continue;
+      }
+
+      // Has a value → this is a flat key, reset sub-section
+      currentSubSection = null;
+
+      // Check if user has this key
+      const userSection = userParsed[currentSection];
+      if (userSection && userSection[key] !== undefined && typeof userSection[key] !== "object") {
+        merged.push(`  ${key}: ${userSection[key]}`);
+        continue;
+      }
+      // New key — use template value
+      merged.push(line);
+      continue;
+    }
+
+    const deepMatch = line.match(/^    (\w[\w_-]*):\s*(.+)$/);
+    if (deepMatch && currentSection && currentSubSection) {
+      const key = deepMatch[1];
+      const userSection = userParsed[currentSection];
+      if (userSection && typeof userSection[currentSubSection] === "object") {
+        const userValue = userSection[currentSubSection][key];
+        if (userValue !== undefined) {
+          merged.push(`    ${key}: ${userValue}`);
+          continue;
+        }
+      }
+      // New key — use template value
+      merged.push(line);
+      continue;
+    }
+
+    merged.push(line);
+  }
+
+  return merged.join("\n");
+}
+
 function extractOrchestraSection(content) {
   const startIdx = content.indexOf(ORCHESTRA_SECTION_START);
   if (startIdx === -1) return null;
@@ -302,11 +419,14 @@ function run() {
       console.log("  [+] Restored knowledge.md");
     }
 
-    // Restore config.yml (user's customizations take priority)
+    // Merge config.yml: new template keys added, user values preserved
     if (hasConfig && fs.existsSync(configBackup)) {
-      fs.copyFileSync(configBackup, path.join(orchestraDest, "config.yml"));
+      const userConfig = fs.readFileSync(configBackup, "utf-8");
+      const templateConfig = fs.readFileSync(path.join(orchestraDest, "config.yml"), "utf-8");
+      const mergedConfig = mergeConfigYaml(userConfig, templateConfig);
+      fs.writeFileSync(path.join(orchestraDest, "config.yml"), mergedConfig);
       fs.unlinkSync(configBackup);
-      console.log("  [+] Restored config.yml (user customizations preserved)");
+      console.log("  [+] Merged config.yml (user values preserved, new keys added)");
     }
   } else {
     // ── Fresh install ──
