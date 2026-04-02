@@ -34,6 +34,9 @@ pipeline:
   # Max RFC rejection rounds before escalating to user
   max_rfc_rounds: 3
 
+  # Max milestone review rounds before proceeding anyway with warnings
+  max_milestone_review_rounds: 3
+
 thresholds:
   # Milestone lock timeout in minutes (stale locks are ignored)
   milestone_lock_timeout: 120
