@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.0-beta.11](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.10...orchestrator-v3.0.0-beta.11) (2026-04-02)
+
+
+### Features
+
+* **orchestra:** add milestone review loop for PM quality gate ([066b00c](https://github.com/sulhadin/orchestrator/commit/066b00c8532ad7d221506231bbeef5975d6d123c))
+
+
+### Documentation
+
+* **orchestra:** update docs for sub-agent delegation and model tiering ([12a05c5](https://github.com/sulhadin/orchestrator/commit/12a05c5b66421253d55c2ec20725a6ac3a943f7d))
+
 ## [3.0.0-beta.10](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.9...orchestrator-v3.0.0-beta.10) (2026-04-02)
 
 
