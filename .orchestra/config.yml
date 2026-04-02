@@ -2,8 +2,14 @@
 # Customize pipeline behavior, thresholds, and verification commands.
 
 pipeline:
+  # Model selection per phase complexity
+  # trivial: version bumps, env vars, config-only changes
+  # quick: single-file fixes, simple CRUD
+  # standard: typical features
+  # complex: new subsystems, architectural changes
   models:
-    quick: haiku
+    trivial: haiku
+    quick: sonnet
     standard: sonnet
     complex: opus
   # RFC approval gate: required | optional | skip
