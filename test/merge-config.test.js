@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Extract mergeConfigYaml from index.js
-const src = fs.readFileSync(path.join(__dirname, "index.js"), "utf-8");
+const src = fs.readFileSync(path.join(__dirname, "..", "bin", "index.js"), "utf-8");
 const match = src.match(/function mergeConfigYaml\([\s\S]*?^}/m);
 eval(match[0]);
 
