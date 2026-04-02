@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.0-beta.8](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.7...orchestrator-v3.0.0-beta.8) (2026-04-02)
+
+
+### Bug Fixes
+
+* **orchestra:** restore sub-agent verification loop for code quality ([2265ec6](https://github.com/sulhadin/orchestrator/commit/2265ec6e213cd6bd359d9b7126d666a4d02ffe74))
+
+
+### Performance
+
+* **orchestra:** model tiering, prompt pre-injection, conductor-owned verification ([2b19682](https://github.com/sulhadin/orchestrator/commit/2b19682845bb091833feed3b9782647eae5715a3))
+
 ## [3.0.0-beta.7](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.6...orchestrator-v3.0.0-beta.7) (2026-03-31)
 
 
