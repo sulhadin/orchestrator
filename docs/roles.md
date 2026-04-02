@@ -43,7 +43,7 @@ scope: "infra/, .github/workflows/, docker/"
 
 ## Agents (not roles)
 
-**Conductor** (`.claude/agents/conductor.md`) — Autonomous milestone executor. Not a role — it's the engine that activates roles, executes phases, and loops through milestones.
+**Conductor** (`.claude/agents/conductor.md`) — Autonomous milestone executor. Not a role — it's a state machine that delegates phases to sub-agents, selects models per complexity, owns commits, and loops through milestones. Never implements code directly.
 
 **Reviewer** (`.claude/agents/reviewer.md`) — Independent code review agent. Called by conductor after implementation. Has no context from implementation — sees only the code.
 

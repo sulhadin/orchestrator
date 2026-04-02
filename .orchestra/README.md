@@ -10,10 +10,10 @@ Terminal 1 (PM):                    Terminal 2 (Conductor):
   /orchestra pm                      /orchestra start
   │                                  │
   ├─ Discuss features with user      ├─ Scan milestones
-  ├─ Create milestones               ├─ 🏗️ architect → RFC
+  ├─ Create milestones               ├─ 🏗️ delegate to architect → RFC
   ├─ Groom phases                    ├─ 🚦 User approves RFC
-  ├─ Always available                ├─ ⚙️ backend → phase by phase
-  │                                  ├─ 🎨 frontend → phase by phase
+  ├─ Always available                ├─ ⚙️ delegate to backend → phase by phase
+  │                                  ├─ 🎨 delegate to frontend → phase by phase
   │  (can plan M2 while M1 runs)     ├─ 🔍 reviewer → review commits
   │                                  ├─ 🚦 User approves push
   │                                  ├─ git push → milestone done
@@ -56,8 +56,9 @@ You can plan new milestones while the conductor is executing another one.
 
 ### Terminal 2: `/orchestra start` (Execution)
 
-Conductor reads milestones, executes phases autonomously. Activates roles per phase.
-Loops to the next milestone when done. Maintains `context.md` for resume capability.
+Conductor reads milestones, delegates each phase to a sub-agent with the right role.
+Sub-agents implement + verify; conductor commits. Loops to next milestone when done.
+Maintains `context.md` for resume capability.
 
 ```
 /orchestra start
@@ -94,19 +95,20 @@ Hotfix (production bugs):
 ### Milestone Lock
 
 Conductor claims a milestone by writing `Locked-By: {timestamp}` to milestone.md before execution.
-Other conductors skip locked milestones. Lock expires after 2 hours (stale protection).
+Other conductors skip locked milestones. Lock expires after config.yml `thresholds.milestone_lock_timeout` minutes (default 120).
 
 ### Pipeline Modes (Complexity)
 
-PM sets a `Complexity` level on each milestone that determines the pipeline:
+PM sets `Complexity` on milestone (pipeline) and `complexity` on each phase (model selection):
 
-| Complexity | Pipeline | Use when |
-|------------|----------|----------|
-| `quick` | Engineer → Commit → Push | Config tweaks, copy changes, trivial fixes |
-| `standard` | Engineer → Review → Push | Typical features, clear requirements |
-| `full` | Architect → Engineer → Review → Push | Complex features, new subsystems |
+| Complexity | Model | Pipeline | Use when |
+|------------|-------|----------|----------|
+| `trivial` | Haiku | Phases → Commit → Push | Version bumps, env vars, config changes |
+| `quick` | Sonnet | Phases → Commit → Push (skip review) | Single-file fixes, simple CRUD |
+| `standard` | Sonnet | Phases → Review → Push | Typical features, clear requirements |
+| `complex` | Opus | Architect → Phases → Review → Push | New subsystems, unfamiliar territory |
 
-Default is `full` if not specified. Conductor reads the `Complexity` field from `milestone.md`.
+Defaults: config.yml `pipeline.default_pipeline` and `pipeline.default_complexity`.
 
 ### Milestone Statuses
 
@@ -142,8 +144,8 @@ Within each domain (backend/frontend), phases run in order: phase-1 → phase-2 
 **Parallel execution:** If PM sets `depends_on` in phase frontmatter, independent phases
 can run in parallel via subagent worktree isolation. No `depends_on` = sequential (default).
 
-**Verification Gate:** Before every commit, conductor MUST pass type check + tests + lint
-(commands from config.yml). Commit is blocked until all checks pass.
+**Verification Gate:** Sub-agents run typecheck + tests + lint (from config.yml) before reporting.
+Conductor NEVER commits unless verification passes.
 
 ---
 
@@ -193,7 +195,7 @@ All other transitions are automatic.
 ### Rejection Handling
 
 If the user says **no** at any gate:
-- **RFC rejected** → Architect revises based on feedback, re-submits (max 3 rounds)
+- **RFC rejected** → Architect revises based on feedback, re-submits (max config `pipeline.max_rfc_rounds`)
 - **Push rejected** → Conductor creates fix phase, implements, re-submits push gate
 - **Milestone rejected** → PM revises in PM terminal
 
@@ -217,8 +219,8 @@ Conductor calls reviewer agent
 
 **If approved-with-comments** → proceed to push gate. Comments are logged in context.md.
 
-**If changes-requested** → Conductor switches to the relevant role, fixes
-and commits. Re-review triggered if fix >= config `re_review_lines` threshold.
+**If changes-requested** → Conductor continues the phase's sub-agent via SendMessage with
+reviewer findings. Re-review triggered if fix >= config `re_review_lines` threshold.
 
 ---
 
