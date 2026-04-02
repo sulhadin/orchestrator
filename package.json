@@ -4,7 +4,7 @@
   "description": "AI Team Orchestration System — multi-role coordination for Claude Code",
   "bin": "bin/index.js",
   "scripts": {
-    "test": "node --test bin/**/*.test.js",
+    "test": "node --test test/**/*.test.js",
     "template": "node bin/build-template.js",
     "prepare": "husky"
   },
