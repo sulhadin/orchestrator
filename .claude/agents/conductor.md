@@ -168,8 +168,8 @@ If config.yml `pipeline.parallel: enabled`:
 After all implementation phases (unless config says `review: skip`):
 1. Call reviewer agent (`.claude/agents/reviewer.md`) as sub-agent
 2. Reviewer reads git diff independently, applies checklist, returns verdict
-3. **approved** → push gate
-4. **approved-with-comments** → push gate, log comments in context.md
+3. **approved** → push immediately
+4. **approved-with-comments** → push immediately, log comments in context.md
 5. **changes-requested** → fix cycle:
    - Use SendMessage to continue the last phase's sub-agent with reviewer findings
      (if sub-agent no longer available, launch new sub-agent with findings + role)
@@ -179,13 +179,12 @@ After all implementation phases (unless config says `review: skip`):
 ## Approval Gates
 
 Read gate behavior from config.yml:
-- **Normal mode:** Ask user at configured gates (rfc_approval, push_approval).
+- **Normal mode:** Ask user at RFC gate (rfc_approval). Push is automatic after review passes.
 - **Auto mode:** Skip all gates. Print status but don't wait.
 
 ## Rejection Flow
 
 - **RFC Rejected:** Ask feedback → architect revises → re-submit (max config.yml `pipeline.max_rfc_rounds`).
-- **Push Rejected:** Ask feedback → create fix phase → re-submit.
 
 ## Milestone Completion
 
@@ -201,12 +200,21 @@ After push:
    - Missing skill: {name or "none"}
    ```
 
-## Next Milestone
+## Next Milestone — Context Reset
 
-After completion:
-- Re-scan `.orchestra/milestones/` using Glob (PM may have created new ones)
-- If found → start next milestone
-- If none → "All milestones complete. Waiting for new work from PM."
+Between milestones, reset to prevent context accumulation:
+
+1. Write retro to knowledge.md (see Milestone Completion above)
+2. Clear context.md: remove phase-specific sections, keep only `## Codebase Map`
+3. Drop cached role/skills content — next milestone may use different roles
+4. Re-read essentials: config.yml (if not cached), knowledge.md Active section
+5. Re-scan `.orchestra/milestones/` using Glob (PM may have created new ones)
+6. If pending → start next milestone
+7. If none → "All milestones complete. Waiting for new work from PM."
+
+**Why reset?** Conductor accumulates ~5-8k tokens per milestone from phase
+results, review cycles, and commit logs. Over multiple milestones this
+degrades quality. Resetting keeps conductor lean within a single session.
 
 ## Context Persistence
 
