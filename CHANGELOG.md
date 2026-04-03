@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0-beta.12](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.11...orchestrator-v3.0.0-beta.12) (2026-04-03)
+
+
+### Features
+
+* **orchestra:** remove push gate, add milestone context reset, default rfc to skip ([6a8f8c5](https://github.com/sulhadin/orchestrator/commit/6a8f8c55c8881e3068dc4dab4c962404afd08e59))
+
 ## [3.0.0-beta.11](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.10...orchestrator-v3.0.0-beta.11) (2026-04-02)
 
 
