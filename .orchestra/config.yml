@@ -13,10 +13,7 @@ pipeline:
     standard: sonnet
     complex: opus
   # RFC approval gate: required | optional | skip
-  rfc_approval: required
-
-  # Push approval gate: required | auto
-  push_approval: required
+  rfc_approval: skip
 
   # Code review: required | optional | skip
   review: required
