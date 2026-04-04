@@ -28,7 +28,7 @@ Terminal 1 (PM):                    Terminal 2 (Conductor):
   │                                   ├─ Delegate to frontend → UI
   │  (plan M2 while M1 runs)          ├─ Call reviewer → code review
   │                                   ├─ Push → milestone done
-  │                                   └─ Loop → next milestone
+  │                                   └─ Stop (inline) or next milestone (agent)
 ```
 
 ## Quick Example
@@ -49,8 +49,7 @@ PM challenges scope, creates M1-user-auth with 3 phases
 ⚙️ backend → phase-2: API endpoints → committed
 🎨 frontend → phase-3: Login UI → committed
 🔍 reviewer → approved
-🚦 Push? → yes
-✅ M1-user-auth done. Checking for next milestone...
+✅ M1-user-auth done. Pushed to origin.
 ```
 
 ## Commands
@@ -116,6 +115,8 @@ PM challenges scope, creates M1-user-auth with 3 phases
 **Learning system** — `knowledge.md` accumulates decisions and lessons. 5-line retrospective after each milestone. PM reads before grooming new work. System gets smarter over time.
 
 **Role boundaries** — Enforced via `.claude/rules/`. PM cannot write code. Engineers cannot modify system files. Orchestrator cannot write features. Boundaries checked by file path, not by words.
+
+**Milestone isolation** — `inline` mode stops after each milestone (user compacts manually). `agent` mode spawns each milestone in its own sub-agent — context freed automatically, enabling 20+ milestones in a single `--auto` session.
 
 **Stuck detection** — Detects repeated failures, circular fixes, over-engineering. Tries different approach once, then escalates. Auto mode skips to next phase.
 

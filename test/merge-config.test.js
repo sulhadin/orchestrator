@@ -14,7 +14,6 @@ const userConfig = `pipeline:
     standard: sonnet
     complex: opus
   rfc_approval: skip
-  push_approval: auto
   review: required
   parallel: disabled
 
@@ -41,9 +40,9 @@ pipeline:
     standard: sonnet
     complex: opus
   rfc_approval: required
-  push_approval: required
   review: required
   parallel: disabled
+  milestone_isolation: inline
   default_pipeline: full
   default_complexity: standard
   max_rfc_rounds: 3
@@ -84,6 +83,10 @@ describe("mergeConfigYaml", () => {
     it("adds milestone_lock_timeout", () => {
       assert.ok(result.includes("milestone_lock_timeout: 120"));
     });
+
+    it("adds milestone_isolation", () => {
+      assert.ok(result.includes("milestone_isolation: inline"));
+    });
   });
 
   describe("user values are preserved", () => {
@@ -93,10 +96,6 @@ describe("mergeConfigYaml", () => {
 
     it("keeps user rfc_approval", () => {
       assert.ok(result.includes("rfc_approval: skip"));
-    });
-
-    it("keeps user push_approval", () => {
-      assert.ok(result.includes("push_approval: auto"));
     });
 
     it("keeps user re_review_lines", () => {

@@ -16,7 +16,7 @@ Terminal 1 (PM):                    Terminal 2 (Conductor):
   │                                  ├─ 🎨 delegate to frontend → phase by phase
   │  (can plan M2 while M1 runs)     ├─ 🔍 reviewer → review commits
   │                                  ├─ git push → milestone done
-  │                                  └─ Loop → next milestone
+  │                                  └─ Stop (inline) or next milestone (agent)
 ```
 
 ## Directory Structure
@@ -56,7 +56,8 @@ You can plan new milestones while the conductor is executing another one.
 ### Terminal 2: `/orchestra start` (Execution)
 
 Conductor reads milestones, delegates each phase to a sub-agent with the right role.
-Sub-agents implement + verify; conductor commits. Loops to next milestone when done.
+Sub-agents implement + verify; conductor commits. After milestone completion, behavior
+depends on `milestone_isolation` config: stops (inline) or continues to next (agent).
 Maintains `context.md` for resume capability.
 
 ```
@@ -108,6 +109,31 @@ PM sets `Complexity` on milestone (pipeline) and `complexity` on each phase (mod
 
 Defaults: config.yml `pipeline.default_pipeline` and `pipeline.default_complexity`.
 
+### Milestone Isolation
+
+Config `pipeline.milestone_isolation` controls how the conductor handles multiple milestones:
+
+| Mode | Behavior | Best for |
+|------|----------|----------|
+| `inline` (default) | Conductor runs milestone directly, **stops** after completion. User runs `/compact` then `/orchestra start` for next milestone. | Manual sessions, PC-based work |
+| `agent` | Conductor spawns a sub-agent per milestone. Context freed automatically after each. Loops to next milestone. | `--auto` overnight batch runs |
+
+```
+Inline mode:                          Agent mode:
+  /orchestra start                      /orchestra start --auto
+  → M1 executes → done → STOP          → Spawn Agent(M1) → done → freed
+  user: /compact                        → Spawn Agent(M2) → done → freed
+  /orchestra start                      → Spawn Agent(M3) → done → freed
+  → M2 executes → done → STOP          → All done
+```
+
+In agent mode, the delegation is two-tier:
+```
+Conductor (lean dispatcher)
+  └── Milestone Agent (fresh context)
+        └── Phase Agent (unchanged)
+```
+
 ### Milestone Statuses
 
 | Status | Meaning |
@@ -152,6 +178,7 @@ Conductor NEVER commits unless verification passes.
 - Each phase completion → **one conventional commit** on the current branch
 - No branch creation or switching — work happens on whatever branch is checked out
 - Milestone completion → **push to origin** (automatic after review passes)
+- Commits stay local until milestone fully completes — no partial push on failure
 - Reviewer reviews unpushed commits: `git log origin/{branch}..HEAD`
 - Clean git history: each commit maps to a phase
 
@@ -331,12 +358,16 @@ sequenceDiagram
 
     C->>C: git push → milestone done
 
-    C->>C: Next milestone? → loop or done
+    alt Inline mode (default)
+        C->>C: STOP — user compacts and restarts
+    else Agent mode
+        C->>C: Next milestone? → loop or done
+    end
 
     Note over PM: PM is free the entire time<br/>Can plan M2 while M1 executes
 ```
 
-### 2. Conductor Execution Loop
+### 2. Conductor Execution Loop (Inline Mode)
 
 ```mermaid
 sequenceDiagram
@@ -351,11 +382,27 @@ sequenceDiagram
     C->>C: reviewer → approved
     C->>C: Push → M1 done
 
-    C->>C: Start M2
-    C->>C: architect → RFC
-    C->>C: backend phase-1
-    C->>C: reviewer → approved
-    C->>C: Push → M2 done
+    Note over C: STOP. "Run /compact then /orchestra start"
+```
+
+### 3. Conductor Execution Loop (Agent Mode)
+
+```mermaid
+sequenceDiagram
+    participant C as Conductor
+    participant MA as Milestone Agent
+
+    C->>C: Scan milestones/
+
+    C->>MA: Spawn Agent(M1)
+    MA->>MA: phase-1 → phase-2 → review → push
+    MA-->>C: {status: done, retro: ...}
+    Note over C: Write retro, ~1-2k tokens retained
+
+    C->>MA: Spawn Agent(M2)
+    MA->>MA: phase-1 → phase-2 → review → push
+    MA-->>C: {status: done, retro: ...}
+    Note over C: Write retro, ~1-2k tokens retained
 
     C->>C: No more milestones
     Note over C: "All done. Waiting for new work."
