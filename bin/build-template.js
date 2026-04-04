@@ -6,9 +6,17 @@ const path = require("path");
 const rootDir = process.cwd();
 const templateDir = path.join(rootDir, "template");
 
+// Dev-only agents that should NOT be published to users
+const DEV_ONLY_AGENTS = new Set([
+  "codebase-deep-analyzer.md",
+  "orchestra-analyzer.md",
+  "orchestra-reviewer.md",
+  "repo-deep-analyzer.md",
+]);
+
 // System files to include in the template
 const SYSTEM_PATHS = [
-  { src: ".claude/agents", dest: ".claude/agents" },
+  { src: ".claude/agents", dest: ".claude/agents", filter: (f) => !DEV_ONLY_AGENTS.has(f) },
   { src: ".claude/commands/orchestra", dest: ".claude/commands/orchestra" },
   { src: ".claude/rules", dest: ".claude/rules", filter: (f) => f.endsWith(".orchestra.md") },
   { src: ".claude/skills", dest: ".claude/skills", filter: (f) => f.endsWith(".orchestra.md") },

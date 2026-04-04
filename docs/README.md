@@ -85,7 +85,7 @@ npx @sulhadin/orchestrator
 
 .orchestra/                             ← Project data + config
 ├── config.yml                          ← Pipeline settings, verification, thresholds
-├── roles/                              ← Role identities (slim, ~20 lines each)
+├── roles/                              ← Role identities (one file per role)
 ├── blueprints/                         ← Project/component templates
 ├── knowledge.md                        ← Append-only project knowledge
 └── milestones/                         ← Your work (one dir per feature)

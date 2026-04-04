@@ -13,7 +13,7 @@ This copies `.orchestra/` and `.claude/` into your project and adds Orchestra co
 ```
 .orchestra/           ← Your project data
 ├── config.yml        ← Pipeline settings (customize for your stack)
-├── roles/            ← Role identities (slim, 15 lines each)
+├── roles/            ← Role identities (one file per role)
 ├── blueprints/       ← Project templates
 ├── knowledge.md      ← Project knowledge log
 └── milestones/       ← Your work (one dir per feature)
