@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0...orchestrator-v3.1.0) (2026-04-04)
+
+
+### Features
+
+* **plugin:** add Claude Code plugin support alongside standalone npm install ([8d90525](https://github.com/sulhadin/orchestrator/commit/8d90525cc2217baf6e27104bbe958096a1848839))
+
 ## [3.0.0](https://github.com/sulhadin/orchestrator/compare/orchestrator-v2.0.0...orchestrator-v3.0.0) (2026-04-04)
 
 
