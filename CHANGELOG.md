@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.2](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.1...orchestrator-v3.1.2) (2026-04-04)
+
+
+### Bug Fixes
+
+* **orchestra:** improve PM guidance for starting execution ([1301fcb](https://github.com/sulhadin/orchestrator/commit/1301fcb347e32d49265696fb3fc7232bba2f6d83))
+* **orchestra:** PM directs user to /orchestra:start when milestone is ready ([437425b](https://github.com/sulhadin/orchestrator/commit/437425b4f2ddb0fff44d428358fa47492d5589d0))
+
 ## [3.1.1](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.0...orchestrator-v3.1.1) (2026-04-04)
 
 
