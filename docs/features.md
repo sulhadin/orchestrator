@@ -120,6 +120,14 @@ For milestones spanning 3+ directories or 20+ files, conductor launches a haiku 
 
 **Metrics** — phase duration + verification retries tracked in context.md `## Metrics` section. PM sees in `/orchestra status`.
 
+## Verifier
+
+`/orchestra verifier [numbers]` — PM compares what was requested vs what was built. Reads PRD, RFC, and acceptance criteria, then scans git commits for each milestone. Reports gaps as met/partial/missed/deviated with severity. Proposes fix milestones for critical gaps.
+
+## Rewind
+
+`/orchestra rewind [numbers]` — PM reviews execution history of completed milestones. Surfaces key decisions made during implementation, phase metrics, review comments, scope changes, and unresolved items. Cross-milestone summary highlights recurring patterns and skill gaps.
+
 ## Rejection Flow
 
 RFC rejected → architect revises (max `pipeline.max_rfc_rounds`). Push is automatic after review passes.

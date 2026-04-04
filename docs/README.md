@@ -42,6 +42,8 @@ The two terminals communicate through files — no direct messaging. PM writes m
 | **Role Creation** | `/orchestra create-role` — interactive discovery, auto-symlink as agent |
 | **Sub-agent delegation** | Each phase runs in isolated sub-agent — prevents context accumulation |
 | **Milestone isolation** | `inline` (stop after each, user compacts) or `agent` (auto context management for batch runs) |
+| **Verifier** | `/orchestra verifier` — compare PRD/RFC requirements against actual commits, propose fix milestones |
+| **Rewind** | `/orchestra rewind` — review execution history: decisions, metrics, review comments, actionable takeaways |
 | **Smart config merge** | On upgrade: new keys added, user values preserved |
 | **Codebase map** | Scout sub-agent generates file map for large milestones |
 

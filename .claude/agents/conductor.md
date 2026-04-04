@@ -221,13 +221,8 @@ Behavior after milestone completion depends on `pipeline.milestone_isolation`:
 ### Inline Mode (default)
 
 After push and retro:
-1. Clear context.md: remove `## Status`, `## Phases`, `## Decisions`, `## Metrics` sections, keep only `## Codebase Map`
-2. **STOP.** Print: "Milestone {id} complete and pushed. Run `/compact` then `/orchestra start` for next milestone."
-3. Do NOT loop to next milestone — user manages context manually.
-
-**Why stop?** Conductor accumulates ~5-8k tokens per milestone from phase
-results, review cycles, and commit logs. In inline mode, the user controls
-when to compact and restart, keeping quality high across milestones.
+1. **STOP.** Print: "Milestone {id} complete and pushed."
+2. Do NOT loop to next milestone.
 
 ### Agent Mode
 
@@ -367,7 +362,7 @@ pipeline: {quick | standard | full}
 - **Phase failed:** Set status to `failed`, add error summary and last-error
 - **Decisions:** Append key decisions from sub-agent's `notes` field — only non-obvious choices that affect later phases
 - **Metrics:** Record approximate phase duration and verification_retries from sub-agent result
-- **Milestone complete (inline mode):** Clear all sections except `## Codebase Map`
+- **Milestone complete:** Retro is written to knowledge.md (see Milestone Completion)
 
 ### On Resume
 

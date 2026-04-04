@@ -386,7 +386,7 @@ sequenceDiagram
     C->>C: reviewer → approved
     C->>C: Push → M1 done
 
-    Note over C: STOP. "Run /compact then /orchestra start"
+    Note over C: STOP. "Run /compact or /clear then /orchestra start"
 ```
 
 ### 3. Conductor Execution Loop (Agent Mode)

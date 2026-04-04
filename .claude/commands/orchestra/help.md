@@ -11,6 +11,8 @@ COMMANDS:
   /orchestra start --auto    Fully autonomous (warns once, then auto-push)
   /orchestra hotfix {desc}   Ultra-fast fix: implement → verify → commit → push
   /orchestra status          Milestone status report (PM only)
+  /orchestra verifier [N]    Verify milestones match requirements (PM only)
+  /orchestra rewind [N]      Review milestone execution history (PM only)
   /orchestra help            Show this help
   /orchestra blueprint {name}  Generate milestones from template (PM only)
   /orchestra blueprint add   Save current work as blueprint (PM only)
