@@ -15,7 +15,6 @@ Terminal 1 (PM):                    Terminal 2 (Conductor):
   ├─ Always available                ├─ ⚙️ delegate to backend → phase by phase
   │                                  ├─ 🎨 delegate to frontend → phase by phase
   │  (can plan M2 while M1 runs)     ├─ 🔍 reviewer → review commits
-  │                                  ├─ 🚦 User approves push
   │                                  ├─ git push → milestone done
   │                                  └─ Loop → next milestone
 ```
@@ -82,7 +81,6 @@ PM discusses feature with user
   → Conductor executes frontend phases (sequential, each → commit)
   → Conductor calls reviewer agent (reviews unpushed commits)
   → FIX cycle if changes-requested (re-review if fix >= 30 lines)
-  → [USER APPROVAL GATE: Push to origin]
   → Conductor pushes, PM verifies acceptance criteria, closes milestone
   → Conductor appends 5-line retrospective to knowledge.md
 
@@ -153,7 +151,7 @@ Conductor NEVER commits unless verification passes.
 
 - Each phase completion → **one conventional commit** on the current branch
 - No branch creation or switching — work happens on whatever branch is checked out
-- Milestone completion → **push to origin** (after user approval)
+- Milestone completion → **push to origin** (automatic after review passes)
 - Reviewer reviews unpushed commits: `git log origin/{branch}..HEAD`
 - Clean git history: each commit maps to a phase
 
@@ -187,16 +185,14 @@ Rules:
 
 The user must approve before these transitions:
 - **Milestone creation** — PM discusses and plans, but must get user approval before creating the milestone directory and files
-- **RFC → Implementation** — user reviews architect's RFC
-- **Push to origin** — user approves the final changeset
+- **RFC → Implementation** — user reviews architect's RFC (if `rfc_approval` is not `skip`)
 
-All other transitions are automatic.
+Push is automatic after review passes. All other transitions are automatic.
 
 ### Rejection Handling
 
 If the user says **no** at any gate:
 - **RFC rejected** → Architect revises based on feedback, re-submits (max config `pipeline.max_rfc_rounds`)
-- **Push rejected** → Conductor creates fix phase, implements, re-submits push gate
 - **Milestone rejected** → PM revises in PM terminal
 
 Rejections are normal. The system does not stall — it loops back with feedback.
@@ -215,9 +211,9 @@ Conductor calls reviewer agent
   → Returns: approved / approved-with-comments / changes-requested
 ```
 
-**If approved** → proceed to push gate.
+**If approved** → push immediately.
 
-**If approved-with-comments** → proceed to push gate. Comments are logged in context.md.
+**If approved-with-comments** → push immediately. Comments are logged in context.md.
 
 **If changes-requested** → Conductor continues the phase's sub-agent via SendMessage with
 reviewer findings. Re-review triggered if fix >= config `re_review_lines` threshold.
@@ -292,9 +288,10 @@ Conductor maintains `context.md` in each milestone directory. This allows:
 
 ### Approval Gates (Conductor Terminal)
 
-Conductor asks the user directly (not PM) at these points:
-1. **RFC ready** — "Approve RFC to start implementation?"
-2. **Push to origin** — "All done. Push to origin?"
+Conductor asks the user directly (not PM) at this point:
+1. **RFC ready** — "Approve RFC to start implementation?" (if `rfc_approval` is not `skip`)
+
+Push is automatic after review passes — no approval needed.
 
 ---
 
@@ -332,8 +329,6 @@ sequenceDiagram
         C->>C: Fix → commit
     end
 
-    C->>U: Push to origin?
-    U->>C: Yes
     C->>C: git push → milestone done
 
     C->>C: Next milestone? → loop or done

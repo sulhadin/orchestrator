@@ -1,6 +1,6 @@
-# CLAUDE.md — Orchestra Setup Instructions
+# CLAUDE.md
 
-This file is automatically read by Claude at the start of every session.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 <!-- orchestra -->
 ## Orchestra — AI Team Orchestration System
@@ -45,6 +45,22 @@ Role IDs: orchestrator, product-manager, architect, backend-engineer, frontend-e
 - Each role writes only to its ownership scope (defined in role file)
 - Rules (`.claude/rules/*.orchestra.md`) auto-loaded. Skills loaded per phase.
 - **PROTECTED:** Non-Orchestrator roles NEVER modify `.orchestra/roles/`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `.claude/agents/`, `.claude/rules/*.orchestra.md`, `.claude/skills/*.orchestra.md`, `.claude/commands/orchestra/`, `CLAUDE.md`, or `docs/`.
+
+## Development
+
+This is an npm package (`@sulhadin/orchestrator`) — a CLI installer that copies Orchestra template files into user projects.
+
+```bash
+yarn test              # Run tests (node:test, test/**/*.test.js)
+yarn template          # Rebuild template/ from source files (bin/build-template.js)
+yarn build             # Full build (defined in lint-staged)
+```
+
+**Architecture:** `bin/index.js` is the CLI entry point (runs via `npx`). It copies files from `template/` into the user's project, with smart YAML merge for `config.yml` (preserves user values, adds new keys). `bin/build-template.js` generates the `template/` directory from the source `.orchestra/` and `.claude/` files.
+
+**npm publishes:** Only `bin/` and `template/` directories (see `package.json` `files` field). Tests, docs, and source orchestra files are excluded.
+
+**Pre-commit:** Husky + lint-staged runs `yarn template && yarn build` on staged `.js`, `.md`, `.yml`, `.json` files.
 
 ## Installation
 

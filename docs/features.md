@@ -11,8 +11,7 @@ pipeline:
     quick: sonnet           # single-file fixes, simple CRUD
     standard: sonnet        # typical features
     complex: opus           # new subsystems, architectural changes
-  rfc_approval: required    # required | optional | skip
-  push_approval: required   # required | auto
+  rfc_approval: skip        # required | optional | skip
   review: required          # required | optional | skip
   parallel: disabled        # enabled | disabled
   default_pipeline: full    # quick | standard | full
@@ -108,7 +107,7 @@ For milestones spanning 3+ directories or 20+ files, conductor launches a haiku 
 
 ## Rejection Flow
 
-RFC rejected → architect revises (max `pipeline.max_rfc_rounds`). Push rejected → fix phase created.
+RFC rejected → architect revises (max `pipeline.max_rfc_rounds`). Push is automatic after review passes.
 
 ## Milestone Lock
 
