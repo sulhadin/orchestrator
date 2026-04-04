@@ -71,12 +71,10 @@ npx @sulhadin/orchestrator
 # Edit .orchestra/config.yml → verification commands
 
 # Terminal 1: Plan
-/orchestra pm          # standalone
-/orchestra:pm          # plugin
+/orchestra:pm
 
 # Terminal 2: Execute
-/orchestra start       # standalone
-/orchestra:start       # plugin
+/orchestra:start
 ```
 
 ## Architecture

@@ -16,7 +16,7 @@ No infrastructure. No API keys. Just markdown files and Claude Code.
 /plugin install orchestra
 ```
 
-This installs Orchestra as a plugin — no files copied into your project. Commands are available as `/orchestra:pm`, `/orchestra:start`, etc.
+No files copied into your project.
 
 ### As Standalone (copies files into your project)
 
@@ -24,7 +24,9 @@ This installs Orchestra as a plugin — no files copied into your project. Comma
 npx @sulhadin/orchestrator
 ```
 
-This copies `.orchestra/` (project data + config) and `.claude/` (agents, skills, rules, commands) into your project. Commands are available as `/orchestra pm`, `/orchestra start`, etc.
+Copies `.orchestra/` (project data + config) and `.claude/` (agents, skills, rules, commands) into your project.
+
+Both options use the same commands: `/orchestra:pm`, `/orchestra:start`, etc.
 
 ## How It Works
 

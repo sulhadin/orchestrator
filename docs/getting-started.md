@@ -8,7 +8,7 @@
 /plugin install orchestra
 ```
 
-No files are copied into your project. Commands use plugin namespace: `/orchestra:pm`, `/orchestra:start`, etc.
+No files are copied into your project.
 
 ### Option 2: Standalone (npx)
 
@@ -16,7 +16,9 @@ No files are copied into your project. Commands use plugin namespace: `/orchestr
 npx @sulhadin/orchestrator
 ```
 
-This copies `.orchestra/` and `.claude/` into your project and adds Orchestra configuration to your `CLAUDE.md`. Commands use directory namespace: `/orchestra pm`, `/orchestra start`, etc.
+This copies `.orchestra/` and `.claude/` into your project and adds Orchestra configuration to your `CLAUDE.md`.
+
+Both options use the same commands: `/orchestra:pm`, `/orchestra:start`, etc.
 
 ## What Gets Installed
 
