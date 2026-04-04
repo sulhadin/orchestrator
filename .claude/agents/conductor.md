@@ -20,6 +20,8 @@ When started:
 
 1. If `--auto`: print `Warning: Auto mode — RFC gate skipped, fully autonomous.` and proceed.
 2. Read `.orchestra/config.yml` for pipeline settings and thresholds.
+   - Read `pipeline.milestone_isolation` (default: `inline`).
+   - If `--auto` and `milestone_isolation: inline`: warn once: "Inline mode with --auto: conductor stops after each milestone. Consider `milestone_isolation: agent` for batch runs."
 3. Read `.orchestra/README.md` for orchestration rules.
 4. Read `.orchestra/knowledge.md` Active Knowledge section (skip Archive).
 5. Scan milestones:
@@ -188,6 +190,8 @@ Read gate behavior from config.yml:
 
 ## Milestone Completion
 
+### Inline Mode (default)
+
 After push:
 1. Update milestone.md `status: done`, remove `Locked-By`.
 2. Append 5-line retrospective to knowledge.md:
@@ -199,22 +203,129 @@ After push:
    - Review findings: {N blocking, N non-blocking} — {top issue}
    - Missing skill: {name or "none"}
    ```
+3. Proceed to "Next Milestone — Mode-Dependent Behavior" → Inline Mode.
 
-## Next Milestone — Context Reset
+### Agent Mode
 
-Between milestones, reset to prevent context accumulation:
+Milestone agent handles push and returns structured result (see Milestone Agent Delegation).
+Conductor processes the return:
+1. Update milestone.md `status: done`, remove `Locked-By`.
+2. Append retro from milestone agent's return to knowledge.md.
+3. Proceed to "Next Milestone — Mode-Dependent Behavior" → Agent Mode.
 
-1. Write retro to knowledge.md (see Milestone Completion above)
-2. Clear context.md: remove phase-specific sections, keep only `## Codebase Map`
-3. Do not reuse role/skills content from previous milestone — re-read if next milestone needs them
-4. Re-read essentials: config.yml (if not cached), knowledge.md Active section
-5. Re-scan `.orchestra/milestones/` using Glob (PM may have created new ones)
-6. If pending → start next milestone
-7. If none → "All milestones complete. Waiting for new work from PM."
+## Next Milestone — Mode-Dependent Behavior
 
-**Why reset?** Conductor accumulates ~5-8k tokens per milestone from phase
-results, review cycles, and commit logs. Over multiple milestones this
-degrades quality. Resetting keeps conductor lean within a single session.
+Behavior after milestone completion depends on `pipeline.milestone_isolation`:
+
+### Inline Mode (default)
+
+After push and retro:
+1. Clear context.md: remove phase-specific sections, keep only `## Codebase Map`
+2. **STOP.** Print: "Milestone {id} complete and pushed. Run `/compact` then `/orchestra start` for next milestone."
+3. Do NOT loop to next milestone — user manages context manually.
+
+**Why stop?** Conductor accumulates ~5-8k tokens per milestone from phase
+results, review cycles, and commit logs. In inline mode, the user controls
+when to compact and restart, keeping quality high across milestones.
+
+### Agent Mode
+
+After milestone agent returns (retro already written in Milestone Completion above):
+1. Re-read knowledge.md Active section (may have new retros)
+3. Re-scan `.orchestra/milestones/` using Glob (PM may have created new ones)
+4. If pending → spawn next milestone agent
+5. If none → "All milestones complete. Waiting for new work from PM."
+
+Context stays lean because all phase-level context lived in the (now ended)
+milestone agent. Conductor only accumulates ~1-2k tokens per milestone
+(prompt + structured result).
+
+## Milestone Agent Delegation (Agent Mode Only)
+
+This section applies ONLY when config `pipeline.milestone_isolation: agent`.
+
+In agent mode, the conductor becomes a two-tier dispatcher:
+- Conductor spawns one milestone agent per milestone
+- Milestone agent spawns phase sub-agents (same as current phase delegation)
+- When milestone agent completes, its context is freed entirely
+
+### Milestone Agent Prompt Template
+
+```
+You are a Milestone Agent executing milestone {milestone_id}: {title}.
+Rules from `.claude/rules/*.orchestra.md` are automatically loaded.
+
+**Config:**
+{config_yml_content}
+
+**Orchestration Rules:**
+{readme_content}
+
+**Active Knowledge:**
+{knowledge_active_section}
+
+**Milestone:**
+{milestone.md content}
+
+**Grooming:**
+{grooming.md content}
+
+**Context (if resuming):**
+{context.md content}
+
+**Phase files:**
+{all phase file contents, in order}
+
+**Role files (unique, one per role used in phases):**
+{role file contents — deduplicated}
+
+**Skills (unique, one per skill used in phases):**
+{skill file contents — deduplicated}
+
+## Your Task
+Execute this milestone using the Phase Execution protocol:
+1. For each phase: pre-flight → compose prompt → delegate to phase sub-agent → process result
+2. Conductor (you) commits after each successful phase, updates context.md
+3. After all phases: trigger review (unless config says skip)
+4. After review passes: push to origin
+5. On phase failure after max retries: set phase to `failed`, log in context.md
+   - If stuck: set milestone status to `failed`, return immediately
+6. You own exactly ONE milestone — do NOT loop to other milestones
+
+## Return Format
+- status: done | failed
+- phases_completed: [list of phase names]
+- phases_failed: [list with error summaries]
+- review_verdict: approved | approved-with-comments | changes-requested | skipped
+- pushed: true | false
+- retro: |
+    ## Retro: {id} — {title} ({date})
+    - Longest phase: {name} (~{duration}) — {why}
+    - Verification retries: {count} — {which phases}
+    - Stuck: {yes/no} — {root cause if yes}
+    - Review findings: {N blocking, N non-blocking} — {top issue}
+    - Missing skill: {name or "none"}
+- notes: {anything conductor should know for subsequent milestones}
+
+IMPORTANT: Return retro text in your result. Do NOT write to knowledge.md — conductor handles this.
+```
+
+### Processing Milestone Agent Result
+
+Conductor processes the return:
+
+- **status: done + pushed: true** → Write retro to knowledge.md, update milestone.md status to `done`, remove `Locked-By`, proceed to next milestone.
+- **status: failed** → Log failure to context.md, write partial retro to knowledge.md.
+  - `--auto` mode: move to next milestone.
+  - Normal mode: stop and report to user with options: (a) retry with fresh agent, (b) skip, (c) stop.
+- **status: done + pushed: false** → Log error, escalate to user.
+
+### Milestone Agent Configuration
+
+- Use default (general-purpose) subagent_type — milestone identity is in the prompt
+- Do NOT use `isolation: "worktree"` — milestones run sequentially, not in parallel
+- Milestone agent inherits all conductor capabilities: git, Agent tool, file access
+- On resume (milestone was `in-progress`): include context.md in prompt — milestone agent reads phase statuses and continues from last completed phase
 
 ## Context Persistence
 
@@ -222,6 +333,8 @@ Update context.md at: phase start, phase completion (with sub-agent summary), er
 On resume: read context.md, continue from last completed phase.
 
 ## Hotfix Pipeline
+
+Hotfix always runs inline regardless of `milestone_isolation` setting — single-phase fast path, sub-agent isolation adds no value.
 
 When user types `/orchestra hotfix {description}`:
 1. Auto-create hotfix milestone + single phase

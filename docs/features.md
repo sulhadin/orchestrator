@@ -14,9 +14,11 @@ pipeline:
   rfc_approval: skip        # required | optional | skip
   review: required          # required | optional | skip
   parallel: disabled        # enabled | disabled
+  milestone_isolation: inline  # inline | agent
   default_pipeline: full    # quick | standard | full
   default_complexity: standard  # trivial | quick | standard | complex
   max_rfc_rounds: 3
+  max_milestone_review_rounds: 3
 
 thresholds:
   milestone_lock_timeout: 120  # minutes
@@ -84,6 +86,19 @@ Conductor never implements code directly. Each phase runs in an isolated sub-age
 3. Conductor commits, updates status, passes summary to next phase
 
 Error logs stay in sub-agent's ephemeral context — conductor stays clean across phases.
+
+## Milestone Isolation
+
+Config `pipeline.milestone_isolation` controls how the conductor manages context across milestones:
+
+| Mode | Behavior | Best for |
+|------|----------|----------|
+| `inline` (default) | Conductor runs milestone directly, stops after completion. User compacts manually. | Manual sessions |
+| `agent` | Each milestone runs in its own sub-agent. Context freed automatically. | `--auto` batch runs |
+
+In `agent` mode, delegation is two-tier: conductor → milestone agent → phase agents. The conductor stays lean (~1-2k tokens per milestone), enabling 20+ milestones in a single session.
+
+In `inline` mode, conductor stops after each milestone. User runs `/compact` then `/orchestra start` to continue — full control over context management.
 
 ## Parallel Execution
 

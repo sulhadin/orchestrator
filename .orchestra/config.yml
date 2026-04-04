@@ -22,6 +22,11 @@ pipeline:
   # When enabled, phases with depends_on: [] run in parallel
   parallel: disabled
 
+  # Milestone isolation mode: inline | agent
+  # inline: conductor runs milestones directly, stops after each. User compacts manually. (default)
+  # agent: each milestone runs in its own sub-agent. Context freed automatically. Best for --auto.
+  milestone_isolation: inline
+
   # Default pipeline when milestone Complexity is missing
   default_pipeline: full  # quick | standard | full
 

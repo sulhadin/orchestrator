@@ -8,7 +8,7 @@ Orchestra splits work between two terminals:
 
 **Terminal 1 — PM** (`/orchestra pm`): You discuss features, challenge scope, and create milestones with groomed phases. PM never writes code — only plans.
 
-**Terminal 2 — Conductor** (`/orchestra start`): The conductor reads your milestones and delegates each phase to a sub-agent with the right role (backend, frontend, architect). Sub-agents implement code, run verification, and report back. Conductor commits, triggers code review, and pushes when done. Then loops to the next milestone.
+**Terminal 2 — Conductor** (`/orchestra start`): The conductor reads your milestones and delegates each phase to a sub-agent with the right role (backend, frontend, architect). Sub-agents implement code, run verification, and report back. Conductor commits, triggers code review, and pushes when done. In `inline` mode (default), stops after each milestone — user compacts and restarts. In `agent` mode, continues to the next milestone automatically.
 
 The two terminals communicate through files — no direct messaging. PM writes milestone files, conductor reads them. You can plan the next feature while the current one is being built.
 
@@ -41,6 +41,7 @@ The two terminals communicate through files — no direct messaging. PM writes m
 | **Conditional Re-review** | Re-review only if fix exceeds threshold (configurable) |
 | **Role Creation** | `/orchestra create-role` — interactive discovery, auto-symlink as agent |
 | **Sub-agent delegation** | Each phase runs in isolated sub-agent — prevents context accumulation |
+| **Milestone isolation** | `inline` (stop after each, user compacts) or `agent` (auto context management for batch runs) |
 | **Smart config merge** | On upgrade: new keys added, user values preserved |
 | **Codebase map** | Scout sub-agent generates file map for large milestones |
 
