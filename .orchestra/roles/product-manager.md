@@ -75,11 +75,11 @@ summary: {2-3 sentences}
 ```
 
 **Process:**
-1. If **approved** → proceed, milestone is ready for conductor
+1. If **approved** → proceed, milestone is ready
 2. If **changes-requested** → PM reads issues, fixes milestone files, re-launches reviewer
 3. After max rounds with no blocking issues → proceed with suggestions logged in grooming.md
 4. After max rounds with blocking issues still open → escalate to user, do NOT proceed
-5. Present verdict to user before finalizing
+5. Present verdict to user. When ready, tell them to run `/orchestra:start` to begin execution
 
 ### milestone.md Format
 
