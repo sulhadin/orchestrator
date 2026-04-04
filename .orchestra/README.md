@@ -308,10 +308,14 @@ PM and conductor run in **separate terminals**. They communicate through milesto
 
 ### Context Persistence
 
-Conductor maintains `context.md` in each milestone directory. This allows:
-- Resume after terminal close/reopen
-- Track decisions made during implementation
-- Record what was committed in each phase
+Conductor maintains `context.md` in each milestone directory with a fixed structure:
+- `## Status` — milestone id, start date, pipeline type
+- `## Phases` — per-phase status, commit hash, files changed, errors
+- `## Codebase Map` — scout-generated file map (survives milestone clear)
+- `## Decisions` — key choices from each phase that affect later phases
+- `## Metrics` — phase duration and verification retries (used by `/orchestra status`)
+
+This enables resume after terminal close/reopen. On restart, conductor reads context.md and skips completed phases.
 
 ### Approval Gates (Conductor Terminal)
 

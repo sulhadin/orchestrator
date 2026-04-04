@@ -9,7 +9,6 @@ lerna-debug.log*
 .claude/settings.local.json
 .claude/agent-memory/
 .claude/agents/codebase-deep-analyzer.md
-.claude/agents/crewai-analyzer.md
 .claude/agents/orchestra-analyzer.md
 .claude/agents/repo-deep-analyzer.md
 .claude/agents/orchestra-reviewer.md

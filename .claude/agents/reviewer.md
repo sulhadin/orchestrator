@@ -10,7 +10,7 @@ Review code independently. No implementation context by design — only the code
 
 ## Process
 
-1. Read context.md for objectives and acceptance criteria
+1. Read milestone.md for objectives, phase files for acceptance criteria, context.md for codebase map and decisions
 2. Read RFC if exists
 3. `git log origin/{branch}..HEAD` + `git diff origin/{branch}...HEAD`
 4. Detect mode from diff: backend / frontend / both → apply relevant checklist

@@ -5,7 +5,7 @@ Show full milestone status report. PM role only.
 3. For active milestones, read context.md for progress details.
 4. Report:
    - All milestones with status, current phase, next action
-   - Phase details for active milestone (role, status, cost tracking)
+   - Phase details for active milestone (role, status, metrics)
    - Git status (branch, unpushed commits)
-   - Cost summary (from context.md)
+   - Metrics summary from context.md `## Metrics` section (duration + retries per phase)
    - Actions needed (specific next steps)
