@@ -14,12 +14,24 @@ const DEV_ONLY_AGENTS = new Set([
   "repo-deep-analyzer.md",
 ]);
 
-// System files to include in the template
+// Plugin manifest
+const PLUGIN_MANIFEST = {
+  name: "orchestra",
+  description: "AI Team Orchestration — multi-role coordination with milestones, phases, and quality gates for Claude Code",
+  version: require("../package.json").version,
+  author: { name: "Sulhadin Öney" },
+  repository: "https://github.com/sulhadin/orchestrator",
+  license: "MIT",
+};
+
+// System files to include in the template (plugin-compatible structure)
+// Plugin dirs (agents/, commands/, skills/, rules/) go at root level
+// .orchestra/ and CLAUDE.md also go at root level
 const SYSTEM_PATHS = [
-  { src: ".claude/agents", dest: ".claude/agents", filter: (f) => !DEV_ONLY_AGENTS.has(f) },
-  { src: ".claude/commands/orchestra", dest: ".claude/commands/orchestra" },
-  { src: ".claude/rules", dest: ".claude/rules", filter: (f) => f.endsWith(".orchestra.md") },
-  { src: ".claude/skills", dest: ".claude/skills", filter: (f) => f.endsWith(".orchestra.md") },
+  { src: ".claude/agents", dest: "agents", filter: (f) => !DEV_ONLY_AGENTS.has(f) },
+  { src: ".claude/commands/orchestra", dest: "commands" },
+  { src: ".claude/rules", dest: "rules", filter: (f) => f.endsWith(".orchestra.md") },
+  { src: ".claude/skills", dest: "skills", filter: (f) => f.endsWith(".orchestra.md") },
   { src: ".orchestra/roles", dest: ".orchestra/roles" },
   { src: ".orchestra/blueprints", dest: ".orchestra/blueprints" },
   { src: ".orchestra/config.yml", dest: ".orchestra/config.yml" },
@@ -81,6 +93,15 @@ for (const item of SYSTEM_PATHS) {
   copyRecursive(item.src, item.dest, item.filter);
   console.log(`  [+] Packed: ${item.src}`);
 }
+
+// Write plugin manifest
+const pluginDir = path.join(templateDir, ".claude-plugin");
+ensureDir(pluginDir);
+fs.writeFileSync(
+  path.join(pluginDir, "plugin.json"),
+  JSON.stringify(PLUGIN_MANIFEST, null, 2) + "\n"
+);
+console.log("  [+] Generated .claude-plugin/plugin.json");
 
 console.log("\n  Done! Template is updated and ready for release.");
 console.log("  Run 'yarn build' to test the installation from this template.\n");

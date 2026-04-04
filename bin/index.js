@@ -6,6 +6,14 @@ const path = require("path");
 const targetDir = process.cwd();
 const templateDir = path.join(__dirname, "..", "template");
 
+// Plugin-to-standalone mapping: plugin root dirs → .claude/ subdirs
+const PLUGIN_TO_CLAUDE = {
+  agents: ".claude/agents",
+  commands: ".claude/commands/orchestra",
+  rules: ".claude/rules",
+  skills: ".claude/skills",
+};
+
 const ORCHESTRA_SECTION_START = "<!-- orchestra -->";
 const ORCHESTRA_SECTION_END = "<!-- /orchestra -->";
 
@@ -295,7 +303,6 @@ function run() {
   console.log("");
 
   const orchestraSrc = path.join(templateDir, ".orchestra");
-  const claudeSrc = path.join(templateDir, ".claude");
   const orchestraDest = path.join(targetDir, ".orchestra");
   const claudeDest = path.join(targetDir, ".claude");
   const isUpgrade = fs.existsSync(orchestraDest);
@@ -384,18 +391,24 @@ function run() {
     copyDirRecursive(orchestraSrc, orchestraDest);
     console.log("  [+] .orchestra/ installed");
 
-    if (fs.existsSync(claudeSrc)) {
-      copyDirRecursive(claudeSrc, claudeDest);
-      console.log("  [+] .claude/ orchestra files installed");
+    // Copy plugin dirs → .claude/ (plugin-to-standalone mapping)
+    for (const [pluginDir, claudeSubdir] of Object.entries(PLUGIN_TO_CLAUDE)) {
+      const src = path.join(templateDir, pluginDir);
+      if (fs.existsSync(src)) {
+        const dest = path.join(targetDir, claudeSubdir);
+        copyDirRecursive(src, dest);
+      }
     }
+    console.log("  [+] .claude/ orchestra files installed");
 
     // ── Restore user data ──
     for (const [key, { backupPath, type, dir }] of Object.entries(backups)) {
       const baseDest = type === "orchestra" ? orchestraDest : claudeDest;
       const restorePath = path.join(baseDest, dir);
+      // Plugin structure: claude dirs are at template root, orchestra dirs under .orchestra/
       const templateDirPath = type === "orchestra"
         ? path.join(orchestraSrc, dir)
-        : path.join(claudeSrc, dir);
+        : path.join(templateDir, dir);
 
       if (dir === "milestones") {
         if (fs.existsSync(restorePath)) rmDirRecursive(restorePath);
@@ -433,10 +446,15 @@ function run() {
     copyDirRecursive(orchestraSrc, orchestraDest);
     console.log("  [+] .orchestra/ installed");
 
-    if (fs.existsSync(claudeSrc)) {
-      copyDirRecursive(claudeSrc, claudeDest);
-      console.log("  [+] .claude/ installed");
+    // Copy plugin dirs → .claude/ (plugin-to-standalone mapping)
+    for (const [pluginDir, claudeSubdir] of Object.entries(PLUGIN_TO_CLAUDE)) {
+      const src = path.join(templateDir, pluginDir);
+      if (fs.existsSync(src)) {
+        const dest = path.join(targetDir, claudeSubdir);
+        copyDirRecursive(src, dest);
+      }
     }
+    console.log("  [+] .claude/ installed");
   }
 
   // ── Handle CLAUDE.md ──
