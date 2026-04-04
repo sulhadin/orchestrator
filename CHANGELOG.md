@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.0.0-beta.13](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.12...orchestrator-v3.0.0-beta.13) (2026-04-04)
+
+
+### Features
+
+* **orchestra:** add milestone isolation mode for context management ([3505dad](https://github.com/sulhadin/orchestrator/commit/3505dad3b0ac02b9c9208020282a24953203f1a7))
+* **orchestra:** add structured context.md format with metrics section ([e0f0cc8](https://github.com/sulhadin/orchestrator/commit/e0f0cc8f8e0285f75ee43069f22ea5d493b945db))
+
+
+### Bug Fixes
+
+* **orchestra:** remove stale push gate refs, add dev section to CLAUDE.md ([6468776](https://github.com/sulhadin/orchestrator/commit/64687767a30a4fe5d7c027e56d54e89a664e80e8))
+
 ## [3.0.0-beta.12](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.11...orchestrator-v3.0.0-beta.12) (2026-04-03)
 
 
