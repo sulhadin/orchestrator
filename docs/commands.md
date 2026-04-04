@@ -22,6 +22,26 @@ Ultra-fast fix pipeline. No RFC, no review, no approval gates (except verificati
 ### `/orchestra status`
 Show full milestone status report. PM role only.
 
+### `/orchestra verifier [numbers]`
+Verify that completed milestones match their PRD/RFC requirements. PM role only.
+
+Compares what was requested (PRD, RFC, acceptance criteria) against what was actually committed. Reports gaps as met/partial/missed/deviated with severity levels. Proposes fix milestones for critical gaps.
+
+```
+/orchestra verifier         → verify all done milestones
+/orchestra verifier 1,2,3   → verify only M1, M2, M3
+```
+
+### `/orchestra rewind [numbers]`
+Review milestone execution history for actionable insights. PM role only.
+
+Surfaces key decisions, metrics, review comments, and scope changes from completed milestones. Highlights unresolved items and recurring patterns.
+
+```
+/orchestra rewind           → rewind all done milestones
+/orchestra rewind 1         → rewind only M1
+```
+
 ### `/orchestra help`
 Show all available commands and system overview.
 

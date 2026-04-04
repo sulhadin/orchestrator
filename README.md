@@ -62,6 +62,8 @@ PM challenges scope, creates M1-user-auth with 3 phases
 | `/orchestra start --auto` | Fully autonomous — warns once, then auto-push |
 | `/orchestra hotfix {desc}` | Ultra-fast fix: implement → verify → commit → push |
 | `/orchestra status` | Milestone status report (PM only) |
+| `/orchestra verifier [N]` | Verify milestones match PRD/RFC requirements (PM only) |
+| `/orchestra rewind [N]` | Review execution history: decisions, metrics, insights (PM only) |
 | `/orchestra blueprint {name}` | Generate milestones from template |
 | `/orchestra blueprint add` | Save current work as reusable template |
 | `/orchestra create-role` | Create a new role interactively (Orchestrator only) |
