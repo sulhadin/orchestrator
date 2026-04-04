@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0-beta.14](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.13...orchestrator-v3.0.0-beta.14) (2026-04-04)
+
+
+### Maintenance
+
+* **orchestra:** filter dev-only agents from template, fix role descriptions ([4f4c04e](https://github.com/sulhadin/orchestrator/commit/4f4c04e0dbb0302ddaec24a9905125661e32a1ea))
+
 ## [3.0.0-beta.13](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.12...orchestrator-v3.0.0-beta.13) (2026-04-04)
 
 
