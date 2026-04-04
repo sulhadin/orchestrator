@@ -10,11 +10,21 @@ No infrastructure. No API keys. Just markdown files and Claude Code.
 
 ## Install
 
+### As Claude Code Plugin (recommended)
+
+```bash
+/plugin install orchestra
+```
+
+This installs Orchestra as a plugin — no files copied into your project. Commands are available as `/orchestra:pm`, `/orchestra:start`, etc.
+
+### As Standalone (copies files into your project)
+
 ```bash
 npx @sulhadin/orchestrator
 ```
 
-This installs `.orchestra/` (project data + config) and `.claude/` (agents, skills, rules, commands) into your project.
+This copies `.orchestra/` (project data + config) and `.claude/` (agents, skills, rules, commands) into your project. Commands are available as `/orchestra pm`, `/orchestra start`, etc.
 
 ## How It Works
 

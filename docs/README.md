@@ -61,17 +61,22 @@ The two terminals communicate through files — no direct messaging. PM writes m
 ## Quick Start
 
 ```bash
-# Install
+# Install as plugin (recommended)
+/plugin install orchestra
+
+# Or install standalone (copies files into project)
 npx @sulhadin/orchestrator
 
 # Customize for your stack
 # Edit .orchestra/config.yml → verification commands
 
 # Terminal 1: Plan
-/orchestra pm
+/orchestra pm          # standalone
+/orchestra:pm          # plugin
 
 # Terminal 2: Execute
-/orchestra start
+/orchestra start       # standalone
+/orchestra:start       # plugin
 ```
 
 ## Architecture

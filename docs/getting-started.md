@@ -2,11 +2,21 @@
 
 ## Installation
 
+### Option 1: Claude Code Plugin (recommended)
+
+```bash
+/plugin install orchestra
+```
+
+No files are copied into your project. Commands use plugin namespace: `/orchestra:pm`, `/orchestra:start`, etc.
+
+### Option 2: Standalone (npx)
+
 ```bash
 npx @sulhadin/orchestrator
 ```
 
-This copies `.orchestra/` and `.claude/` into your project and adds Orchestra configuration to your `CLAUDE.md`.
+This copies `.orchestra/` and `.claude/` into your project and adds Orchestra configuration to your `CLAUDE.md`. Commands use directory namespace: `/orchestra pm`, `/orchestra start`, etc.
 
 ## What Gets Installed
 
