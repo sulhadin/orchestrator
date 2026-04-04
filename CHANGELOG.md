@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0-beta.15](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.14...orchestrator-v3.0.0-beta.15) (2026-04-04)
+
+
+### Features
+
+* **orchestra:** add verifier and rewind PM commands ([76bcbc8](https://github.com/sulhadin/orchestrator/commit/76bcbc8ea3b4705c86b6a3576d56f64ac45f3513))
+
 ## [3.0.0-beta.14](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0-beta.13...orchestrator-v3.0.0-beta.14) (2026-04-04)
 
 
