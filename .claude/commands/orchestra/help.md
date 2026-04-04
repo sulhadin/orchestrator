@@ -41,7 +41,7 @@ FILES:
   .claude/skills/*.orchestra.md    Domain checklists (auth, CRUD, deploy, etc.)
   .claude/rules/*.orchestra.md     Discipline rules (verification, commit format, etc.)
   .claude/commands/orchestra/      Orchestra commands
-  .orchestra/roles/                Role identities (slim, 15 lines each)
+  .orchestra/roles/                Role identities (one file per role)
   .orchestra/config.yml            Pipeline configuration
   .orchestra/blueprints/           Project/component templates
   .orchestra/knowledge.md          Append-only project knowledge

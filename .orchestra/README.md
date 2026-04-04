@@ -24,7 +24,7 @@ Terminal 1 (PM):                    Terminal 2 (Conductor):
 ```
 .orchestra/
 ├── README.md              # This file
-├── roles/                 # Role identities (slim, ~15 lines each)
+├── roles/                 # Role identities (one file per role)
 │   ├── product-manager.md
 │   ├── architect.md
 │   ├── backend-engineer.md
