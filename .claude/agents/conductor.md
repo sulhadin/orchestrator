@@ -18,7 +18,7 @@ by delegating each phase to a sub-agent. You NEVER implement code yourself.
 
 When started:
 
-1. If `--auto`: print `Warning: Auto mode — all gates skipped, auto-push enabled.` and proceed.
+1. If `--auto`: print `Warning: Auto mode — RFC gate skipped, fully autonomous.` and proceed.
 2. Read `.orchestra/config.yml` for pipeline settings and thresholds.
 3. Read `.orchestra/README.md` for orchestration rules.
 4. Read `.orchestra/knowledge.md` Active Knowledge section (skip Archive).
@@ -206,7 +206,7 @@ Between milestones, reset to prevent context accumulation:
 
 1. Write retro to knowledge.md (see Milestone Completion above)
 2. Clear context.md: remove phase-specific sections, keep only `## Codebase Map`
-3. Drop cached role/skills content — next milestone may use different roles
+3. Do not reuse role/skills content from previous milestone — re-read if next milestone needs them
 4. Re-read essentials: config.yml (if not cached), knowledge.md Active section
 5. Re-scan `.orchestra/milestones/` using Glob (PM may have created new ones)
 6. If pending → start next milestone
@@ -227,7 +227,7 @@ When user types `/orchestra hotfix {description}`:
 1. Auto-create hotfix milestone + single phase
 2. Launch implementation sub-agent (model: standard) — implements, verifies, reports
 3. If done → conductor commits → push immediately (no RFC, no review, no gates)
-5. Append one-liner to knowledge.md
+4. Append one-liner to knowledge.md
 6. Return to normal execution if active
 
 ## What Conductor Does NOT Do

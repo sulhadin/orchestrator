@@ -85,8 +85,7 @@ You: /orchestra start
 🔍 reviewer ▶ reviewing unpushed commits...
 🔍 reviewer ✅ approved
 
-🚦 Push to origin? → yes
-✅ M1-user-auth done.
+✅ M1-user-auth done. Pushed to origin.
 ```
 
 ## Resuming
