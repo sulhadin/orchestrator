@@ -69,7 +69,7 @@ Last 5 milestones. Conductor reads before every milestone start. PM reads before
 
 ### Decisions
 - Skill System (markdown-only): Lightweight `.orchestra/skills/` with domain checklists (auth, CRUD, deployment). No registry, no keyword matching — PM manually assigns via `skills:` frontmatter in phase files. Preserves zero-infrastructure philosophy.
-- Cost Awareness: Track duration + verification retries per phase in context.md Cost Tracking table. PM sees this in #status. No token counting (unreliable from prompt), focus on observable metrics.
+- Cost Awareness: Track duration + verification retries per phase in context.md `## Metrics` section. PM sees this in `/orchestra status`. No token counting (unreliable from prompt), focus on observable metrics.
 - Re-review Threshold: Fix < 30 lines → no re-review. Fix >= 30 lines → abbreviated re-review (only the fix commit). Balances quality vs speed.
 - Rejection Flow: RFC rejected → architect revises (max 3 rounds). Push rejected → create fix phase. System no longer stalls on "no".
 

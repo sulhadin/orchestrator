@@ -118,7 +118,7 @@ For milestones spanning 3+ directories or 20+ files, conductor launches a haiku 
 
 **Retrospective** — 5-line summary after each milestone: longest phase, retries, stuck, review findings, missing skill.
 
-**Cost tracking** — phase duration + verification retries in context.md. PM sees in `/orchestra status`.
+**Metrics** — phase duration + verification retries tracked in context.md `## Metrics` section. PM sees in `/orchestra status`.
 
 ## Rejection Flow
 
