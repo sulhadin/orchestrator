@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.1](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.0...orchestrator-v3.1.1) (2026-04-04)
+
+
+### Documentation
+
+* add Claude Code plugin installation instructions ([1427d6b](https://github.com/sulhadin/orchestrator/commit/1427d6b8ca85bf9ccc019fa0101a114098859173))
+* fix command format, both modes use /orchestra:cmd ([90a2eac](https://github.com/sulhadin/orchestrator/commit/90a2eac8e01d327780ad4482ae8cd81598fb140a))
+
 ## [3.1.0](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.0.0...orchestrator-v3.1.0) (2026-04-04)
 
 
