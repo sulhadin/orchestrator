@@ -81,7 +81,7 @@ function copyDirRecursive(src, dest) {
       copyDirRecursive(srcPath, destPath);
     } else if (entry.isSymbolicLink()) {
       const linkTarget = fs.readlinkSync(srcPath);
-      if (fs.existsSync(destPath)) fs.unlinkSync(destPath);
+      try { fs.unlinkSync(destPath); } catch {}
       fs.symlinkSync(linkTarget, destPath);
     } else {
       fs.copyFileSync(srcPath, destPath);
@@ -314,6 +314,16 @@ function run() {
   const isUpgrade = fs.existsSync(orchestraDest);
 
   if (isUpgrade) {
+    // ── Clean stale backups from previous failed runs ──
+    for (const dir of ORCHESTRA_USER_DIRS) {
+      const stale = path.join(targetDir, ".orchestra-backup-" + dir);
+      if (fs.existsSync(stale)) rmDirRecursive(stale);
+    }
+    for (const dir of CLAUDE_USER_DIRS) {
+      const stale = path.join(targetDir, ".claude-backup-" + dir);
+      if (fs.existsSync(stale)) rmDirRecursive(stale);
+    }
+
     // ── Backup user data ──
     const backups = {};
 
