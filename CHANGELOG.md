@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.4](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.3...orchestrator-v3.1.4) (2026-04-05)
+
+
+### Bug Fixes
+
+* **upgrade:** handle broken symlinks and legacy .orchestra.md files in smartMergeDir ([85d80cd](https://github.com/sulhadin/orchestrator/commit/85d80cd4050e9c24029f928bd5ab097e299ee3c5))
+
 ## [3.1.3](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.2...orchestrator-v3.1.3) (2026-04-05)
 
 
