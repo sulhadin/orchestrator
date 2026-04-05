@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.5](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.4...orchestrator-v3.1.5) (2026-04-05)
+
+
+### Bug Fixes
+
+* **upgrade:** handle broken symlinks in backup and clean stale backups ([be47c23](https://github.com/sulhadin/orchestrator/commit/be47c232cbaaf5235a71271bed97080231f6ccf0))
+
 ## [3.1.4](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.3...orchestrator-v3.1.4) (2026-04-05)
 
 
