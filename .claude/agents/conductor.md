@@ -76,7 +76,7 @@ Cache role/skills content in conductor context — don't re-read for consecutive
 phases with the same role.
 
 1. Read `.orchestra/roles/{role}.md` → role_content (skip if same role as previous phase)
-2. Read skill files from phase → skills_content (skip already-read skills)
+2. Read skill files from phase `.claude/skills/{name}/SKILL.md` → skills_content (skip already-read skills)
 3. Read phase file → phase_content
 4. Extract verification commands from config.yml (read once at startup, reuse)
 5. Read codebase map from context.md (if exists) → codebase_map

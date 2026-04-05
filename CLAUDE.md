@@ -44,7 +44,7 @@ Role IDs: orchestrator, product-manager, architect, backend-engineer, frontend-e
 - Two-terminal model: PM plans in one terminal, conductor executes in another
 - Each role writes only to its ownership scope (defined in role file)
 - Rules (`.claude/rules/*.orchestra.md`) auto-loaded. Skills loaded per phase.
-- **PROTECTED:** Non-Orchestrator roles NEVER modify `.orchestra/roles/`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `.claude/agents/`, `.claude/rules/*.orchestra.md`, `.claude/skills/*.orchestra.md`, `.claude/commands/orchestra/`, `CLAUDE.md`, or `docs/`.
+- **PROTECTED:** Non-Orchestrator roles NEVER modify `.orchestra/roles/`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `.claude/agents/`, `.claude/rules/*.orchestra.md`, `.claude/skills/*/SKILL.md`, `.claude/commands/orchestra/`, `CLAUDE.md`, or `docs/`.
 
 ## Development
 

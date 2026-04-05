@@ -103,8 +103,8 @@ role: backend-engineer | frontend-engineer | architect | adaptive
 status: pending | in-progress | done | failed                                                                                                                                                               
 order: 1                                                                                                                                                                                                      
 complexity: standard          # trivial | quick | standard | complex — conductor uses this for model selection                                                                                                          
-skills: []                                                                                                                                                                                                    
-depends_on: []   
+skills: []                    # list .claude/skills/, assign relevant ones by name
+depends_on: []
 ---
 
 ## Objective

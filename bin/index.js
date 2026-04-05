@@ -230,8 +230,8 @@ function extractOrchestraSection(content) {
 
 /**
  * Smart merge for user directories (skills, rules, blueprints):
- * - .orchestra.md files = system files → always updated from template
- * - other .md files = user files → preserved
+ * - entries present in template = system files → always updated from template
+ * - entries not in template = user files → preserved
  */
 function smartMergeDir(backupPath, restorePath, templateDirPath) {
   const templateFiles = fs.existsSync(templateDirPath)
@@ -241,9 +241,8 @@ function smartMergeDir(backupPath, restorePath, templateDirPath) {
   let restored = 0;
 
   for (const file of backupFiles) {
-    // User-created files: not in template AND not .orchestra.md
-    const isOrchestraFile = file.endsWith(".orchestra.md");
-    if (!templateFiles.includes(file) && !isOrchestraFile) {
+    // User-created entries: not in template → preserve
+    if (!templateFiles.includes(file)) {
       const srcFile = path.join(backupPath, file);
       const destFile = path.join(restorePath, file);
       if (fs.statSync(srcFile).isDirectory()) {

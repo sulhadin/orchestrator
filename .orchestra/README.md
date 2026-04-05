@@ -262,7 +262,7 @@ No role may create, edit, delete, or modify these files:
 - `.orchestra/blueprints/`
 - `.claude/agents/conductor.md`, `.claude/agents/reviewer.md`
 - `.claude/rules/*.orchestra.md`
-- `.claude/skills/*.orchestra.md`
+- `.claude/skills/*/SKILL.md`
 - `.claude/commands/orchestra/`
 - `CLAUDE.md`
 - `docs/`
@@ -288,7 +288,7 @@ Each role has exclusive write access to specific directories:
 
 | Role | Owns (can write) | Reads |
 |------|-------------------|-------|
-| orchestrator | `.orchestra/roles/*`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `CLAUDE.md`, `.claude/agents/`, `.claude/skills/*.orchestra.md`, `.claude/rules/*.orchestra.md`, `.claude/commands/orchestra/`, `.orchestra/knowledge.md`, `docs/` | Everything |
+| orchestrator | `.orchestra/roles/*`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `CLAUDE.md`, `.claude/agents/`, `.claude/skills/*/SKILL.md`, `.claude/rules/*.orchestra.md`, `.claude/commands/orchestra/`, `.orchestra/knowledge.md`, `docs/` | Everything |
 | product-manager | `.orchestra/milestones/*` (prd.md, milestone.md, grooming.md, phases) | Everything |
 | architect | `.orchestra/milestones/*/rfc.md`, `.orchestra/milestones/*/architecture.md`, `.orchestra/milestones/*/adrs/*`, project configs | Everything |
 | backend-engineer | Defined by PM in phase scope (typically `src/`, `tests/`, `migrations/`) | `.orchestra/milestones/*/phases/*` |

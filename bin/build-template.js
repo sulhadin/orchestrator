@@ -14,6 +14,9 @@ const DEV_ONLY_AGENTS = new Set([
   "repo-deep-analyzer.md",
 ]);
 
+// Dev-only skills that should NOT be published to users
+const DEV_ONLY_SKILLS = new Set(["ship"]);
+
 // Plugin manifest
 const PLUGIN_MANIFEST = {
   name: "orchestra",
@@ -31,7 +34,11 @@ const SYSTEM_PATHS = [
   { src: ".claude/agents", dest: "agents", filter: (f) => !DEV_ONLY_AGENTS.has(f) },
   { src: ".claude/commands/orchestra", dest: "commands" },
   { src: ".claude/rules", dest: "rules", filter: (f) => f.endsWith(".orchestra.md") },
-  { src: ".claude/skills", dest: "skills", filter: (f) => f.endsWith(".orchestra.md") },
+  { src: ".claude/skills", dest: "skills", filter: (f) => {
+    if (DEV_ONLY_SKILLS.has(f)) return false;
+    const skillDir = path.join(rootDir, ".claude/skills", f);
+    return fs.statSync(skillDir).isDirectory() && fs.existsSync(path.join(skillDir, "SKILL.md"));
+  }},
   { src: ".orchestra/roles", dest: ".orchestra/roles" },
   { src: ".orchestra/blueprints", dest: ".orchestra/blueprints" },
   { src: ".orchestra/config.yml", dest: ".orchestra/config.yml" },
@@ -75,7 +82,7 @@ function copyRecursive(src, dest, filter = null) {
         if (fs.existsSync(fullEntryDest)) fs.unlinkSync(fullEntryDest);
         fs.symlinkSync(linkTarget, fullEntryDest);
       } else if (entry.isDirectory()) {
-        copyRecursive(entrySrc, entryDest, filter);
+        copyRecursive(entrySrc, entryDest);
       } else {
         fs.copyFileSync(fullEntrySrc, fullEntryDest);
       }

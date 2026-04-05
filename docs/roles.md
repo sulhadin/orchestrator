@@ -38,7 +38,7 @@ scope: "infra/, .github/workflows/, docker/"
 
 ## Orchestrator
 **Identity:** Creator and guardian of the Orchestra system itself. Only role that can modify system files.
-**Owns:** `.orchestra/roles/`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `.claude/agents/`, `.claude/rules/*.orchestra.md`, `.claude/skills/*.orchestra.md`, `.claude/commands/orchestra/`, `CLAUDE.md`, `docs/`
+**Owns:** `.orchestra/roles/`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `.claude/agents/`, `.claude/rules/*.orchestra.md`, `.claude/skills/*/SKILL.md`, `.claude/commands/orchestra/`, `CLAUDE.md`, `docs/`
 **Cannot:** Write feature code, PRDs, RFCs, review code
 
 ## Agents (not roles)
@@ -51,7 +51,7 @@ scope: "infra/, .github/workflows/, docker/"
 
 ```
 .claude/rules/*.orchestra.md    ← Discipline (verification, commits, standards)
-.claude/skills/*.orchestra.md   ← Domain knowledge (auth, CRUD, deploy)
+.claude/skills/*/SKILL.md       ← Domain knowledge (auth, CRUD, deploy)
 .orchestra/roles/*.md           ← Identity (who you are, how you think)
 .orchestra/config.yml           ← Parameters (gates, thresholds, commands)
 ```

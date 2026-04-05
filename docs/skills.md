@@ -5,7 +5,7 @@ Skills are domain-specific checklists in `.claude/skills/`. PM assigns them to p
 ## How Skills Work
 
 1. PM adds `skills: [auth-setup, crud-api]` to phase frontmatter
-2. Conductor reads `.claude/skills/auth-setup.orchestra.md`
+2. Conductor reads `.claude/skills/auth-setup/SKILL.md`
 3. Conductor follows the checklist alongside the role's identity
 
 ## Available Skills (14)
@@ -29,7 +29,12 @@ Skills are domain-specific checklists in `.claude/skills/`. PM assigns them to p
 
 ## Creating a New Skill
 
-Create `.claude/skills/my-skill.md` (no `.orchestra` suffix — that's for system skills):
+Create a folder in `.claude/skills/` with a `SKILL.md` inside:
+
+```
+.claude/skills/my-skill/
+└── SKILL.md
+```
 
 ```markdown
 # Skill: {name}
@@ -45,9 +50,9 @@ One line describing when to assign this skill.
 - Mistake → what to do instead
 ```
 
-**Naming convention:**
-- `*.orchestra.md` = system skills (updated on upgrade)
-- `*.md` = your custom skills (preserved on upgrade)
+**System vs custom skills:**
+- Skills that ship with Orchestra (in `template/skills/`) are replaced on upgrade
+- Your custom skill folders are preserved on upgrade
 
 ## Discovering Skills
 

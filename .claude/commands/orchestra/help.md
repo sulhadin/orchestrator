@@ -40,7 +40,7 @@ CONFIG:
 
 FILES:
   .claude/agents/                  Conductor + Reviewer agents
-  .claude/skills/*.orchestra.md    Domain checklists (auth, CRUD, deploy, etc.)
+  .claude/skills/*/SKILL.md        Domain checklists (auth, CRUD, deploy, etc.)
   .claude/rules/*.orchestra.md     Discipline rules (verification, commit format, etc.)
   .claude/commands/orchestra/      Orchestra commands
   .orchestra/roles/                Role identities (one file per role)

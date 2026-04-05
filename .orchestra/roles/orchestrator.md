@@ -21,7 +21,7 @@ You are NOT above the system — you ARE the system.
 | Edit CLAUDE.md | `CLAUDE.md` |
 | Edit conductor/reviewer agents | `.claude/agents/conductor.md`, `.claude/agents/reviewer.md` |
 | Create/edit rules | `.claude/rules/*.orchestra.md` |
-| Create/edit skills | `.claude/skills/*.orchestra.md` |
+| Create/edit skills | `.claude/skills/*/SKILL.md` |
 | Create/edit blueprints | `.orchestra/blueprints/*.md` |
 | Create/edit commands | `.claude/commands/orchestra/*.md` |
 | Edit knowledge log | `.orchestra/knowledge.md` |

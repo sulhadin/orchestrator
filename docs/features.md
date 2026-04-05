@@ -69,7 +69,7 @@ Detects: same error N times, circular fixes, verification loops, no progress. Re
 
 ## Skills
 
-Domain checklists in `.claude/skills/*.orchestra.md`. PM assigns via phase frontmatter `skills: [auth-setup, crud-api]`. Conductor loads them before implementation.
+Domain checklists in `.claude/skills/*/SKILL.md`. PM assigns via phase frontmatter `skills: [auth-setup, crud-api]`. Conductor loads them before implementation.
 
 14 built-in skills: auth-setup, crud-api, deployment, accessibility, best-practices, code-optimizer, core-web-vitals, debug, frontend-design, react-best-practices, review, testing, web-quality-audit, fullstack-infrastructure.
 
