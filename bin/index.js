@@ -231,7 +231,8 @@ function extractOrchestraSection(content) {
 /**
  * Smart merge for user directories (skills, rules, blueprints):
  * - entries present in template = system files → always updated from template
- * - entries not in template = user files → preserved
+ * - .orchestra.md files = legacy system files → skip (backward compat)
+ * - remaining entries = user files → preserved
  */
 function smartMergeDir(backupPath, restorePath, templateDirPath) {
   const templateFiles = fs.existsSync(templateDirPath)
@@ -241,16 +242,22 @@ function smartMergeDir(backupPath, restorePath, templateDirPath) {
   let restored = 0;
 
   for (const file of backupFiles) {
-    // User-created entries: not in template → preserve
-    if (!templateFiles.includes(file)) {
-      const srcFile = path.join(backupPath, file);
+    // Skip system entries: in template OR legacy .orchestra.md files
+    if (templateFiles.includes(file) || file.endsWith(".orchestra.md")) continue;
+
+    const srcFile = path.join(backupPath, file);
+    try {
+      const stat = fs.lstatSync(srcFile);
       const destFile = path.join(restorePath, file);
-      if (fs.statSync(srcFile).isDirectory()) {
+      if (stat.isDirectory()) {
         copyDirRecursive(srcFile, destFile);
-      } else {
+      } else if (stat.isFile()) {
         fs.copyFileSync(srcFile, destFile);
       }
+      // Skip broken symlinks and other non-regular entries
       restored++;
+    } catch {
+      // Entry inaccessible — skip silently
     }
   }
 
