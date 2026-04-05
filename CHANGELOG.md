@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.3](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.2...orchestrator-v3.1.3) (2026-04-05)
+
+
+### Refactoring
+
+* **skills:** convert to Claude Code folder structure (skill-name/SKILL.md) ([585003f](https://github.com/sulhadin/orchestrator/commit/585003fb720fa1520da29c3d7edb366bd3d30692))
+
 ## [3.1.2](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.1...orchestrator-v3.1.2) (2026-04-04)
 
 
