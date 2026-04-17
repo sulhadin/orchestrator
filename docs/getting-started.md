@@ -27,7 +27,6 @@ Both options use the same commands: `/orchestra:pm`, `/orchestra:start`, etc.
 ├── config.yml        ← Pipeline settings (customize for your stack)
 ├── roles/            ← Role identities (one file per role)
 ├── blueprints/       ← Project templates
-├── knowledge.md      ← Project knowledge log
 └── milestones/       ← Your work (one dir per feature)
 
 .claude/              ← Claude Code integration
@@ -137,6 +136,5 @@ Smart merge: system files updated, your data preserved, config intelligently mer
 | Blueprints (template) | Updated |
 | Blueprints (your custom) | Preserved |
 | milestones/ | Untouched |
-| knowledge.md | Preserved |
 | config.yml | Smart merged (user values preserved, new keys added) |
 | CLAUDE.md | Orchestra section replaced |

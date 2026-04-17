@@ -42,7 +42,6 @@ const SYSTEM_PATHS = [
   { src: ".orchestra/roles", dest: ".orchestra/roles" },
   { src: ".orchestra/blueprints", dest: ".orchestra/blueprints" },
   { src: ".orchestra/config.yml", dest: ".orchestra/config.yml" },
-  { src: ".orchestra/knowledge.md", dest: ".orchestra/knowledge.md" },
   { src: ".orchestra/README.md", dest: ".orchestra/README.md" },
   { src: "CLAUDE.md", dest: "CLAUDE.md" }
 ];

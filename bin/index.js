@@ -355,21 +355,6 @@ function run() {
       }
     }
 
-    // knowledge.md
-    const knowledgePath = path.join(orchestraDest, "knowledge.md");
-    const knowledgeBackup = path.join(targetDir, ".orchestra-backup-knowledge.md");
-    let hasKnowledge = false;
-    if (fs.existsSync(knowledgePath)) {
-      const content = fs.readFileSync(knowledgePath, "utf-8");
-      const marker = "<!-- New entries go here";
-      const idx = content.indexOf(marker);
-      if (idx !== -1 && content.slice(idx + marker.length).trim().length > 10) {
-        fs.copyFileSync(knowledgePath, knowledgeBackup);
-        hasKnowledge = true;
-        console.log("  [~] Backed up knowledge.md");
-      }
-    }
-
     // config.yml (user may have customized)
     const configPath = path.join(orchestraDest, "config.yml");
     const configBackup = path.join(targetDir, ".orchestra-backup-config.yml");
@@ -439,13 +424,6 @@ function run() {
       }
 
       rmDirRecursive(backupPath);
-    }
-
-    // Restore knowledge.md
-    if (hasKnowledge && fs.existsSync(knowledgeBackup)) {
-      fs.copyFileSync(knowledgeBackup, path.join(orchestraDest, "knowledge.md"));
-      fs.unlinkSync(knowledgeBackup);
-      console.log("  [+] Restored knowledge.md");
     }
 
     // Merge config.yml: new template keys added, user values preserved

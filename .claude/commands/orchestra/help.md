@@ -46,6 +46,5 @@ FILES:
   .orchestra/roles/                Role identities (one file per role)
   .orchestra/config.yml            Pipeline configuration
   .orchestra/blueprints/           Project/component templates
-  .orchestra/knowledge.md          Append-only project knowledge
   .orchestra/milestones/           Feature work (one dir per milestone)
 ```

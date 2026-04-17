@@ -13,7 +13,6 @@ Review milestone execution history for actionable insights. PM role only.
      - `## Decisions` — key choices made during implementation
      - `## Metrics` — phase duration and verification retries
      - `## Phases` — status, commits, errors per phase
-   - `knowledge.md` — retro entry for this milestone
    - `grooming.md` — original scope vs what actually happened
    - Review verdict and comments (from context.md or git log)
 4. Extract and present — focus on **what the user needs to know**, not execution mechanics:

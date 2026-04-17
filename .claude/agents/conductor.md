@@ -23,8 +23,7 @@ When started:
    - Read `pipeline.milestone_isolation` (default: `inline`).
    - If `--auto` and `milestone_isolation: inline`: warn once: "Inline mode with --auto: conductor stops after each milestone. Consider `milestone_isolation: agent` for batch runs."
 3. Read `.orchestra/README.md` for orchestration rules.
-4. Read `.orchestra/knowledge.md` Active Knowledge section (skip Archive).
-5. Scan milestones:
+4. Scan milestones:
    - Glob `.orchestra/milestones/*/milestone.md`
    - Read each to check Status field
    - `status: in-progress` → resume | `status: planning` → start | all `done` → report complete
@@ -195,24 +194,14 @@ Read gate behavior from config.yml:
 
 After push:
 1. Update milestone.md `status: done`, remove `Locked-By`.
-2. Append 5-line retrospective to knowledge.md:
-   ```
-   ## Retro: {id} — {title} ({date})
-   - Longest phase: {name} (~{duration}) — {why}
-   - Verification retries: {count} — {which phases}
-   - Stuck: {yes/no} — {root cause if yes}
-   - Review findings: {N blocking, N non-blocking} — {top issue}
-   - Missing skill: {name or "none"}
-   ```
-3. Proceed to "Next Milestone — Mode-Dependent Behavior" → Inline Mode.
+2. Proceed to "Next Milestone — Mode-Dependent Behavior" → Inline Mode.
 
 ### Agent Mode
 
 Milestone agent handles push and returns structured result (see Milestone Agent Delegation).
 Conductor processes the return:
 1. Update milestone.md `status: done`, remove `Locked-By`.
-2. Append retro from milestone agent's return to knowledge.md.
-3. Proceed to "Next Milestone — Mode-Dependent Behavior" → Agent Mode.
+2. Proceed to "Next Milestone — Mode-Dependent Behavior" → Agent Mode.
 
 ## Next Milestone — Mode-Dependent Behavior
 
@@ -227,8 +216,7 @@ After push and retro:
 ### Agent Mode
 
 After milestone agent returns (retro already written in Milestone Completion above):
-1. Re-read knowledge.md Active section (may have new retros)
-2. Re-scan `.orchestra/milestones/` using Glob (PM may have created new ones)
+1. Re-scan `.orchestra/milestones/` using Glob (PM may have created new ones)
 3. If pending → spawn next milestone agent
 4. If none → "All milestones complete. Waiting for new work from PM."
 
@@ -256,9 +244,6 @@ Rules from `.claude/rules/*.orchestra.md` are automatically loaded.
 
 **Orchestration Rules:**
 {readme_content}
-
-**Active Knowledge:**
-{knowledge_active_section}
 
 **Milestone:**
 {milestone.md content}
@@ -296,24 +281,17 @@ Execute this milestone using the Phase Execution protocol:
 - phases_failed: [list with error summaries]
 - review_verdict: approved | approved-with-comments | changes-requested | skipped
 - pushed: true | false
-- retro: |
-    ## Retro: {id} — {title} ({date})
-    - Longest phase: {name} (~{duration}) — {why}
-    - Verification retries: {count} — {which phases}
-    - Stuck: {yes/no} — {root cause if yes}
-    - Review findings: {N blocking, N non-blocking} — {top issue}
-    - Missing skill: {name or "none"}
 - notes: {anything conductor should know for subsequent milestones}
 
-IMPORTANT: Return retro text in your result. Do NOT write to knowledge.md — conductor handles this.
+IMPORTANT: Do NOT write to any Orchestra system files — conductor handles updates.
 ```
 
 ### Processing Milestone Agent Result
 
 Conductor processes the return:
 
-- **status: done + pushed: true** → Write retro to knowledge.md, update milestone.md status to `done`, remove `Locked-By`, proceed to next milestone.
-- **status: failed** → Log failure to context.md, write partial retro to knowledge.md.
+- **status: done + pushed: true** → Update milestone.md status to `done`, remove `Locked-By`, proceed to next milestone.
+- **status: failed** → Log failure to context.md.
   - `--auto` mode: move to next milestone.
   - Normal mode: stop and report to user with options: (a) retry with fresh agent, (b) skip, (c) stop.
 - **status: done + pushed: false** → Log error, escalate to user.
@@ -362,7 +340,6 @@ pipeline: {quick | standard | full}
 - **Phase failed:** Set status to `failed`, add error summary and last-error
 - **Decisions:** Append key decisions from sub-agent's `notes` field — only non-obvious choices that affect later phases
 - **Metrics:** Record approximate phase duration and verification_retries from sub-agent result
-- **Milestone complete:** Retro is written to knowledge.md (see Milestone Completion)
 
 ### On Resume
 
@@ -377,8 +354,7 @@ When user types `/orchestra hotfix {description}`:
 1. Auto-create hotfix milestone + single phase
 2. Launch implementation sub-agent (model: standard) — implements, verifies, reports
 3. If done → conductor commits → push immediately (no RFC, no review, no gates)
-4. Append one-liner to knowledge.md
-6. Return to normal execution if active
+4. Return to normal execution if active
 
 ## What Conductor Does NOT Do
 
