@@ -17,7 +17,6 @@ The two terminals communicate through files — no direct messaging. PM writes m
 - **Zero infrastructure** — No databases, APIs, or services. Just markdown files and Claude Code.
 - **Role boundaries enforced** — PM can't write code, engineers can't modify system files. Checked by file path, not words.
 - **Config-driven** — Verification commands, approval gates, thresholds — all in one YAML file. Works with any stack.
-- **Learns over time** — knowledge.md accumulates decisions and lessons. Retrospective after every milestone.
 - **Blueprints** — Start from templates, save your patterns for reuse.
 
 ## Key Features
@@ -32,7 +31,6 @@ The two terminals communicate through files — no direct messaging. PM writes m
 | **Blueprints** | Project templates — `/orchestra blueprint saas-starter` creates 5 milestones |
 | **Blueprint Add** | `/orchestra blueprint add` — save current work as reusable template |
 | **Hotfix** | `/orchestra hotfix {desc}` — implement, verify, commit, push in one command |
-| **Learning System** | knowledge.md with Active/Archive sections, 5-line retrospective per milestone |
 | **Parallel Phases** | Independent phases run simultaneously via `depends_on` (opt-in via config) |
 | **Stuck Detection** | Detects repeated failures, circular fixes, over-engineering — escalates |
 | **Phase Limits** | Time (~15min), scope (stay in criteria), tool call (40+) guards |
@@ -92,7 +90,6 @@ npx @sulhadin/orchestrator
 ├── config.yml                          ← Pipeline settings, verification, thresholds
 ├── roles/                              ← Role identities (one file per role)
 ├── blueprints/                         ← Project/component templates
-├── knowledge.md                        ← Append-only project knowledge
 └── milestones/                         ← Your work (one dir per feature)
 ```
 

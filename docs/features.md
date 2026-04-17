@@ -112,13 +112,9 @@ For milestones spanning 3+ directories or 20+ files, conductor launches a haiku 
 
 `/orchestra hotfix {desc}` — sub-agent implements + verifies, conductor commits + pushes. No RFC, no review, no gates.
 
-## Learning System
+## Metrics
 
-**knowledge.md** — append-only, Active (last 5 milestones) + Archive. Conductor reads before milestones, PM reads before grooming.
-
-**Retrospective** — 5-line summary after each milestone: longest phase, retries, stuck, review findings, missing skill.
-
-**Metrics** — phase duration + verification retries tracked in context.md `## Metrics` section. PM sees in `/orchestra status`.
+Phase duration + verification retries tracked in context.md `## Metrics` section. PM sees in `/orchestra status`.
 
 ## Verifier
 

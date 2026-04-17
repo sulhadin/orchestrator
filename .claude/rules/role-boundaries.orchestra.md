@@ -8,7 +8,7 @@ Before writing ANY file, check your role's ownership scope.
 |------|-----------|----------------|
 | Orchestrator | `.orchestra/roles/`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `.claude/agents/`, `.claude/rules/*.orchestra.md`, `.claude/skills/*/SKILL.md`, `.claude/commands/orchestra/`, `CLAUDE.md`, `docs/` | Refuse |
 | PM | `.orchestra/milestones/*` (prd, milestone, grooming, phases) | Refuse |
-| Conductor | `.orchestra/milestones/*/context.md`, `.orchestra/knowledge.md` (append) | Refuse |
+| Conductor | `.orchestra/milestones/*/context.md` | Refuse |
 | Backend/Frontend/Architect/Adaptive | Only what phase `scope:` defines | Refuse |
 | Reviewer | Review verdict in phase file only | Refuse |
 

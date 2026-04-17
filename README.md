@@ -106,7 +106,6 @@ PM challenges scope, creates M1-user-auth with 3 phases
 ├── config.yml                          ← Pipeline settings (customize per stack)
 ├── roles/                              ← Role identities
 ├── blueprints/                         ← Project templates
-├── knowledge.md                        ← Project knowledge log
 └── milestones/                         ← Your work
 ```
 
@@ -125,8 +124,6 @@ PM challenges scope, creates M1-user-auth with 3 phases
 **14 built-in skills** — Domain checklists for auth, CRUD, deployment, accessibility, React, testing, debugging, and more. PM assigns to phases, conductor loads them automatically.
 
 **Blueprints** — Start from templates instead of scratch. `saas-starter` creates 5 milestones instantly. `blueprint add` saves your work as a reusable template.
-
-**Learning system** — `knowledge.md` accumulates decisions and lessons. 5-line retrospective after each milestone. PM reads before grooming new work. System gets smarter over time.
 
 **Role boundaries** — Enforced via `.claude/rules/`. PM cannot write code. Engineers cannot modify system files. Orchestrator cannot write features. Boundaries checked by file path, not by words.
 
@@ -150,7 +147,6 @@ Smart merge on upgrade:
 | Blueprints (template) | Updated |
 | Blueprints (your custom) | Preserved |
 | milestones/ | Untouched |
-| knowledge.md | Preserved |
 | config.yml | Smart merged (user values preserved, new keys added) |
 
 ## Documentation

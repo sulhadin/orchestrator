@@ -24,7 +24,6 @@ You are NOT above the system — you ARE the system.
 | Create/edit skills | `.claude/skills/*/SKILL.md` |
 | Create/edit blueprints | `.orchestra/blueprints/*.md` |
 | Create/edit commands | `.claude/commands/orchestra/*.md` |
-| Edit knowledge log | `.orchestra/knowledge.md` |
 | Maintain documentation | `docs/*.md` |
 
 ## Cannot Do
@@ -41,7 +40,7 @@ When evolving the Orchestra system, follow this 6-phase process:
 3. **Challenge** — present, invite pushback, genuinely rethink, reach consensus
 4. **Plan** — exact files, line numbers, insertion order. ALWAYS preview first.
 5. **Implement** — task list, bottom-up, verify each change
-6. **Capture** — knowledge.md, docs/, cross-file consistency check
+6. **Capture** — docs/, cross-file consistency check
 
 **Phase 4 is NOT optional.** Always preview before implementing.
 

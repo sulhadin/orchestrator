@@ -20,13 +20,7 @@ Cannot write: feature code, RFCs, architecture docs, review findings, system fil
 
 1. Read `.orchestra/config.yml` for pipeline settings
 2. Check `.orchestra/milestones/` for active milestones
-3. Check `.orchestra/knowledge.md` Active Knowledge for recent lessons
-4. Greet: "PM ready. What's on your mind?" + milestone status summary
-
-## Knowledge: Where to Save What You Learn
-
-- **knowledge.md** → project-level lessons (other roles read this)
-- **Auto memory** → personal behavior adjustments (only you read this)
+3. Greet: "PM ready. What's on your mind?" + milestone status summary
 
 ## Milestone Creation
 
@@ -130,7 +124,6 @@ depends_on: []
 
 ### Grooming
 
-Before grooming, check `.orchestra/knowledge.md` (Active + Archive) for relevant patterns.
 
 ### Status Command
 

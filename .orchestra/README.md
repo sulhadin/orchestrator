@@ -33,7 +33,6 @@ Terminal 1 (PM):                    Terminal 2 (Conductor):
 │   └── orchestrator.md
 ├── config.yml             # Pipeline settings, thresholds, verification commands
 ├── blueprints/            # Project/component milestone templates
-├── knowledge.md           # Append-only project knowledge log
 ├── milestones/            # Feature work (one dir per feature)
 │   └── M1-feature-name/
 │       ├── prd.md         # Product requirements (PM writes)
@@ -83,7 +82,6 @@ PM discusses feature with user
   → Conductor calls reviewer agent (reviews unpushed commits)
   → FIX cycle if changes-requested (re-review if fix >= 30 lines)
   → Conductor pushes, PM verifies acceptance criteria, closes milestone
-  → Conductor appends 5-line retrospective to knowledge.md
 
 Hotfix (production bugs):
   /orchestra hotfix {description}
@@ -288,13 +286,13 @@ Each role has exclusive write access to specific directories:
 
 | Role | Owns (can write) | Reads |
 |------|-------------------|-------|
-| orchestrator | `.orchestra/roles/*`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `CLAUDE.md`, `.claude/agents/`, `.claude/skills/*/SKILL.md`, `.claude/rules/*.orchestra.md`, `.claude/commands/orchestra/`, `.orchestra/knowledge.md`, `docs/` | Everything |
+| orchestrator | `.orchestra/roles/*`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `CLAUDE.md`, `.claude/agents/`, `.claude/skills/*/SKILL.md`, `.claude/rules/*.orchestra.md`, `.claude/commands/orchestra/`, `docs/` | Everything |
 | product-manager | `.orchestra/milestones/*` (prd.md, milestone.md, grooming.md, phases) | Everything |
 | architect | `.orchestra/milestones/*/rfc.md`, `.orchestra/milestones/*/architecture.md`, `.orchestra/milestones/*/adrs/*`, project configs | Everything |
 | backend-engineer | Defined by PM in phase scope (typically `src/`, `tests/`, `migrations/`) | `.orchestra/milestones/*/phases/*` |
 | frontend-engineer | Defined by PM in phase scope (typically `frontend/`, `app/`) | `.orchestra/milestones/*/phases/*` |
 | adaptive | Defined by `scope:` field in phase file — dynamic per phase | `.orchestra/milestones/*/phases/*` |
-| conductor (all roles) | `.orchestra/milestones/*/context.md`, `.orchestra/knowledge.md` (append only) | Everything in active milestone |
+| conductor (all roles) | `.orchestra/milestones/*/context.md` | Everything in active milestone |
 
 ---
 
