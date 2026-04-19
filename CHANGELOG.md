@@ -1,5 +1,32 @@
 # Changelog
 
+## [4.0.1-beta.0](https://github.com/sulhadin/orchestrator/compare/orchestrator-v4.0.0-beta.0...orchestrator-v4.0.1-beta.0) (2026-04-19)
+
+
+### Bug Fixes
+
+* **ci:** align manifest with last published version (4.0.1-beta) ([832ec41](https://github.com/sulhadin/orchestrator/commit/832ec41edd7607d035d3199c77e48117f61277b7))
+* **ci:** auto-inject beta prerelease config for next branch ([c62d6cc](https://github.com/sulhadin/orchestrator/commit/c62d6cc0293300b79733bc1c406b3b8e27e60881))
+* **ci:** reset manifest for correct prerelease numbering (4.0.0-beta.N) ([e670dd0](https://github.com/sulhadin/orchestrator/commit/e670dd09b4dbb61b597d7937753177818a060bc0))
+* **ci:** reset manifest version for correct beta bump ([130f328](https://github.com/sulhadin/orchestrator/commit/130f328ae904e0470b4b1fa1ca5d7d0b1a9405a1))
+* **ci:** restore versioning prerelease config from working v3 betas ([6e55c92](https://github.com/sulhadin/orchestrator/commit/6e55c9220834a6d9d6fed8349a576dec75a08c77))
+* **ci:** set manifest to 4.0.0-beta.0 with matching tag for beta.N versioning ([4738986](https://github.com/sulhadin/orchestrator/commit/473898637f9a55adda6be3e9de505db9e4010543))
+
+
+### Refactoring
+
+* **config:** remove 6 rarely-used config fields, hardcode defaults ([ce8ad38](https://github.com/sulhadin/orchestrator/commit/ce8ad3824fd9f231d93f41a46c9f8dac196d7b56))
+* **config:** remove milestone_isolation, hardcode agent mode ([99b56ec](https://github.com/sulhadin/orchestrator/commit/99b56ec92d8ef8ab2c0396e732629f606f3d31a8))
+* remove hardcoded directory rules from identity derivation ([5b592d0](https://github.com/sulhadin/orchestrator/commit/5b592d021841df709488153ec1d9afb0447cbb09))
+
+
+### Maintenance
+
+* **ci:** configure release-please for beta prereleases on next ([4426600](https://github.com/sulhadin/orchestrator/commit/44266000eb33ad7adeb1f2c88f1073824d84307b))
+* **next:** release orchestrator 4.0.0-beta ([#48](https://github.com/sulhadin/orchestrator/issues/48)) ([2d919ba](https://github.com/sulhadin/orchestrator/commit/2d919ba1867ee7680605ec63bdf38122a4885da4))
+* **next:** release orchestrator 4.0.1-beta ([#49](https://github.com/sulhadin/orchestrator/issues/49)) ([34a06b7](https://github.com/sulhadin/orchestrator/commit/34a06b7edb8a630cec0a8c7495a6dfefe7b06ce5))
+* trigger release-please with beta config ([9161ee4](https://github.com/sulhadin/orchestrator/commit/9161ee4db5afea3fdf532dee0fb183b0cb227488))
+
 ## [4.0.1-beta](https://github.com/sulhadin/orchestrator/compare/orchestrator-v4.0.0-beta...orchestrator-v4.0.1-beta) (2026-04-19)
 
 
