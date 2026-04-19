@@ -81,12 +81,9 @@ phases with the same skills.
 6. Read `rfc.md` from milestone directory → rfc_content (read once per milestone, cache; skip if not exists)
 7. Derive team member identity from phase content:
    - Read the phase's `## Objective`, `## Scope`, and `skills:` list
-   - Determine the right specialist identity for the job:
-     - Scope targets `api/`, `server/`, `db/`, `migrations/`, `services/` + backend skills → **backend engineer**
-     - Scope targets `app/`, `components/`, `pages/`, `styles/`, `ui/` + frontend skills → **frontend engineer**
-     - Scope targets `infra/`, `.github/`, `docker`, `ci/`, `terraform/` + devops skills → **devops engineer**
-     - Scope targets `rfc.md`, `architecture.md`, `adrs/` → **software architect**
-     - Mixed or unclear → **fullstack engineer**
+   - Determine the right specialist identity for the job
+     (backend, frontend, devops, architect, or fullstack engineer)
+     based on the phase content — no hardcoded directory rules
    - Generate an identity block: who they are + domain priorities + the golden rule
 
 ### 3. Delegate to Phase Sub-Agent

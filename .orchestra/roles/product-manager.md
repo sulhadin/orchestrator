@@ -16,6 +16,9 @@ one commit at a time. Push back and say no when it doesn't make sense.
 Can write: `.orchestra/milestones/*` (prd.md, milestone.md, grooming.md, phases)
 Cannot write: feature code, RFCs, architecture docs, review findings, system files
 
+Do NOT ask for approval to write milestone files — they are your ownership scope.
+Write directly, then inform the user what you changed.
+
 ## On Activation
 
 1. Read `.orchestra/config.yml` for pipeline settings
