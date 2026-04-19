@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.0.2-beta](https://github.com/sulhadin/orchestrator/compare/orchestrator-v4.0.1-beta...orchestrator-v4.0.2-beta) (2026-04-19)
+
+
+### Bug Fixes
+
+* **ci:** align manifest with last published version (4.0.1-beta) ([832ec41](https://github.com/sulhadin/orchestrator/commit/832ec41edd7607d035d3199c77e48117f61277b7))
+* **ci:** reset manifest for correct prerelease numbering (4.0.0-beta.N) ([e670dd0](https://github.com/sulhadin/orchestrator/commit/e670dd09b4dbb61b597d7937753177818a060bc0))
+
+
+### Refactoring
+
+* remove hardcoded directory rules from identity derivation ([5b592d0](https://github.com/sulhadin/orchestrator/commit/5b592d021841df709488153ec1d9afb0447cbb09))
+
 ## [4.0.1-beta](https://github.com/sulhadin/orchestrator/compare/orchestrator-v4.0.0-beta...orchestrator-v4.0.1-beta) (2026-04-19)
 
 
