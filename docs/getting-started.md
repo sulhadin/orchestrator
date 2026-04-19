@@ -54,13 +54,6 @@ verification:
   lint: "ruff check ."
 ```
 
-For long autonomous runs (`--auto` with many milestones), set `milestone_isolation: agent` to prevent context exhaustion:
-
-```yaml
-pipeline:
-  milestone_isolation: agent   # each milestone gets fresh context
-```
-
 ## Two-Terminal Model
 
 | Terminal | Command | What it does |

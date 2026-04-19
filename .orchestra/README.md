@@ -50,9 +50,9 @@ You can plan new milestones while the lead is executing another one.
 ### Terminal 2: `/orchestra start` (Execution)
 
 Lead reads milestones, derives the right team member identity from phase content, and delegates each phase to a sub-agent.
-Sub-agents implement + verify; lead commits. After milestone completion, behavior
-depends on `milestone_isolation` config: stops (inline) or continues to next (agent).
-Maintains `context.md` for resume capability.
+Sub-agents implement + verify; lead commits. Each milestone runs in its own sub-agent
+for context isolation. After completion, `--auto` continues to next milestone automatically;
+normal mode asks user before continuing. Maintains `context.md` for resume capability.
 
 ```
 /orchestra start
@@ -101,25 +101,22 @@ PM sets `Complexity` on milestone (pipeline) and `complexity` on each phase (mod
 
 Defaults: config.yml `pipeline.default_pipeline` and `pipeline.default_complexity`.
 
-### Milestone Isolation
+### Milestone Execution
 
-Config `pipeline.milestone_isolation` controls how the lead handles multiple milestones:
-
-| Mode | Behavior | Best for |
-|------|----------|----------|
-| `inline` (default) | Lead runs milestone directly, **stops** after completion. User runs `/compact` then `/orchestra start` for next milestone. | Manual sessions, PC-based work |
-| `agent` | Lead spawns a sub-agent per milestone. Context freed automatically after each. Loops to next milestone. | `--auto` overnight batch runs |
+Every milestone runs in its own sub-agent for context isolation. After completion:
+- **Normal mode:** Lead asks "Continue to next milestone?" — user decides
+- **`--auto` mode:** Lead continues to next milestone automatically
 
 ```
-Inline mode:                          Agent mode:
-  /orchestra start                      /orchestra start --auto
-  → M1 executes → done → STOP          → Spawn Agent(M1) → done → freed
-  user: /compact                        → Spawn Agent(M2) → done → freed
-  /orchestra start                      → Spawn Agent(M3) → done → freed
-  → M2 executes → done → STOP          → All done
+/orchestra start                      /orchestra start --auto
+  → Spawn Agent(M1) → done             → Spawn Agent(M1) → done → freed
+  → "Continue to M2?" → yes            → Spawn Agent(M2) → done → freed
+  → Spawn Agent(M2) → done             → Spawn Agent(M3) → done → freed
+  → "Continue to M3?" → yes            → All done
+  → Spawn Agent(M3) → done
 ```
 
-In agent mode, the delegation is two-tier:
+Delegation is two-tier:
 ```
 Lead (lean dispatcher)
   └── Milestone Agent (fresh context)
@@ -344,34 +341,16 @@ sequenceDiagram
 
     C->>C: git push → milestone done
 
-    alt Inline mode (default)
-        C->>C: STOP — user compacts and restarts
-    else Agent mode
-        C->>C: Next milestone? → loop or done
+    alt --auto mode
+        C->>C: Next milestone → loop or done
+    else Normal mode
+        C->>C: Ask user: "Continue to next?"
     end
 
     Note over PM: PM is free the entire time<br/>Can plan M2 while M1 executes
 ```
 
-### 2. Lead Execution Loop (Inline Mode)
-
-```mermaid
-sequenceDiagram
-    participant C as Lead
-
-    C->>C: Scan milestones/
-    Note over C: M1: in-progress<br/>M2: planning<br/>M3: done
-
-    C->>C: Resume M1 (read context.md)
-    C->>C: backend phase-2 (resuming)
-    C->>C: backend phase-3
-    C->>C: reviewer → approved
-    C->>C: Push → M1 done
-
-    Note over C: STOP. "Run /compact or /clear then /orchestra start"
-```
-
-### 3. Lead Execution Loop (Agent Mode)
+### 2. Lead Execution Loop
 
 ```mermaid
 sequenceDiagram
@@ -383,12 +362,16 @@ sequenceDiagram
     C->>MA: Spawn Agent(M1)
     MA->>MA: phase-1 → phase-2 → review → push
     MA-->>C: {status: done, retro: ...}
-    Note over C: Write retro, ~1-2k tokens retained
+    Note over C: ~1-2k tokens retained
 
-    C->>MA: Spawn Agent(M2)
+    alt --auto mode
+        C->>MA: Spawn Agent(M2) automatically
+    else Normal mode
+        C->>C: "Continue to M2?" → user says yes
+        C->>MA: Spawn Agent(M2)
+    end
     MA->>MA: phase-1 → phase-2 → review → push
     MA-->>C: {status: done, retro: ...}
-    Note over C: Write retro, ~1-2k tokens retained
 
     C->>C: No more milestones
     Note over C: "All done. Waiting for new work."

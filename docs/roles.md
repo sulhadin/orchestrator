@@ -14,7 +14,7 @@ Orchestra has 2 permanent roles. Sub-agent identities are derived dynamically by
 
 ## Agents (not roles)
 
-**Lead** (`.claude/agents/lead.md`) — Autonomous milestone executor and team assembler. Not a role — it's a state machine that reads milestones, derives the right sub-agent identity dynamically from phase scope and skills, delegates phases, selects models per complexity, and owns commits. Post-milestone behavior depends on `milestone_isolation` config: stops (inline) or continues to next (agent). Never implements code directly.
+**Lead** (`.claude/agents/lead.md`) — Autonomous milestone executor and team assembler. Not a role — it's a state machine that reads milestones, derives the right sub-agent identity dynamically from phase scope and skills, delegates phases, selects models per complexity, and owns commits. Each milestone runs in its own sub-agent; `--auto` continues automatically, normal mode asks before continuing. Never implements code directly.
 
 **Reviewer** (`.claude/agents/reviewer.md`) — Independent code review agent. Called by lead after implementation. Has no context from implementation — sees only the code.
 

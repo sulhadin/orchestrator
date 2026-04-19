@@ -122,7 +122,7 @@ PM challenges scope, creates M1-user-auth with 3 phases
 
 **Role boundaries** — Enforced via `.claude/rules/`. PM cannot write code. Engineers cannot modify system files. Orchestrator cannot write features. Boundaries checked by file path, not by words.
 
-**Milestone isolation** — `inline` mode stops after each milestone (user compacts manually). `agent` mode spawns each milestone in its own sub-agent — context freed automatically, enabling 20+ milestones in a single `--auto` session.
+**Milestone isolation** — Every milestone runs in its own sub-agent — context freed automatically, enabling 20+ milestones in a single session. Normal mode asks before continuing; `--auto` chains milestones automatically.
 
 **Stuck detection** — Detects repeated failures, circular fixes, over-engineering. Tries different approach once, then escalates. Auto mode skips to next phase.
 

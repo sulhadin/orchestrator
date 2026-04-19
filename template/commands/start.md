@@ -8,10 +8,8 @@ The lead will:
 3. Delegate phases to sub-agents, load skills, implement code
 4. Trigger code review via reviewer agent
 5. Push automatically after review passes
-6. Behavior after milestone: stop (inline mode) or continue to next (agent mode)
+6. After milestone: `--auto` continues to next automatically, normal mode asks user
 
-Config `pipeline.milestone_isolation` controls post-milestone behavior:
-- `inline` (default): stops after each milestone. User compacts and restarts.
-- `agent`: spawns each milestone in sub-agent. Loops automatically. Best with `--auto`.
+Each milestone runs in its own sub-agent for context isolation.
 
 Pass `--auto` flag for fully autonomous mode (warns once, then skips all gates).
