@@ -1,0 +1,10 @@
+{
+  "name": "orchestra",
+  "description": "AI Team Orchestration — multi-role coordination with milestones, phases, and quality gates for Claude Code",
+  "version": "4.0.0-beta",
+  "author": {
+    "name": "Sulhadin Öney"
+  },
+  "repository": "https://github.com/sulhadin/orchestrator",
+  "license": "MIT"
+}

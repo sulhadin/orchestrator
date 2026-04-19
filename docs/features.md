@@ -17,14 +17,8 @@ pipeline:
   milestone_isolation: inline  # inline | agent
   default_pipeline: full    # quick | standard | full
   default_complexity: standard  # trivial | quick | standard | complex
-  max_rfc_rounds: 3
-  max_milestone_review_rounds: 3
 
 thresholds:
-  milestone_lock_timeout: 120  # minutes
-  re_review_lines: 30
-  phase_time_limit: 15      # minutes
-  phase_tool_limit: 40
   stuck_retry_limit: 3
 
 verification:
@@ -58,10 +52,7 @@ After verification passes, sub-agent checks: "Does this satisfy every acceptance
 
 ## Phase Limits
 
-From config.yml thresholds:
-- **Time limit** — pause if exceeded
-- **Scope guard** — don't work outside phase criteria
-- **Tool call guard** — too many calls without commit = likely over-engineering
+- **Scope guard** — don't work outside phase acceptance criteria
 
 ## Stuck Detection
 
@@ -126,12 +117,12 @@ Phase duration + verification retries tracked in context.md `## Metrics` section
 
 ## Rejection Flow
 
-RFC rejected → lead revises (max `pipeline.max_rfc_rounds`). Push is automatic after review passes.
+RFC rejected → lead revises (max 3 rounds). Push is automatic after review passes.
 
 ## Milestone Lock
 
-Lead claims milestone with `Locked-By: {timestamp}`. Other leads skip it. Expires after `thresholds.milestone_lock_timeout` minutes (default 120).
+Lead claims milestone with `Locked-By: {timestamp}`. Other leads skip it. Expires after 60 minutes.
 
 ## Conditional Re-review
 
-Fix < config `re_review_lines` → proceed. Fix >= threshold → abbreviated re-review.
+Fix < 50 lines → proceed. Fix >= 50 lines → abbreviated re-review.
