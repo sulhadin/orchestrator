@@ -23,7 +23,7 @@ pipeline:
   parallel: disabled
 
   # Milestone isolation mode: inline | agent
-  # inline: conductor runs milestones directly, stops after each. User compacts manually. (default)
+  # inline: lead runs milestones directly, stops after each. User compacts manually. (default)
   # agent: each milestone runs in its own sub-agent. Context freed automatically. Best for --auto.
   milestone_isolation: inline
 

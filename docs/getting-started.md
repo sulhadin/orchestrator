@@ -30,7 +30,7 @@ Both options use the same commands: `/orchestra:pm`, `/orchestra:start`, etc.
 └── milestones/       ← Your work (one dir per feature)
 
 .claude/              ← Claude Code integration
-├── agents/           ← Conductor + Reviewer
+├── agents/           ← Lead + Reviewer
 ├── skills/           ← Domain checklists (*.orchestra.md)
 ├── rules/            ← Discipline rules (*.orchestra.md)
 └── commands/orchestra/ ← /orchestra commands
@@ -90,15 +90,15 @@ You: /orchestra start
 
 📋 Starting M1-user-auth
 
-🏗️ architect ▶ RFC + grooming validation...
-🏗️ architect ✅ RFC ready
+🏗️ design ▶ RFC + grooming validation...
+🏗️ design ✅ RFC ready
 🚦 Approve RFC? → yes
 
-⚙️ backend ▶ phase-1: DB schema + migrations...
-⚙️ backend ✅ phase-1 done
+⚙️ phase-1 ▶ DB schema + migrations...
+⚙️ phase-1 ✅ done
 
-🎨 frontend ▶ phase-2: Login UI...
-🎨 frontend ✅ phase-2 done
+⚙️ phase-2 ▶ Login UI...
+⚙️ phase-2 ✅ done
 
 🔍 reviewer ▶ reviewing unpushed commits...
 🔍 reviewer ✅ approved
@@ -108,7 +108,7 @@ You: /orchestra start
 
 ## Resuming
 
-Close terminal, reopen, `/orchestra start` — conductor reads context.md and continues.
+Close terminal, reopen, `/orchestra start` — lead reads context.md and continues.
 
 ## Blueprints
 

@@ -21,29 +21,25 @@ COMMANDS:
 ROLES (activate via /orchestra {role}):
   /orchestra orchestrator    Maintain and evolve Orchestra system
   /orchestra pm              Plan features, create milestones
-  /orchestra architect       Design architecture, choose tech
-  /orchestra backend         Implement backend code + tests
-  /orchestra frontend        Design + build UI, write frontend tests
-  /orchestra adaptive        Adaptive expert — domain defined per phase
 
 AGENTS:
-  conductor                        Autonomous milestone executor (/orchestra start)
-  reviewer                         Independent code review (called by conductor)
+  lead                             Team assembler + milestone executor (/orchestra start)
+  reviewer                         Independent code review (called by lead)
 
 PIPELINE (set by PM via Complexity field):
-  quick       Engineer → Commit → Push
-  standard    Engineer → Review → Push
-  full        Architect → Engineer → Review → Push (default)
+  quick       Phases → Commit → Push
+  standard    Phases → Review → Push
+  full        Design → Phases → Review → Push (default)
 
 CONFIG:
   .orchestra/config.yml            Pipeline settings, thresholds, verification commands
 
 FILES:
-  .claude/agents/                  Conductor + Reviewer agents
+  .claude/agents/                  Lead + Reviewer agents
   .claude/skills/*/SKILL.md        Domain checklists (auth, CRUD, deploy, etc.)
   .claude/rules/*.orchestra.md     Discipline rules (verification, commit format, etc.)
   .claude/commands/orchestra/      Orchestra commands
-  .orchestra/roles/                Role identities (one file per role)
+  .orchestra/roles/                Role identities (orchestrator, product-manager)
   .orchestra/config.yml            Pipeline configuration
   .orchestra/blueprints/           Project/component templates
   .orchestra/milestones/           Feature work (one dir per milestone)

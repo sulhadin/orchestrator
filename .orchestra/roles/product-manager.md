@@ -39,7 +39,7 @@ Cannot write: feature code, RFCs, architecture docs, review findings, system fil
 ### Milestone Review Loop
 
 After creating milestone files, launch a milestone-reviewer sub-agent before
-marking the milestone as ready. This catches planning errors before conductor executes.
+marking the milestone as ready. This catches planning errors before lead executes.
 
 **Flow:** PM creates → reviewer sub-agent → PM fixes → reviewer again → max `pipeline.max_milestone_review_rounds`
 
@@ -51,15 +51,18 @@ in {milestone_path}/: prd.md, milestone.md, grooming.md, and all files in phases
 (rfc.md and context.md don't exist yet — don't flag them as missing.)
 
 ## Checklist
-1. Every phase has `role:` set?
-2. Every phase has `complexity:` set?
-3. Every phase has `skills:` appropriate for the role and task?
-4. Every phase has `scope:` defining which files/dirs to touch?
-5. Acceptance criteria are testable? (not vague like "works well" — specific like "returns 200")
-6. `milestone.md` has `Complexity:` set?
-7. Phase order and `depends_on` are correct? (frontend depends on backend, etc.)
-8. No overlapping scope between phases? (two phases writing same files)
-9. PRD explains WHY, not just WHAT?
+1. Every phase has `complexity:` set?
+2. Every phase has `skills:` appropriate for the task?
+3. Every phase has `## Scope` defining specific files/dirs to touch?
+4. Acceptance criteria are testable? (not vague like "works well" — specific like "returns 200")
+5. `milestone.md` has `Complexity:` set?
+6. Phase order and `depends_on` are correct?
+7. No overlapping scope between phases? (two phases writing same files)
+8. PRD explains WHY, not just WHAT?
+9. Every non-trivial phase has `## Context` explaining what the project is?
+10. Every non-trivial phase has `## Technical Decisions` with NO unresolved "X OR Y" choices?
+11. Standard+ phases have `## References` for technologies that may have changed since training cutoff?
+12. Standard+ phases have `## Constraints` with at least 2 negative scenarios?
 
 ## Return Format
 verdict: approved | changes-requested
@@ -93,19 +96,46 @@ summary: {2-3 sentences}
 
 ```markdown
 ---
-role: backend-engineer | frontend-engineer | architect | adaptive                                                                                                                                             
-status: pending | in-progress | done | failed                                                                                                                                                               
-order: 1                                                                                                                                                                                                      
-complexity: standard          # trivial | quick | standard | complex — conductor uses this for model selection                                                                                                          
-skills: []                    # list .claude/skills/, assign relevant ones by name
+status: pending
+order: 1
+complexity: standard          # trivial | quick | standard | complex
+skills: []                    # .claude/skills/ names
 depends_on: []
 ---
 
 ## Objective
+What this phase must accomplish. One paragraph, specific.
+
+## Context
+What is this project? Why does it exist? What does the user do with it?
+This grounds the implementer so they understand the bigger picture.
+Can reference prd.md for detail. (Optional for trivial complexity.)
+
+## Technical Decisions
+All technical choices resolved. NO "X or Y" — every decision is final.
+Include versions for all named technologies.
+(Optional for trivial complexity.)
+
 ## Scope
+Files and directories this phase touches. Be specific:
+- src/services/auth.ts (new)
+- src/routes/login.ts (modify)
+- tests/auth.test.ts (new)
+
+## References
+Links to official docs for anything where training data may be stale.
+(Optional, recommended for standard+.)
+
 ## Acceptance Criteria
+Testable criteria. Each must be verifiable by running a command or checking output.
+- [ ] `POST /api/login` with valid credentials returns 200 with JWT
+
+## Constraints
+Negative scenarios, boundary conditions, and hard limits. (Optional for trivial/quick.)
+- [ ] Max 5 login attempts per minute per IP
+
 ## Result
-(filled by conductor)
+(filled by lead after execution)
 ```
 
 ### Complexity Levels
@@ -115,7 +145,7 @@ depends_on: []
 | `trivial` | Haiku | Phases → Commit → Push | Version bumps, env vars, config changes |
 | `quick` | Sonnet | Phases → Commit → Push (skip review) | Single-file fixes, simple CRUD |
 | `standard` | Sonnet | Phases → Review → Push | Typical features (default) |
-| `complex` | Opus | Architect → Phases → Review → Push | New subsystems, unfamiliar territory |
+| `complex` | Opus | Design → Phases → Review → Push | New subsystems, unfamiliar territory |
 
 ### Blueprint Command
 

@@ -10,7 +10,14 @@
         { "type": "docs", "section": "Documentation" },
         { "type": "chore", "section": "Maintenance" },
         { "type": "ci", "section": "CI/CD" }
-      ]
+      ],
+      "prerelease-type": "beta"
     }
-  }
+  },
+  "branch-overrides": [
+    {
+      "branch": "next",
+      "prerelease": true
+    }
+  ]
 }

@@ -16,14 +16,10 @@ Call `ask_user_questions` with:
 - options:
   1. Orchestrator — Maintain and evolve Orchestra system files, roles, and rules
   2. Product Manager — Write PRDs, create milestones with phases, orchestrate pipeline
-  3. Architect — Design system architecture, choose technologies, set up project skeleton
-  4. Backend Engineer — Implement features, write code + tests, build APIs
-  5. Frontend Engineer — Design + build user interfaces, write frontend tests
-  6. Adaptive — Adaptive expert role (iOS, DevOps, ML, etc.) — domain defined per phase
-  7. Discussion — Just brainstorm, no role needed
+  3. Discussion — Just brainstorm, no role needed
 
 If user skips or starts giving instructions directly — work with them normally.
-Sub-agents spawned by conductor skip role selection — they already have a role assigned in their prompt.
+Sub-agents spawned by lead skip role selection — they already have a role assigned in their prompt.
 Do NOT greet. Do NOT explain. The role selection IS your greeting.
 
 **AFTER ROLE SELECTED:**
@@ -33,15 +29,15 @@ Do NOT greet. Do NOT explain. The role selection IS your greeting.
 3. Check `.orchestra/milestones/` for active work
 4. If work exists → announce and start. If not → report and wait.
 
-Role IDs: orchestrator, product-manager, architect, backend-engineer, frontend-engineer, adaptive
+Role IDs: orchestrator, product-manager
 
 **ROLE ACTIVATION:** Only via `/orchestra {role}` commands. Never switch on free text.
 
-**`/orchestra start`** → read `.claude/agents/conductor.md`, run in **separate terminal** from PM.
+**`/orchestra start`** → read `.claude/agents/lead.md`, run in **separate terminal** from PM.
 
 ### Rules
 
-- Two-terminal model: PM plans in one terminal, conductor executes in another
+- Two-terminal model: PM plans in one terminal, lead executes in another
 - Each role writes only to its ownership scope (defined in role file)
 - Rules (`.claude/rules/*.orchestra.md`) auto-loaded. Skills loaded per phase.
 - **PROTECTED:** Non-Orchestrator roles NEVER modify `.orchestra/roles/`, `.orchestra/config.yml`, `.orchestra/README.md`, `.orchestra/blueprints/`, `.claude/agents/`, `.claude/rules/*.orchestra.md`, `.claude/skills/*/SKILL.md`, `.claude/commands/orchestra/`, `CLAUDE.md`, or `docs/`.

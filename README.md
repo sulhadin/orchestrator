@@ -4,7 +4,7 @@ AI team orchestration for [Claude Code](https://docs.anthropic.com/en/docs/claud
 
 ## What is Orchestra?
 
-Orchestra turns a single Claude Code session into a coordinated development team. A Product Manager plans features, a Conductor orchestrates them — delegating each phase to a sub-agent with the right role (backend, frontend, architect). Sub-agents own implementation and verification; conductor owns commits. Each role has strict boundaries, every commit passes verification, and the system learns from past milestones.
+Orchestra turns a single Claude Code session into a coordinated development team. A Product Manager plans features, a Lead assembles the right team — deriving sub-agent identity dynamically from phase content and delegating each phase. Sub-agents own implementation and verification; lead owns commits. Each role has strict boundaries, every commit passes verification, and the system learns from past milestones.
 
 No infrastructure. No API keys. Just markdown files and Claude Code.
 
@@ -31,15 +31,14 @@ Both options use the same commands: `/orchestra:pm`, `/orchestra:start`, etc.
 ## How It Works
 
 ```
-Terminal 1 (PM):                    Terminal 2 (Conductor):
+Terminal 1 (PM):                    Terminal 2 (Lead):
   /orchestra pm                       /orchestra start
   │                                   │
   ├─ Discuss features                 ├─ Scan milestones
-  ├─ Create milestones                ├─ Delegate to architect → RFC
-  ├─ Groom phases                     ├─ Delegate to backend → code + tests
-  │                                   ├─ Delegate to frontend → UI
-  │  (plan M2 while M1 runs)          ├─ Call reviewer → code review
-  │                                   ├─ Push → milestone done
+  ├─ Create milestones                ├─ Design phase → RFC
+  ├─ Groom phases                     ├─ Delegate to sub-agents → code + tests
+  │                                   ├─ Call reviewer → code review
+  │  (plan M2 while M1 runs)          ├─ Push → milestone done
   │                                   └─ Stop (inline) or next milestone (agent)
 ```
 
@@ -56,10 +55,10 @@ PM challenges scope, creates M1-user-auth with 3 phases
 ```
 /orchestra start
 📋 Starting M1-user-auth
-🏗️ architect → RFC ready → user approves
-⚙️ backend → phase-1: DB schema → committed
-⚙️ backend → phase-2: API endpoints → committed
-🎨 frontend → phase-3: Login UI → committed
+🏗️ design → RFC ready → user approves
+⚙️ phase-1: DB schema → committed
+⚙️ phase-2: API endpoints → committed
+⚙️ phase-3: Login UI → committed
 🔍 reviewer → approved
 ✅ M1-user-auth done. Pushed to origin.
 ```
@@ -85,10 +84,6 @@ PM challenges scope, creates M1-user-auth with 3 phases
 | Command | Role |
 |---------|------|
 | `/orchestra pm` | Product Manager — plan and orchestrate |
-| `/orchestra backend` | Backend Engineer — code + tests |
-| `/orchestra frontend` | Frontend Engineer — UI + design |
-| `/orchestra architect` | Architect — technical design |
-| `/orchestra adaptive` | Adaptive expert — any domain (iOS, DevOps, ML...) |
 | `/orchestra orchestrator` | System maintenance |
 
 ## Architecture
@@ -96,7 +91,7 @@ PM challenges scope, creates M1-user-auth with 3 phases
 ```
 .claude/                                ← Claude Code integration
 ├── agents/
-│   ├── conductor.md                    ← Autonomous milestone executor
+│   ├── lead.md                         ← Autonomous milestone executor
 │   └── reviewer.md                     ← Independent code review
 ├── skills/*.orchestra.md               ← 14 domain checklists
 ├── rules/*.orchestra.md                ← Discipline rules (auto-loaded)
@@ -104,7 +99,7 @@ PM challenges scope, creates M1-user-auth with 3 phases
 
 .orchestra/                             ← Project data + config
 ├── config.yml                          ← Pipeline settings (customize per stack)
-├── roles/                              ← Role identities
+├── roles/                              ← Role identities (orchestrator, product-manager)
 ├── blueprints/                         ← Project templates
 └── milestones/                         ← Your work
 ```
@@ -121,7 +116,7 @@ PM challenges scope, creates M1-user-auth with 3 phases
 
 **Verification gate** — Tests + lint must pass before every commit. Commands come from config. Fails 3 times → phase marked failed, escalated to user.
 
-**14 built-in skills** — Domain checklists for auth, CRUD, deployment, accessibility, React, testing, debugging, and more. PM assigns to phases, conductor loads them automatically.
+**14 built-in skills** — Domain checklists for auth, CRUD, deployment, accessibility, React, testing, debugging, and more. PM assigns to phases, lead loads them automatically.
 
 **Blueprints** — Start from templates instead of scratch. `saas-starter` creates 5 milestones instantly. `blueprint add` saves your work as a reusable template.
 
@@ -155,7 +150,7 @@ Full docs at [docs/](https://github.com/sulhadin/orchestrator/blob/main/docs/REA
 
 - [Getting Started](https://github.com/sulhadin/orchestrator/blob/main/docs/getting-started.md) — installation, first milestone, two-terminal model
 - [Commands](https://github.com/sulhadin/orchestrator/blob/main/docs/commands.md) — all commands with examples
-- [Roles](https://github.com/sulhadin/orchestrator/blob/main/docs/roles.md) — 6 roles + adaptive, responsibilities, boundaries
+- [Roles](https://github.com/sulhadin/orchestrator/blob/main/docs/roles.md) — roles, responsibilities, boundaries
 - [Features](https://github.com/sulhadin/orchestrator/blob/main/docs/features.md) — config, verification, skills, blueprints, and more
 - [Blueprints](https://github.com/sulhadin/orchestrator/blob/main/docs/blueprints.md) — project templates, customization
 - [Skills](https://github.com/sulhadin/orchestrator/blob/main/docs/skills.md) — domain checklists, creating new skills

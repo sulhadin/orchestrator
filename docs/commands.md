@@ -6,7 +6,7 @@
 Activate the Product Manager role. PM is your strategic partner — discusses ideas, challenges scope, creates milestones.
 
 ### `/orchestra start`
-Start the conductor for autonomous milestone execution. Asks at approval gates (RFC, push).
+Start the lead for autonomous milestone execution. Asks at approval gates (RFC, push).
 
 ### `/orchestra start --auto`
 Fully autonomous execution. Warns once, then skips all approval gates.
@@ -67,7 +67,3 @@ Switch to a specific role using `/orchestra {role}`:
 |---------|-------------|
 | `/orchestra orchestrator` | System maintenance — modify Orchestra files |
 | `/orchestra pm` | Plan features, create milestones |
-| `/orchestra architect` | Design architecture, write RFCs |
-| `/orchestra backend` | Write backend code + tests |
-| `/orchestra frontend` | Design + build UI, write frontend tests |
-| `/orchestra adaptive` | Adaptive expert — domain defined per phase |

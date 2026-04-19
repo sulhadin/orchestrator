@@ -1,11 +1,11 @@
-Start the Orchestra conductor for autonomous milestone execution.
+Start the Orchestra lead for autonomous milestone execution.
 
-Read `.claude/agents/conductor.md` and follow its instructions.
+Read `.claude/agents/lead.md` and follow its instructions.
 
-The conductor will:
+The lead will:
 1. Scan milestones for pending work
-2. Execute phases sequentially (or parallel if configured)
-3. Activate roles, load skills, implement code
+2. Assemble the right team for each phase (identity derived from phase content)
+3. Delegate phases to sub-agents, load skills, implement code
 4. Trigger code review via reviewer agent
 5. Push automatically after review passes
 6. Behavior after milestone: stop (inline mode) or continue to next (agent mode)
