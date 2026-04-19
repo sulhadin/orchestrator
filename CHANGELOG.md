@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.0.1-beta](https://github.com/sulhadin/orchestrator/compare/orchestrator-v4.0.0-beta...orchestrator-v4.0.1-beta) (2026-04-19)
+
+
+### Bug Fixes
+
+* **ci:** auto-inject beta prerelease config for next branch ([c62d6cc](https://github.com/sulhadin/orchestrator/commit/c62d6cc0293300b79733bc1c406b3b8e27e60881))
+
+
+### Refactoring
+
+* **config:** remove 6 rarely-used config fields, hardcode defaults ([ce8ad38](https://github.com/sulhadin/orchestrator/commit/ce8ad3824fd9f231d93f41a46c9f8dac196d7b56))
+* **config:** remove milestone_isolation, hardcode agent mode ([99b56ec](https://github.com/sulhadin/orchestrator/commit/99b56ec92d8ef8ab2c0396e732629f606f3d31a8))
+
 ## [4.0.0-beta](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.5...orchestrator-v4.0.0-beta) (2026-04-19)
 
 
