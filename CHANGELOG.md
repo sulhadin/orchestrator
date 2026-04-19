@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.0.0](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.5...orchestrator-v4.0.0) (2026-04-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* static role files (backend-engineer, frontend-engineer, adaptive, architect) and conductor.md are removed. Phase files no longer use `role:` frontmatter. Users must re-run `npx @sulhadin/orchestrator` to upgrade.
+
+### Features
+
+* replace static agent roles with dynamic Lead architecture ([57d694f](https://github.com/sulhadin/orchestrator/commit/57d694f9e85e4c2e916403ba772ea7c5222787c0))
+
+
+### Refactoring
+
+* **system:** remove knowledge.md and all references ([c9d4ee1](https://github.com/sulhadin/orchestrator/commit/c9d4ee1668772d68199d1a689ffb8c89c7d0188d))
+
 ## [3.1.5](https://github.com/sulhadin/orchestrator/compare/orchestrator-v3.1.4...orchestrator-v3.1.5) (2026-04-05)
 
 
