@@ -12,8 +12,5 @@
         { "type": "ci", "section": "CI/CD" }
       ]
     }
-  },
-  "versioning": "prerelease",
-  "prerelease": true,
-  "prerelease-type": "beta"
+  }
 }

@@ -16,6 +16,20 @@ jobs:
       tag_name: ${{ steps.release.outputs.tag_name }}
       version: ${{ steps.release.outputs.version }}
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare release config
+        if: github.ref_name == 'next'
+        run: |
+          node --input-type=module -e "
+            import { readFileSync, writeFileSync } from 'fs';
+            const cfg = JSON.parse(readFileSync('release-please-config.json', 'utf8'));
+            cfg.versioning = 'prerelease';
+            cfg.prerelease = true;
+            cfg['prerelease-type'] = 'beta';
+            writeFileSync('release-please-config.json', JSON.stringify(cfg, null, 2) + '\n');
+          "
+
       - uses: googleapis/release-please-action@v4
         id: release
         with:
