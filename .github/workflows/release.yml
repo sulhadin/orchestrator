@@ -27,6 +27,8 @@ jobs:
             cfg.versioning = 'prerelease';
             cfg.prerelease = true;
             cfg['prerelease-type'] = 'beta';
+            cfg['bump-minor-pre-major'] = false;
+            cfg['bump-patch-for-minor-pre-major'] = false;
             writeFileSync('release-please-config.json', JSON.stringify(cfg, null, 2) + '\n');
           "
 
