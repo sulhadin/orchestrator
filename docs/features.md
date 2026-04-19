@@ -14,7 +14,6 @@ pipeline:
   rfc_approval: skip        # required | optional | skip
   review: required          # required | optional | skip
   parallel: disabled        # enabled | disabled
-  milestone_isolation: inline  # inline | agent
   default_pipeline: full    # quick | standard | full
   default_complexity: standard  # trivial | quick | standard | complex
 
@@ -78,18 +77,13 @@ Lead never implements code directly. Each phase runs in an isolated sub-agent wi
 
 Error logs stay in sub-agent's ephemeral context — lead stays clean across phases.
 
-## Milestone Isolation
+## Milestone Execution
 
-Config `pipeline.milestone_isolation` controls how the lead manages context across milestones:
+Every milestone runs in its own sub-agent for context isolation. Delegation is two-tier: lead → milestone agent → phase agents. The lead stays lean (~1-2k tokens per milestone), enabling 20+ milestones in a single session.
 
-| Mode | Behavior | Best for |
-|------|----------|----------|
-| `inline` (default) | Lead runs milestone directly, stops after completion. User compacts manually. | Manual sessions |
-| `agent` | Each milestone runs in its own sub-agent. Context freed automatically. | `--auto` batch runs |
-
-In `agent` mode, delegation is two-tier: lead → milestone agent → phase agents. The lead stays lean (~1-2k tokens per milestone), enabling 20+ milestones in a single session.
-
-In `inline` mode, lead stops after each milestone. User runs `/compact` then `/orchestra start` to continue — full control over context management.
+After each milestone:
+- **Normal mode:** Lead asks "Continue to next milestone?" — user decides
+- **`--auto` mode:** Lead continues to next milestone automatically
 
 ## Parallel Execution
 

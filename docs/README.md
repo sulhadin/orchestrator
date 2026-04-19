@@ -8,7 +8,7 @@ Orchestra splits work between two terminals:
 
 **Terminal 1 — PM** (`/orchestra pm`): You discuss features, challenge scope, and create milestones with groomed phases. PM never writes code — only plans.
 
-**Terminal 2 — Lead** (`/orchestra start`): The lead reads your milestones, derives the right sub-agent identity dynamically from phase scope and skills, and delegates each phase. Sub-agents implement code, run verification, and report back. Lead commits, triggers code review, and pushes when done. In `inline` mode (default), stops after each milestone — user compacts and restarts. In `agent` mode, continues to the next milestone automatically.
+**Terminal 2 — Lead** (`/orchestra start`): The lead reads your milestones, derives the right sub-agent identity dynamically from phase scope and skills, and delegates each phase. Sub-agents implement code, run verification, and report back. Lead commits, triggers code review, and pushes when done. Each milestone runs in its own sub-agent for context isolation. After completion, `--auto` continues automatically; normal mode asks before continuing.
 
 The two terminals communicate through files — no direct messaging. PM writes milestone files, lead reads them. You can plan the next feature while the current one is being built.
 

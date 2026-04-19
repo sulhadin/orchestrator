@@ -21,8 +21,6 @@ When started:
 
 1. If `--auto`: print `Warning: Auto mode — RFC gate skipped, fully autonomous.` and proceed.
 2. Read `.orchestra/config.yml` for pipeline settings and thresholds.
-   - Read `pipeline.milestone_isolation` (default: `inline`).
-   - If `--auto` and `milestone_isolation: inline`: warn once: "Inline mode with --auto: lead stops after each milestone. Consider `milestone_isolation: agent` for batch runs."
 3. Read `.orchestra/README.md` for orchestration rules.
 4. Scan milestones:
    - Glob `.orchestra/milestones/*/milestone.md`
@@ -249,45 +247,27 @@ Read gate behavior from config.yml:
 
 ## Milestone Completion
 
-### Inline Mode (default)
-
-After push:
-1. Update milestone.md `status: done`, remove `Locked-By`.
-2. Proceed to "Next Milestone — Mode-Dependent Behavior" → Inline Mode.
-
-### Agent Mode
-
 Milestone agent handles push and returns structured result (see Milestone Agent Delegation).
 Lead processes the return:
 1. Update milestone.md `status: done`, remove `Locked-By`.
-2. Proceed to "Next Milestone — Mode-Dependent Behavior" → Agent Mode.
+2. Proceed to next milestone.
 
-## Next Milestone — Mode-Dependent Behavior
-
-Behavior after milestone completion depends on `pipeline.milestone_isolation`:
-
-### Inline Mode (default)
-
-After push:
-1. **STOP.** Print: "Milestone {id} complete and pushed."
-2. Do NOT loop to next milestone.
-
-### Agent Mode
+## Next Milestone
 
 After milestone agent returns:
 1. Re-scan `.orchestra/milestones/` using Glob (PM may have created new ones)
-3. If pending → spawn next milestone agent
-4. If none → "All milestones complete. Waiting for new work from PM."
+2. If pending milestones exist:
+   - `--auto` mode → spawn next milestone agent immediately
+   - Normal mode → ask user: "Milestone {id} complete. Continue to {next-id}?" → yes: spawn next, no: stop
+3. If none → "All milestones complete. Waiting for new work from PM."
 
 Context stays lean because all phase-level context lived in the (now ended)
 milestone agent. Lead only accumulates ~1-2k tokens per milestone
 (prompt + structured result).
 
-## Milestone Agent Delegation (Agent Mode Only)
+## Milestone Agent Delegation
 
-This section applies ONLY when config `pipeline.milestone_isolation: agent`.
-
-In agent mode, the lead becomes a two-tier dispatcher:
+Every milestone runs as a separate sub-agent. Lead is a two-tier dispatcher:
 - Lead spawns one milestone agent per milestone
 - Milestone agent spawns phase sub-agents (same as current phase delegation)
 - When milestone agent completes, its context is freed entirely
@@ -404,7 +384,7 @@ Read context.md → skip phases marked `done` → resume from first non-done pha
 
 ## Hotfix Pipeline
 
-Hotfix always runs inline regardless of `milestone_isolation` setting — single-phase fast path, sub-agent isolation adds no value.
+Hotfix runs as a single-phase fast path — no milestone agent needed.
 
 When user types `/orchestra hotfix {description}`:
 1. Auto-create hotfix milestone + single phase

@@ -41,7 +41,7 @@ Verify `.claude/rules/role-boundaries.orchestra.md` matches reality:
 
 ### 4. Config ↔ Lead Alignment
 Verify `.orchestra/config.yml` fields match what lead.md references:
-- Pipeline settings (rfc_approval, review, parallel, milestone_isolation)
+- Pipeline settings (rfc_approval, review, parallel)
 - Thresholds (stuck_retry_limit)
 - Verification commands (typecheck, test, lint)
 
