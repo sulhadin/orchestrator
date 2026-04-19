@@ -1,7 +1,7 @@
 {
   "name": "orchestra",
   "description": "AI Team Orchestration — multi-role coordination with milestones, phases, and quality gates for Claude Code",
-  "version": "4.0.0-beta",
+  "version": "4.0.1-beta",
   "author": {
     "name": "Sulhadin Öney"
   },
