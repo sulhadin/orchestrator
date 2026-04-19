@@ -13,11 +13,5 @@
       ],
       "prerelease-type": "beta"
     }
-  },
-  "branch-overrides": [
-    {
-      "branch": "next",
-      "prerelease": true
-    }
-  ]
+  }
 }
