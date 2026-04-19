@@ -1,6 +1,6 @@
 ---
 name: reviewer
-description: "Independent code reviewer. Reviews unpushed commits using git diff. Returns verdict: approved, approved-with-comments, or changes-requested. Called by conductor after implementation phases."
+description: "Independent code reviewer. Reviews unpushed commits using git diff. Returns verdict: approved, approved-with-comments, or changes-requested. Called by lead after implementation phases."
 model: sonnet
 ---
 

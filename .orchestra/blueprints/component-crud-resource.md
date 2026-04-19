@@ -13,9 +13,9 @@ validation, frontend UI, and tests. Use whenever you need a new entity.
 ### M{N} — {RESOURCE_NAME} CRUD
 - Complexity: standard
 - Phases:
-  1. (backend) DB schema + migration for {RESOURCE_NAME} table [skills: crud-api]
-  2. (backend) {RESOURCE_NAME} CRUD endpoints + validation + tests [skills: crud-api]
-  3. (frontend) {RESOURCE_NAME} list view + detail view + create/edit form
+  1. (impl) DB schema + migration for {RESOURCE_NAME} table [skills: crud-api]
+  2. (impl) {RESOURCE_NAME} CRUD endpoints + validation + tests [skills: crud-api]
+  3. (impl) {RESOURCE_NAME} list view + detail view + create/edit form
 - Acceptance Criteria:
   - [ ] Create, read, update, delete operations work
   - [ ] Input validation on create and update

@@ -45,8 +45,8 @@ What this blueprint produces.
 ### M1 — {title}
 - Complexity: quick / standard / full
 - Phases:
-  1. (backend) {description} [skills: skill-name]
-  2. (frontend) {description}
+  1. {description} [skills: skill-name]
+  2. {description}
 - Acceptance Criteria:
   - [ ] Criterion 1
 ```

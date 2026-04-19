@@ -1,12 +1,12 @@
 # Skills
 
-Skills are domain-specific checklists in `.claude/skills/`. PM assigns them to phases, conductor loads them before implementation.
+Skills are domain-specific checklists in `.claude/skills/`. PM assigns them to phases, lead loads them before implementation.
 
 ## How Skills Work
 
 1. PM adds `skills: [auth-setup, crud-api]` to phase frontmatter
-2. Conductor reads `.claude/skills/auth-setup/SKILL.md`
-3. Conductor follows the checklist alongside the role's identity
+2. Lead reads `.claude/skills/auth-setup/SKILL.md`
+3. Lead inlines the checklist into the sub-agent prompt
 
 ## Available Skills (14)
 

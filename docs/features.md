@@ -44,13 +44,13 @@ PM sets `complexity` per phase (or milestone-level `Complexity` for pipeline). D
 | `trivial` | Haiku | Phases → Commit → Push | Version bumps, env vars, config changes |
 | `quick` | Sonnet | Phases → Commit → Push (skip review) | Single-file fixes, simple CRUD |
 | `standard` | Sonnet | Phases → Review → Push | Typical features (default) |
-| `complex` | Opus | Architect → Phases → Review → Push | New subsystems, architectural changes |
+| `complex` | Opus | Design → Phases → Review → Push | New subsystems, architectural changes |
 
 Defaults configurable: `pipeline.default_pipeline` and `pipeline.default_complexity` in config.yml.
 
 ## Verification Gate
 
-Sub-agents run verification commands from config.yml before reporting back. All must pass. Max retries from config. Conductor NEVER commits if verification fails.
+Sub-agents run verification commands from config.yml before reporting back. All must pass. Max retries from config. Lead NEVER commits if verification fails.
 
 ## Acceptance Check
 
@@ -69,7 +69,7 @@ Detects: same error N times, circular fixes, verification loops, no progress. Re
 
 ## Skills
 
-Domain checklists in `.claude/skills/*/SKILL.md`. PM assigns via phase frontmatter `skills: [auth-setup, crud-api]`. Conductor loads them before implementation.
+Domain checklists in `.claude/skills/*/SKILL.md`. PM assigns via phase frontmatter `skills: [auth-setup, crud-api]`. Lead loads them before implementation.
 
 14 built-in skills: auth-setup, crud-api, deployment, accessibility, best-practices, code-optimizer, core-web-vitals, debug, frontend-design, react-best-practices, review, testing, web-quality-audit, fullstack-infrastructure.
 
@@ -79,26 +79,26 @@ Pre-built milestone templates. `/orchestra blueprint saas-starter` creates 5 mil
 
 ## Sub-Agent Delegation
 
-Conductor never implements code directly. Each phase runs in an isolated sub-agent:
+Lead never implements code directly. Each phase runs in an isolated sub-agent with a dynamically generated identity (e.g., "senior backend engineer") based on phase scope:
 
-1. Conductor pre-reads role, skills, phase content and inlines into sub-agent prompt
+1. Lead reads skills and phase content, derives the right sub-agent identity, and inlines into sub-agent prompt
 2. Sub-agent implements, verifies, checks acceptance, reports back
-3. Conductor commits, updates status, passes summary to next phase
+3. Lead commits, updates status, passes summary to next phase
 
-Error logs stay in sub-agent's ephemeral context — conductor stays clean across phases.
+Error logs stay in sub-agent's ephemeral context — lead stays clean across phases.
 
 ## Milestone Isolation
 
-Config `pipeline.milestone_isolation` controls how the conductor manages context across milestones:
+Config `pipeline.milestone_isolation` controls how the lead manages context across milestones:
 
 | Mode | Behavior | Best for |
 |------|----------|----------|
-| `inline` (default) | Conductor runs milestone directly, stops after completion. User compacts manually. | Manual sessions |
+| `inline` (default) | Lead runs milestone directly, stops after completion. User compacts manually. | Manual sessions |
 | `agent` | Each milestone runs in its own sub-agent. Context freed automatically. | `--auto` batch runs |
 
-In `agent` mode, delegation is two-tier: conductor → milestone agent → phase agents. The conductor stays lean (~1-2k tokens per milestone), enabling 20+ milestones in a single session.
+In `agent` mode, delegation is two-tier: lead → milestone agent → phase agents. The lead stays lean (~1-2k tokens per milestone), enabling 20+ milestones in a single session.
 
-In `inline` mode, conductor stops after each milestone. User runs `/compact` then `/orchestra start` to continue — full control over context management.
+In `inline` mode, lead stops after each milestone. User runs `/compact` then `/orchestra start` to continue — full control over context management.
 
 ## Parallel Execution
 
@@ -106,11 +106,11 @@ If `config.yml parallel: enabled`, phases with `depends_on: []` run simultaneous
 
 ## Codebase Map
 
-For milestones spanning 3+ directories or 20+ files, conductor launches a haiku scout sub-agent to generate a file map. Sub-agents use this map to target files directly instead of exploring.
+For milestones spanning 3+ directories or 20+ files, lead launches a haiku scout sub-agent to generate a file map. Sub-agents use this map to target files directly instead of exploring.
 
 ## Hotfix Pipeline
 
-`/orchestra hotfix {desc}` — sub-agent implements + verifies, conductor commits + pushes. No RFC, no review, no gates.
+`/orchestra hotfix {desc}` — sub-agent implements + verifies, lead commits + pushes. No RFC, no review, no gates.
 
 ## Metrics
 
@@ -126,11 +126,11 @@ Phase duration + verification retries tracked in context.md `## Metrics` section
 
 ## Rejection Flow
 
-RFC rejected → architect revises (max `pipeline.max_rfc_rounds`). Push is automatic after review passes.
+RFC rejected → lead revises (max `pipeline.max_rfc_rounds`). Push is automatic after review passes.
 
 ## Milestone Lock
 
-Conductor claims milestone with `Locked-By: {timestamp}`. Other conductors skip it. Expires after `thresholds.milestone_lock_timeout` minutes (default 120).
+Lead claims milestone with `Locked-By: {timestamp}`. Other leads skip it. Expires after `thresholds.milestone_lock_timeout` minutes (default 120).
 
 ## Conditional Re-review
 

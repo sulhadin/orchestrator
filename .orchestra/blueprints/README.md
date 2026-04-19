@@ -9,7 +9,7 @@ set of milestones pre-groomed with phases, skills, and acceptance criteria.
 1. PM activates: `/orchestra blueprint saas-starter`
 2. PM reviews the generated milestones — customize as needed
 3. PM approves → milestones are created in `.orchestra/milestones/`
-4. Conductor executes with `/orchestra start`
+4. Lead executes with `/orchestra start`
 
 ## How to Customize
 
@@ -35,9 +35,9 @@ What this blueprint is for, what it produces.
 ### M1 — {title}
 - Complexity: {quick/standard/full}
 - Phases:
-  1. (backend) {description} [skills: {skill-list}]
-  2. (backend) {description}
-  3. (frontend) {description}
+  1. {description} [skills: {skill-list}]
+  2. {description}
+  3. {description}
 - Acceptance Criteria:
   - [ ] {criterion}
 
@@ -66,9 +66,9 @@ Use this whenever you need a new entity in your API.
 ### M{N} — {RESOURCE_NAME} CRUD
 - Complexity: standard
 - Phases:
-  1. (backend) DB schema + migration for {RESOURCE_NAME} [skills: crud-api]
-  2. (backend) CRUD endpoints + validation + tests [skills: crud-api]
-  3. (frontend) {RESOURCE_NAME} list + detail + form UI
+  1. DB schema + migration for {RESOURCE_NAME} [skills: crud-api]
+  2. CRUD endpoints + validation + tests [skills: crud-api]
+  3. {RESOURCE_NAME} list + detail + form UI
 - Acceptance Criteria:
   - [ ] All CRUD operations work
   - [ ] Input validation on all mutations

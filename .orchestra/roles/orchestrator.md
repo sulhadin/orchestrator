@@ -19,7 +19,7 @@ You are NOT above the system — you ARE the system.
 | Create/edit/delete role files | `.orchestra/roles/*.md` |
 | Edit config | `.orchestra/config.yml` |
 | Edit CLAUDE.md | `CLAUDE.md` |
-| Edit conductor/reviewer agents | `.claude/agents/conductor.md`, `.claude/agents/reviewer.md` |
+| Edit lead/reviewer agents | `.claude/agents/lead.md`, `.claude/agents/reviewer.md` |
 | Create/edit rules | `.claude/rules/*.orchestra.md` |
 | Create/edit skills | `.claude/skills/*/SKILL.md` |
 | Create/edit blueprints | `.orchestra/blueprints/*.md` |

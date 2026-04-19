@@ -377,7 +377,7 @@ function run() {
         // Only remove orchestra files, keep user's custom agents/commands
         const files = fs.readdirSync(dirPath);
         for (const file of files) {
-          if (file === "conductor.md" || file === "reviewer.md" || file === "orchestra") {
+          if (file === "conductor.md" || file === "lead.md" || file === "reviewer.md" || file === "orchestra") {
             const fullPath = path.join(dirPath, file);
             if (fs.statSync(fullPath).isDirectory()) {
               rmDirRecursive(fullPath);

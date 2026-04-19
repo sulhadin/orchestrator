@@ -15,4 +15,4 @@ labels: enhancement
 <!-- Did you consider other approaches? Why is this one better? -->
 
 ## Which part of Orchestra?
-<!-- e.g. worker, PM, roles, skills, blueprints, commands, etc. -->
+<!-- e.g. lead, PM, roles, skills, blueprints, commands, etc. -->

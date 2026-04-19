@@ -8,9 +8,9 @@ Orchestra splits work between two terminals:
 
 **Terminal 1 — PM** (`/orchestra pm`): You discuss features, challenge scope, and create milestones with groomed phases. PM never writes code — only plans.
 
-**Terminal 2 — Conductor** (`/orchestra start`): The conductor reads your milestones and delegates each phase to a sub-agent with the right role (backend, frontend, architect). Sub-agents implement code, run verification, and report back. Conductor commits, triggers code review, and pushes when done. In `inline` mode (default), stops after each milestone — user compacts and restarts. In `agent` mode, continues to the next milestone automatically.
+**Terminal 2 — Lead** (`/orchestra start`): The lead reads your milestones, derives the right sub-agent identity dynamically from phase scope and skills, and delegates each phase. Sub-agents implement code, run verification, and report back. Lead commits, triggers code review, and pushes when done. In `inline` mode (default), stops after each milestone — user compacts and restarts. In `agent` mode, continues to the next milestone automatically.
 
-The two terminals communicate through files — no direct messaging. PM writes milestone files, conductor reads them. You can plan the next feature while the current one is being built.
+The two terminals communicate through files — no direct messaging. PM writes milestone files, lead reads them. You can plan the next feature while the current one is being built.
 
 ## What Makes Orchestra Different
 
@@ -34,8 +34,7 @@ The two terminals communicate through files — no direct messaging. PM writes m
 | **Parallel Phases** | Independent phases run simultaneously via `depends_on` (opt-in via config) |
 | **Stuck Detection** | Detects repeated failures, circular fixes, over-engineering — escalates |
 | **Phase Limits** | Time (~15min), scope (stay in criteria), tool call (40+) guards |
-| **Adaptive Role** | Domain expert (iOS, DevOps, ML) — defined per phase via `context:` field |
-| **Milestone Lock** | Prevents two conductors from executing the same milestone |
+| **Milestone Lock** | Prevents two leads from executing the same milestone |
 | **Conditional Re-review** | Re-review only if fix exceeds threshold (configurable) |
 | **Role Creation** | `/orchestra create-role` — interactive discovery, auto-symlink as agent |
 | **Sub-agent delegation** | Each phase runs in isolated sub-agent — prevents context accumulation |
@@ -51,7 +50,7 @@ The two terminals communicate through files — no direct messaging. PM writes m
 |-----|---------------|
 | [Getting Started](getting-started.md) | Installation, config setup, first milestone, two-terminal model, upgrading |
 | [Commands](commands.md) | All `/orchestra` commands with usage examples |
-| [Roles](roles.md) | 6 roles + adaptive: identity, ownership, boundaries, agents |
+| [Roles](roles.md) | Roles, identity, ownership, boundaries, agents |
 | [Features](features.md) | Config, verification, skills, blueprints, learning, parallel, and more |
 | [Blueprints](blueprints.md) | Using templates, creating your own, blueprint add, customization |
 | [Skills](skills.md) | 14 built-in skills, creating custom skills, naming convention |
@@ -80,7 +79,7 @@ npx @sulhadin/orchestrator
 ```
 .claude/                                ← Claude Code integration
 ├── agents/
-│   ├── conductor.md                    ← Autonomous milestone executor
+│   ├── lead.md                         ← Autonomous milestone executor
 │   └── reviewer.md                     ← Independent code review
 ├── skills/*.orchestra.md               ← 14 domain checklists
 ├── rules/*.orchestra.md                ← 8 discipline rules (auto-loaded)
@@ -88,7 +87,7 @@ npx @sulhadin/orchestrator
 
 .orchestra/                             ← Project data + config
 ├── config.yml                          ← Pipeline settings, verification, thresholds
-├── roles/                              ← Role identities (one file per role)
+├── roles/                              ← Role identities (orchestrator, product-manager)
 ├── blueprints/                         ← Project/component templates
 └── milestones/                         ← Your work (one dir per feature)
 ```
