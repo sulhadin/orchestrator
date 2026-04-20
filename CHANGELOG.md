@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1-beta.1](https://github.com/sulhadin/orchestrator/compare/orchestrator-v4.0.0-beta.1...orchestrator-v4.0.1-beta.1) (2026-04-20)
+
+
+### Bug Fixes
+
+* **ci:** add manual publish via workflow_dispatch ([5cc2233](https://github.com/sulhadin/orchestrator/commit/5cc2233c18c5f37b2272b3703e1e59a05ba8b5c5))
+
 ## [4.0.1-beta.0](https://github.com/sulhadin/orchestrator/compare/orchestrator-v4.0.0-beta.0...orchestrator-v4.0.1-beta.0) (2026-04-19)
 
 
