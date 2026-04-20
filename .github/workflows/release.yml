@@ -3,6 +3,7 @@ name: Release & Publish
 on:
   push:
     branches: [main, next]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -10,6 +11,7 @@ permissions:
 
 jobs:
   release-please:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
@@ -40,9 +42,9 @@ jobs:
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
 
-  publish:
+  publish-auto:
+    if: github.event_name == 'push' && needs.release-please.outputs.release_created == 'true'
     needs: release-please
-    if: needs.release-please.outputs.release_created == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -70,7 +72,42 @@ jobs:
           else
             echo "tag=latest" >> $GITHUB_OUTPUT
           fi
-          echo "Publishing v${VERSION} with tag: $(cat $GITHUB_OUTPUT | grep tag | cut -d= -f2)"
+
+      - name: Publish to npm
+        run: npm publish --access public --tag ${{ steps.npm-tag.outputs.tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-manual:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build template
+        run: yarn run template
+
+      - name: Determine npm tag
+        id: npm-tag
+        run: |
+          VERSION=$(node --input-type=module -e "import {readFileSync} from 'fs'; process.stdout.write(JSON.parse(readFileSync('package.json','utf8')).version);")
+          if echo "$VERSION" | grep -q "beta\|alpha\|rc"; then
+            echo "tag=beta" >> $GITHUB_OUTPUT
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          fi
+          echo "Publishing v${VERSION} with tag ${{ steps.npm-tag.outputs.tag }}"
 
       - name: Publish to npm
         run: npm publish --access public --tag ${{ steps.npm-tag.outputs.tag }}
