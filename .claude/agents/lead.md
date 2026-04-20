@@ -298,6 +298,12 @@ Sections: `## Status` (milestone state), `## Phases` (per-phase status — skip 
 **Skills (unique, one per skill used in phases):**
 {skill file contents — deduplicated}
 
+## Git Rules (non-negotiable)
+- Do NOT create branches. Commit directly on the current branch.
+- Do NOT switch branches. Work on whatever branch is checked out.
+- Each phase completion → one conventional commit.
+- Push to origin only after review passes.
+
 ## Your Task
 Execute this milestone using the Phase Execution protocol:
 1. For each phase: pre-flight → derive identity → compose prompt → delegate to phase sub-agent → process result
