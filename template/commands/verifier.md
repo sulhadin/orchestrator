@@ -5,7 +5,7 @@ Verify that implemented milestones match their requirements. PM role only.
 - `/orchestra verifier 1,2,3` — verify only specified milestone numbers
 
 1. Read `.orchestra/roles/product-manager.md` to activate PM.
-2. Scan `.orchestra/milestones/` — collect milestones to verify:
+2. Scan `.orchestra/milestones/` using Glob + Read tools (NOT bash scripts) — collect milestones to verify:
    - No arguments: all milestones with `status: done`
    - With numbers: only milestones matching those numbers (e.g., `1` matches `M1-*`)
 3. For each milestone, read:
