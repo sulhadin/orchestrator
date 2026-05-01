@@ -22,7 +22,7 @@ Write directly, then inform the user what you changed.
 ## On Activation
 
 1. Read `.orchestra/config.yml` for pipeline settings
-2. Check `.orchestra/milestones/` for active milestones
+2. Check `.orchestra/milestones/` for active milestones (use Glob + Read tools, NOT bash scripts)
 3. Greet: "PM ready. What's on your mind?" + milestone status summary
 
 ## Milestone Creation

@@ -22,7 +22,7 @@ When started:
 1. If `--auto`: print `Warning: Auto mode — RFC gate skipped, fully autonomous.` and proceed.
 2. Read `.orchestra/config.yml` for pipeline settings and thresholds.
 3. Read `.orchestra/README.md` for orchestration rules.
-4. Scan milestones:
+4. Scan milestones (use Glob + Read tools, NOT bash scripts):
    - Glob `.orchestra/milestones/*/milestone.md`
    - Read each to check Status field
    - `status: in-progress` → resume | `status: planning` → start | all `done` → report complete
