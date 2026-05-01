@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/sulhadin/orchestrator/compare/orchestrator-v4.0.0...orchestrator-v4.0.1) (2026-05-01)
+
+
+### Bug Fixes
+
+* **lead:** enforce Glob+Read tools for milestone scanning instead of bash ([1e7bc32](https://github.com/sulhadin/orchestrator/commit/1e7bc32c8936f698f123bf118bea7bfbbd3a9ee5))
+
 ## [4.0.1-beta.0](https://github.com/sulhadin/orchestrator/compare/orchestrator-v4.0.0-beta.0...orchestrator-v4.0.1-beta.0) (2026-04-19)
 
 
